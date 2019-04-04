@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  app:
+    build: .
+    image: 'khemlabs/whatsapp-panel:${TAG:-dev}'
+    env_file: '${ENV_APP_FILE_PATH:-./docker_configuration/prod.env}'
+    restart: always
+    networks:
+      - app_network
+
+networks:
+  app_network:

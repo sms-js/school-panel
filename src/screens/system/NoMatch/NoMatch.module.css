@@ -1,0 +1,12 @@
+.no-match-container {
+	height: 100vh;
+	width: 100vw;
+}
+
+.no-match-content {
+	padding: 50px;
+}
+
+.no-match-card {
+	width: 300px;
+}

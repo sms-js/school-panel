@@ -1,0 +1,19 @@
+.authenticated-container {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+}
+
+.authenticated-card {
+	display: flex;
+	max-width: 500px;
+	background-color: rgb(250, 250, 250);
+}
+
+.success {
+	color: green;
+}
+
+.error {
+	color: red;
+}

@@ -1,0 +1,47 @@
+{
+	"name": "react-panel",
+	"version": "0.1.0",
+	"private": true,
+	"dependencies": {
+		"antd": "3.14.1",
+		"axios": "^0.18.0",
+		"jwt-decode": "2.2.0",
+		"react": "16.8.3",
+		"react-dom": "16.8.3",
+		"react-router-dom": "4.3.1",
+		"react-scripts": "2.1.5"
+	},
+	"scripts": {
+		"react-start": "react-scripts start",
+		"prod-start": "sh ./start.sh",
+		"start": "sh ./docker_configuration/lib/run-local.sh",
+		"build": "sh ./docker_configuration/lib/build/build-prod.sh",
+		"react-build": "react-scripts build",
+		"test": "react-scripts test",
+		"eject": "react-scripts eject",
+		"docker-build": "sh ./docker_configuration/lib/build/build.sh",
+		"docker-clean": "sh ./docker_configuration/lib/docker-compose/clean.sh",
+		"docker-recreate": "sh ./docker_configuration/lib/docker-compose/recreate.sh",
+		"docker-up": "sh ./docker_configuration/lib/docker-compose/start.sh",
+		"docker-down": "sh ./docker_configuration/lib/docker-compose/stop.sh",
+		"docker-logs-tail": "sh ./docker_configuration/lib/logs/logs_tail.sh",
+		"docker-logs": "sh ./docker_configuration/lib/logs/logs.sh",
+		"docker-prestart": "sh ./docker_configuration/lib/prestart.sh",
+		"docker-rebuild": "sh ./docker_configuration/lib/build/rebuild.sh",
+		"docker-remove": "sh ./docker_configuration/lib/build/remove.sh",
+		"docker-start": "sh ./docker_configuration/lib/start.sh",
+		"docker-uninstall": "sh ./docker_configuration/lib/build/uninstall.sh",
+		"upgrade-patch": "node ./docker_configuration/lib/git/patchRelease.js",
+		"upgrade-minor": "node ./docker_configuration/lib/git/minorRelease.js",
+		"upgrade-mayor": "node ./docker_configuration/lib/git/mayorRelease.js"
+	},
+	"eslintConfig": {
+		"extends": "react-app"
+	},
+	"browserslist": [
+		">0.2%",
+		"not dead",
+		"not ie <= 11",
+		"not op_mini all"
+	]
+}

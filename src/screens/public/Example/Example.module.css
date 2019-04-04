@@ -1,0 +1,12 @@
+.public-container {
+	height: 100vh;
+	width: 100vw;
+}
+
+.public-content {
+	padding: 50px;
+}
+
+.public-card {
+	width: 300px;
+}

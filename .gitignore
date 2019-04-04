@@ -1,0 +1,9 @@
+.env
+node_modules/
+.vagrant/
+.local/
+.idea/
+docker_configuration/prod.env
+package-lock.json
+npm-debug.log
+yarn.lock

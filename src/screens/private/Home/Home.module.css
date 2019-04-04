@@ -1,0 +1,16 @@
+.home-container {
+	padding: 15px;
+	align-content: center;
+}
+
+.home-container > h2 {
+	text-align: center;
+}
+
+.home-icon {
+	color: rgba(0, 0, 0, 0.25);
+}
+
+.password-form-button {
+	margin-left: 15px;
+}

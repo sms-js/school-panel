@@ -1,0 +1,15 @@
+.login-container {
+	min-width: 100vw;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-content: center;
+	align-items: center;
+}
+
+.login-card-container {
+	display: flex-grow;
+	min-width: 30vw;
+	min-height: 30vh;
+}
