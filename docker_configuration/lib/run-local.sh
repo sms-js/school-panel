@@ -12,4 +12,7 @@ else
 	cp ./docker_configuration/test.env .env
 fi
 
+printf "\n${bold}==> ********** Installinde pedendencies **********${normal} \n"
+npm update
+
 npm run react-start
