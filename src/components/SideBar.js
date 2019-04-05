@@ -11,8 +11,8 @@ const SideBar = ({ collapsed }) => {
 		<div style={{ height: '100vh', textAlign: 'left' }}>
 			<Menu
 				style={{ height: '100%' }}
-				defaultSelectedKeys={['1']}
-				defaultOpenKeys={['sub1']}
+				defaultSelectedKeys={[ '1' ]}
+				defaultOpenKeys={[ 'sub1' ]}
 				mode="inline"
 				inlineCollapsed={collapsed}
 			>
@@ -35,14 +35,14 @@ const SideBar = ({ collapsed }) => {
 						</span>
 					}
 				>
-					{/* Authenticated screen item */}
+					{/* Authenticated screen item *
 					<Menu.Item key="menu-authenticated-authenticated">
 						<Link to="/admin/examples/authenticated">Authenticated screen</Link>
-					</Menu.Item>
-					{/* Unauthorized example screen item */}
+					</Menu.Item>/}
+					{/* Unauthorized example screen item 
 					<Menu.Item key="menu-authenticated-unauthorized">
 						<Link to="/admin/examples/unauthorized">Unauthorized screen</Link>
-					</Menu.Item>
+					</Menu.Item>*/}
 					{/* Authenticated users screens menu */}
 					<SubMenu
 						key="menu-authenticated-users"
@@ -58,12 +58,14 @@ const SideBar = ({ collapsed }) => {
 							<Link to="/admin/users">List</Link>
 						</Menu.Item>
 						{/* User edition screen item */}
-						<Menu.Item key="menu-authenticated-unauthorized">
+						{/* <Menu.Item key="menu-authenticated-unauthorized">
 							<Link to="/admin/user">Edit</Link>
-						</Menu.Item>
+						</Menu.Item> */}
 					</SubMenu>
 				</SubMenu>
+
 				{/* Public screens menu */}
+				{/* 				
 				<SubMenu
 					key="menu-public"
 					title={
@@ -72,12 +74,14 @@ const SideBar = ({ collapsed }) => {
 							<span>Public screens</span>
 						</span>
 					}
-				>
-					{/* Public screen item */}
-					<Menu.Item key="menu-public-example">
+				> */}
+				{/* Public screen item */}
+				{/* <Menu.Item key="menu-public-example">
 						<Link to="/public/examples/example_1">Example 1</Link>
-					</Menu.Item>
-				</SubMenu>
+					</Menu.Item> */}
+				{/* </SubMenu> */}
+
+				
 				{/* Settings menu */}
 				<SubMenu
 					key="config"
