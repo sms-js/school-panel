@@ -42,8 +42,7 @@ const systemRoutes = [
 const privateRoutes = [
 	<PrivateRoute key="route-home" path="/admin/home" component={Home} />,
 	<PrivateRoute key="route-home" path="/admin/profile" component={Profile} rule={['Profile']} />,
-/* 	<PrivateRoute key="route-auth" path="/admin/examples/authenticated" component={Authenticated} rule="*" />,
-	<PrivateRoute key="route-unauth" path="/admin/examples/unauthorized" component={Authenticated} rule="Error" />, */
+
 	// Users
 	<PrivateRoute key="route-users-list" path="/admin/users" component={UsersList} rule="UserReadyOnly" />,
 	<PrivateRoute exact key="route-users-create" path="/admin/user" component={UserEdition} rule="UserFull" />,
@@ -55,8 +54,7 @@ const privateRoutes = [
  */
 const publicRoutes = [
 	// Public route example
-/* 	<PublicRoute key="route-public-example-route" exact path="/public/examples/example_1" component={Example} />
- */];
+];
 
 const Router = () => {
 	return (

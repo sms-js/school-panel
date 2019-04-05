@@ -36,13 +36,7 @@ const SideBar = ({ collapsed }) => {
 					}
 				>
 					{/* Authenticated screen item *
-					<Menu.Item key="menu-authenticated-authenticated">
-						<Link to="/admin/examples/authenticated">Authenticated screen</Link>
-					</Menu.Item>/}
-					{/* Unauthorized example screen item 
-					<Menu.Item key="menu-authenticated-unauthorized">
-						<Link to="/admin/examples/unauthorized">Unauthorized screen</Link>
-					</Menu.Item>*/}
+								
 					{/* Authenticated users screens menu */}
 					<SubMenu
 						key="menu-authenticated-users"
@@ -58,30 +52,14 @@ const SideBar = ({ collapsed }) => {
 							<Link to="/admin/users">List</Link>
 						</Menu.Item>
 						{/* User edition screen item */}
-						{/* <Menu.Item key="menu-authenticated-unauthorized">
-							<Link to="/admin/user">Edit</Link>
-						</Menu.Item> */}
+				
 					</SubMenu>
 				</SubMenu>
 
 				{/* Public screens menu */}
-				{/* 				
-				<SubMenu
-					key="menu-public"
-					title={
-						<span>
-							<Icon type="project" />
-							<span>Public screens</span>
-						</span>
-					}
-				> */}
-				{/* Public screen item */}
-				{/* <Menu.Item key="menu-public-example">
-						<Link to="/public/examples/example_1">Example 1</Link>
-					</Menu.Item> */}
-				{/* </SubMenu> */}
 
-				
+				{/* Public screen item */}
+					
 				{/* Settings menu */}
 				<SubMenu
 					key="config"
