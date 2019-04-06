@@ -20,6 +20,7 @@ import Example from 'screens/public/Example';
 import Login from 'screens/system/Login';
 import Unauthorized from 'screens/system/Unauthorized';
 import NoMatch from 'screens/system/NoMatch';
+import RecoverPassword from 'screens/system/RecoverPassword/';
 
 // Rules validation
 // The authentication system, will fail if the rule is not defined in config/rules
@@ -32,6 +33,7 @@ import NoMatch from 'screens/system/NoMatch';
  */
 const systemRoutes = [
 	<PublicRoute key="route-login-route" exact path="/login" component={Login} />,
+	<PublicRoute key="route-recover-password" exact path="/recoverpassword" component={RecoverPassword} />,
 	<PrivateRoute key="route-home-route" exact path="/" component={Home} />,
 	<PrivateRoute key="route-unauthorized-route" exact path="/unauthorized" component={Unauthorized} rule="*" />
 ];
@@ -41,7 +43,7 @@ const systemRoutes = [
  */
 const privateRoutes = [
 	<PrivateRoute key="route-home" path="/admin/home" component={Home} />,
-	<PrivateRoute key="route-home" path="/admin/profile" component={Profile} rule={['Profile']} />,
+	<PrivateRoute key="route-profile" path="/admin/profile" component={Profile} rule={[ 'Profile' ]} />,
 
 	// Users
 	<PrivateRoute key="route-users-list" path="/admin/users" component={UsersList} rule="UserReadyOnly" />,

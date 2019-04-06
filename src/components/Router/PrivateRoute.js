@@ -8,13 +8,12 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 	return (
 		<Route
 			{...rest}
-			render={props =>
+			render={(props) =>
 				session.logged === true ? (
 					validateComponent(Component, session.user, { ...props, ...rest })
 				) : (
 					<Redirect to="/login" />
-				)
-			}
+				)}
 		/>
 	);
 };
