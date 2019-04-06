@@ -1,4 +1,4 @@
-import { API_DOMAIN, LOGIN_URL, PROFILE_URL } from 'config';
+import { API_DOMAIN, LOGIN_URL, PROFILE_URL, RECOVERPASSWORD_URL } from 'config';
 import axios from 'axios';
 import { checkStatus } from './validators/response';
 import { validLoginResponse } from './validators/user';
@@ -10,7 +10,7 @@ const api = axios.create({ baseURL: API_DOMAIN });
  *
  * @param {string} AUTH_TOKEN
  */
-export const setToken = AUTH_TOKEN => {
+export const setToken = (AUTH_TOKEN) => {
 	if (AUTH_TOKEN) {
 		api.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 		return;
@@ -23,7 +23,7 @@ export const setToken = AUTH_TOKEN => {
  *
  * @param {string} userId
  */
-export const testAuthenticatedRequest = async userId => {
+export const testAuthenticatedRequest = async (userId) => {
 	try {
 		const response = await api.get(`${PROFILE_URL}${userId}`);
 		if (!checkStatus(response)) {
@@ -67,6 +67,24 @@ export const updateProfile = async (id, data) => {
 			throw new Error('invalid credentials');
 		}
 		return data;
+	} catch (error) {
+		console.debug(error);
+		return false;
+	}
+};
+
+/**
+ * Recovers user password
+ *
+ * @param {string} emailadress
+ */
+export const recoverpassword = async (email) => {
+	try {
+		const response = await api.post(RECOVERPASSWORD_URL, { email });
+		if (!checkStatus(response) || !validLoginResponse(response)) {
+			throw new Error('invalid credentials');
+		}
+		return response.data;
 	} catch (error) {
 		console.debug(error);
 		return false;

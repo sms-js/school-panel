@@ -3,7 +3,7 @@ import styles from './RecoverPassword.module.css';
 import React, { useState, useContext } from 'react';
 import { Card, Form, Icon, Input, Button } from 'antd';
 import SessionContext from 'components/SessionContext';
-import { login } from 'lib/api';
+import { recoverpassword } from 'lib/api';
 import { Redirect } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
@@ -17,8 +17,8 @@ const RecoverPassword = ({ form }) => {
 		e.preventDefault();
 		form.validateFields(async (err, values) => {
 			if (!err) {
-				const { username, password } = values;
-				const response = await login(username, password);
+				const { emailadress } = values;
+				const response = await recoverpassword(emailadress);
 				if (!response) {
 					setRequestError(true);
 					return;
@@ -37,20 +37,14 @@ const RecoverPassword = ({ form }) => {
 			<Card title="RecoverPassword" className={styles['login-card-container']}>
 				<Form onSubmit={(e) => handleSubmit(session, e)} className={styles['login-form']}>
 					<Form.Item>
-						{getFieldDecorator('username', {
+						{getFieldDecorator('emailadress', {
 							rules: [ { required: true, message: 'Please enter your registrered email' } ]
-						})(
-							<Input
-								prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-								placeholder="Email"
-								
-							/>
-						)}
+						})(<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Email" />)}
 					</Form.Item>
-					{requestError && <Form.Item validateStatus="error" help="Login request failed" />}
+					{requestError && <Form.Item validateStatus="error" help="Recover password request failed" />}
 					<Form.Item>
 						<div className={styles['buttons-style']}>
-								<Button type="primary" htmlType="button" className={styles['login-form-button']}>
+							<Button type="primary" htmlType="submit" className={styles['login-form-button']}>
 								Recuperar clave
 							</Button>
 						</div>
