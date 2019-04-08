@@ -1,4 +1,4 @@
-import { API_DOMAIN, LOGIN_URL, PROFILE_URL, RECOVERPASSWORD_URL } from 'config';
+import { API_DOMAIN, LOGIN_URL, PROFILE_URL, RECOVERPASSWORD_URL, GENERATENEWPASSWORD_URL } from 'config';
 import axios from 'axios';
 import { checkStatus } from './validators/response';
 import { validLoginResponse } from './validators/user';
@@ -45,7 +45,7 @@ export const testAuthenticatedRequest = async (userId) => {
 export const login = async (username, password) => {
 	try {
 		const response = await api.post(LOGIN_URL, { username, password });
-		if (!checkStatus(response) || !validLoginResponse(response)) {
+		if (!checkStatus(response)) {
 			throw new Error('invalid credentials');
 		}
 		return response.data;
@@ -74,15 +74,38 @@ export const updateProfile = async (id, data) => {
 };
 
 /**
- * Recovers user password
+ * Request email with validated link to generate a new password
  *
  * @param {string} emailadress
  */
 export const recoverpassword = async (email) => {
 	try {
 		const response = await api.post(RECOVERPASSWORD_URL, { email });
-		if (!checkStatus(response) || !validLoginResponse(response)) {
+		console.log(response);
+		if (!checkStatus(response)) {
 			throw new Error('invalid credentials');
+		}
+		return response.data;
+	} catch (error) {
+		console.debug(error);
+		return false;
+	}
+};
+
+/**
+ * Send user's defined new password
+ *
+ * @param {string} password
+ */
+export const generatenewpassword = async (params) => {
+	try {
+		console.log('api-client, password = ', params);
+		let test = GENERATENEWPASSWORD_URL + '?auth_token=' + params.token;
+		console.log('api/generatedLink = ', test);
+		delete params.token;
+		const response = await api.post(test, params);
+		if (!checkStatus(response)) {
+			throw new Error('invalid password change process');
 		}
 		return response.data;
 	} catch (error) {

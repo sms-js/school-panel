@@ -20,7 +20,7 @@ import Example from 'screens/public/Example';
 import Login from 'screens/system/Login';
 import Unauthorized from 'screens/system/Unauthorized';
 import NoMatch from 'screens/system/NoMatch';
-import RecoverPassword from 'screens/system/RecoverPassword/';
+import { RecoverPassword, GenerateNewPassword } from 'screens/system/RecoverPassword/';
 
 // Rules validation
 // The authentication system, will fail if the rule is not defined in config/rules
@@ -33,7 +33,13 @@ import RecoverPassword from 'screens/system/RecoverPassword/';
  */
 const systemRoutes = [
 	<PublicRoute key="route-login-route" exact path="/login" component={Login} />,
-	<PublicRoute key="route-recover-password" exact path="/recoverpassword" component={RecoverPassword} />,
+	<PublicRoute key="route-recover-password" exact path="/recoverpassword/" component={RecoverPassword} />,
+	<PublicRoute
+		key="route-generate-new-password"
+		exact
+		path="/recoverpassword/generatenewpassword/:token"
+		component={GenerateNewPassword}
+	/>,
 	<PrivateRoute key="route-home-route" exact path="/" component={Home} />,
 	<PrivateRoute key="route-unauthorized-route" exact path="/unauthorized" component={Unauthorized} rule="*" />
 ];

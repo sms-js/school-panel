@@ -1,3 +1,4 @@
 import RecoverPassword from './RecoverPassword';
+import GenerateNewPassword from './GenerateNewPassword';
 
-export default RecoverPassword;
+export { RecoverPassword, GenerateNewPassword };
