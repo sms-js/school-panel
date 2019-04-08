@@ -8,6 +8,10 @@ const server = http.createServer(app);
 
 app.use(express.static('build'));
 
+app.get('/*', function(req, res) {
+	res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
 server.listen(process.env.PORT || 3000, function() {
 	const address = server.address().address;
 	const host = address && address !== '::' ? address : 'localhost',
