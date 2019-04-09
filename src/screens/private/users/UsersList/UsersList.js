@@ -11,9 +11,9 @@ import { Link } from 'react-router-dom';
 const confirm = Modal.confirm;
 
 const UsersList = () => {
-	const [users, setUsers] = useState([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(false);
+	const [ users, setUsers ] = useState([]);
+	const [ loading, setLoading ] = useState(true);
+	const [ error, setError ] = useState(false);
 
 	useEffect(() => {
 		loadList();
@@ -23,18 +23,18 @@ const UsersList = () => {
 		const data = await userLib.getUsers();
 		setLoading(false);
 		if (!data) return setError(true);
-		setUsers(data.map(user => ({ ...user, key: `list_${user._id}` })));
+		setUsers(data.map((user) => ({ ...user, key: `list_${user._id}` })));
 	};
 
-	const onDelete = async id => {
-		const user = users.find(user => user._id === id);
+	const onDelete = async (id) => {
+		const user = users.find((user) => user._id === id);
 		confirm({
 			title: 'Do you want to delete these item?',
-			content: `${user.first_name} ${user.last_name} will be deleted, are you sure?`,
+			content: `${user.firstName} ${user.lastName} will be deleted, are you sure?`,
 			async onOk() {
 				setLoading(true);
 				const success = await userLib.deleteUser(id);
-				if (success) setUsers(users.filter(user => user._id !== id));
+				if (success) setUsers(users.filter((user) => user._id !== id));
 				else setError(true);
 				setLoading(false);
 			},

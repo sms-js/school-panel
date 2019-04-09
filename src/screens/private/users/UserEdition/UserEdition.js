@@ -4,17 +4,17 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button, Spin } from 'antd';
 import SideBarContainer from 'components/SideBarContainer';
 import { user as userLib } from 'lib/models';
-import { Email, FirstName, LastName } from './inputs';
+import { Email, FirstName, LastName, UserType,UserName } from './inputs';
 import { Redirect } from 'react-router-dom';
 import { keyIsObject } from 'lib/validators/types';
 
 const UserEdition = ({ form, match }) => {
 	const params = keyIsObject(match, 'params') ? match.params : {};
-	const [user, setUser] = useState({});
-	const [loading, setLoading] = useState(true);
-	const [success, setSuccess] = useState(false);
-	const [error, setError] = useState(false);
-	const [mustReturn, setReturn] = useState(false);
+	const [ user, setUser ] = useState({});
+	const [ loading, setLoading ] = useState(true);
+	const [ success, setSuccess ] = useState(false);
+	const [ error, setError ] = useState(false);
+	const [ mustReturn, setReturn ] = useState(false);
 
 	const loadUser = async () => {
 		if (params.id) {
@@ -45,7 +45,7 @@ const UserEdition = ({ form, match }) => {
 			setLoading(false);
 			if (!response) return setError(true);
 			setSuccess(true);
-			// If you dont want to aredirect user after saving uncomment next line
+			// If you dont want to redirect user after saving uncomment next line
 			//setReturn(true);
 		});
 	};
@@ -59,14 +59,15 @@ const UserEdition = ({ form, match }) => {
 
 	if (mustReturn) return <Redirect to="/admin/users" />;
 
-	//req.body.password && req.body.passwordConfirm && req.body.password == req.body.passwordConfirm
 	return (
 		<SideBarContainer title={user._id ? 'Update user' : 'Create user'}>
 			<div className={styles['user-edit-container']}>
-				<Form onSubmit={e => handleSubmit(user, e)} className={styles['login-form']}>
-					<Email form={form} user={user} />
+				<Form onSubmit={(e) => handleSubmit(user, e)} className={styles['login-form']}>
 					<FirstName form={form} user={user} />
 					<LastName form={form} user={user} />
+					<UserName form={form} user={user} />
+					<Email form={form} user={user} />
+					<UserType form={form} user={user} />
 					<Messages />
 					<Form.Item>
 						<Button type="primary" htmlType="submit" className={styles['login-form-button']}>

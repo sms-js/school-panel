@@ -5,9 +5,9 @@ import { Form, Icon, Input } from 'antd';
 const getInput = (form, session) => {
 	const { getFieldDecorator } = form;
 
-	return getFieldDecorator('last_name', {
-		rules: [{ required: true, message: 'Please input your last name!' }],
-		initialValue: session.user.last_name
+	return getFieldDecorator('lastName', {
+		rules: [ { required: true, message: 'Please input your last name!' } ],
+		initialValue: session.user.lastName
 	})(
 		<Input
 			key="profile-lastname-input"

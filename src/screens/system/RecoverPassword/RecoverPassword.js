@@ -18,7 +18,6 @@ const RecoverPassword = ({ form }) => {
 			if (!err) {
 				const { emailadress } = values;
 				const response = await recoverpassword(emailadress);
-				console.log(response);
 				if (!response) {
 					setRequestError(true);
 					return;

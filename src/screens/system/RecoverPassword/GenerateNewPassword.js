@@ -8,7 +8,6 @@ import { Redirect } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 const GenerateNewPassword = ({ form, match }) => {
-	console.log('generateNewPassword/match = ', match);
 	const [ requestError, setRequestError ] = useState(false);
 	const [ passwordHasBeenChanged, setPasswordHasBeenChanged ] = useState(false);
 	const [ tokenHasBeenValidated, setTokenHasBeenValidated ] = useState(false);

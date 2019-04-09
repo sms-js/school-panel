@@ -40,6 +40,7 @@ const SideBar = ({ collapsed }) => {
 					{/* Authenticated users screens menu */}
 					<SubMenu
 						key="menu-authenticated-users"
+						disabled={session.user.type=='admin'?false:true}
 						title={
 							<span>
 								<Icon type="user" />

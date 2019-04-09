@@ -88,7 +88,6 @@ export const updateProfile = async (id, data) => {
 export const recoverpassword = async (email) => {
 	try {
 		const response = await api.post(RECOVERPASSWORD_URL, { email });
-		console.log(response);
 		if (!checkStatus(response)) {
 			throw new Error('invalid credentials');
 		}
@@ -106,7 +105,6 @@ export const recoverpassword = async (email) => {
  */
 export const generatenewpassword = async (params) => {
 	try {
-		console.log('api-client, password = ', params);
 		let targetURL = GENERATENEWPASSWORD_URL + '?auth_token=' + params.token;
 		delete params.token;
 		const response = await api.post(targetURL, params);

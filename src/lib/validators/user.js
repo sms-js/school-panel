@@ -7,16 +7,16 @@ export const validUser = (user = {}) => {
 		isObject(user) &&
 		isString(user._id) &&
 		isString(user.username) &&
-		isString(user.first_name) &&
-		isString(user.last_name) &&
-		isString(user.status, ['isactive', 'inactive']) &&
+		isString(user.firstName) &&
+		isString(user.lastName) &&
+		isString(user.status, [ 'isactive', 'inactive' ]) &&
 		isString(user.type) &&
 		isObject(user.rules)
 	);
 };
 
 export const validLoginResponse = (response = {}) => {
-	//{"success":true,"token":"JWT_TOKEN","_id":"USER_ID","username":"admin","first_name":"admin","last_name":"admin","status":"isactive","type":"admin","rules":{"Entity":{"delete":true,"update":true,"create":true,"read":true,"list":true},"Category":{"delete":true,"update":true,"create":true,"read":true,"list":true},"User":{"delete":true,"update":true,"create":true,"read":true,"list":true}}}
+	//{"success":true,"token":"JWT_TOKEN","_id":"USER_ID","username":"admin","firstName":"admin","lastName":"admin","status":"isactive","type":"admin","rules":{"Entity":{"delete":true,"update":true,"create":true,"read":true,"list":true},"Category":{"delete":true,"update":true,"create":true,"read":true,"list":true},"User":{"delete":true,"update":true,"create":true,"read":true,"list":true}}}
 	return (
 		keyIsObject(response, 'data') &&
 		isBoolean(response.data.success) &&

@@ -5,9 +5,9 @@ import { Form, Icon, Input } from 'antd';
 const getInput = (form, user) => {
 	const { getFieldDecorator } = form;
 
-	return getFieldDecorator('first_name', {
+	return getFieldDecorator('firstName', {
 		rules: [{ required: true, message: 'Please input your first name!' }],
-		initialValue: user.first_name
+		initialValue: user.firstName
 	})(
 		<Input
 			key="profile-firstname-input"
@@ -17,6 +17,6 @@ const getInput = (form, user) => {
 	);
 };
 
-const FirstName = ({ form, user }) => <Form.Item label="First name">{getInput(form, user)}</Form.Item>;
+const FirstName = ({ form, user }) => <Form.Item hasFeedback label="First name">{getInput(form, user)}</Form.Item>;
 
 export default FirstName;

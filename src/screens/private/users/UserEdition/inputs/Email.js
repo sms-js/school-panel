@@ -18,6 +18,6 @@ const getInput = (form, user) => {
 	);
 };
 
-const Email = ({ form, user }) => <Form.Item label="Email">{getInput(form, user)}</Form.Item>;
+const Email = ({ form, user }) => <Form.Item hasFeedback label="Email">{getInput(form, user)}</Form.Item>;
 
 export default Email;

@@ -25,7 +25,7 @@ export const getUsers = async (search = {}) => {
  *
  * @param {string} id
  */
-export const getUser = async id => {
+export const getUser = async (id) => {
 	try {
 		const response = await api.get(`${USER_URL}${id}`);
 		if (!checkStatus(response)) {
@@ -38,7 +38,7 @@ export const getUser = async id => {
 	}
 };
 
-export const deleteUser = async id => {
+export const deleteUser = async (id) => {
 	try {
 		const response = await api.delete(`${USER_URL}${id}`);
 		if (!checkStatus(response)) {
@@ -57,7 +57,7 @@ export const deleteUser = async id => {
  * @param {string} id
  * @param {object} data
  */
-export const createUser = async data => {
+export const createUser = async (data) => {
 	try {
 		if (!data.type) data.type = 'admin';
 		const response = await api.post(USER_URL, data);
