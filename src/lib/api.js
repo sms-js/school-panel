@@ -1,4 +1,11 @@
-import { API_DOMAIN, LOGIN_URL, PROFILE_URL, RECOVERPASSWORD_URL, GENERATENEWPASSWORD_URL } from 'config';
+import {
+	API_DOMAIN,
+	LOGIN_URL,
+	PROFILE_URL,
+	RECOVERPASSWORD_URL,
+	GENERATENEWPASSWORD_URL,
+	VALIDATETOKEN_URL
+} from 'config';
 import axios from 'axios';
 import { checkStatus } from './validators/response';
 import { validLoginResponse } from './validators/user';
@@ -100,10 +107,23 @@ export const recoverpassword = async (email) => {
 export const generatenewpassword = async (params) => {
 	try {
 		console.log('api-client, password = ', params);
-		let test = GENERATENEWPASSWORD_URL + '?auth_token=' + params.token;
-		console.log('api/generatedLink = ', test);
+		let targetURL = GENERATENEWPASSWORD_URL + '?auth_token=' + params.token;
 		delete params.token;
-		const response = await api.post(test, params);
+		const response = await api.post(targetURL, params);
+		if (!checkStatus(response)) {
+			throw new Error('invalid password change process');
+		}
+		return response.data;
+	} catch (error) {
+		console.debug(error);
+		return false;
+	}
+};
+
+export const validateToken = async (params) => {
+	try {
+		let targetURL = VALIDATETOKEN_URL + '?auth_token=' + params.token;
+		const response = await api.post(targetURL);
 		if (!checkStatus(response)) {
 			throw new Error('invalid password change process');
 		}

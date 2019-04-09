@@ -1,9 +1,9 @@
 import styles from './GenerateNewPassword.module.css';
 
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Card, Form, Icon, Input, Button, Spin } from 'antd';
 import SessionContext from 'components/SessionContext';
-import { generatenewpassword } from 'lib/api';
+import { generatenewpassword, validateToken } from 'lib/api';
 import { Redirect } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
@@ -11,15 +11,30 @@ const GenerateNewPassword = ({ form, match }) => {
 	console.log('generateNewPassword/match = ', match);
 	const [ requestError, setRequestError ] = useState(false);
 	const [ passwordHasBeenChanged, setPasswordHasBeenChanged ] = useState(false);
+	const [ tokenHasBeenValidated, setTokenHasBeenValidated ] = useState(false);
+	const [ loading, setLoading ] = useState(true);
+
 	const { getFieldDecorator } = form;
 
+	useEffect(() => {
+		validateTokenProcess();
+	}, []);
+
+	const validateTokenProcess = async () => {
+		if (match.params.token != undefined) {
+			const response = await validateToken({ token: match.params.token });
+			if (response.success) {
+				setTokenHasBeenValidated(true);
+			}
+		}
+		setLoading(false);
+	};
+
 	const handleSubmit = (session, e) => {
-		console.log('handle submit: session = ', session);
 		setRequestError(false);
 		e.preventDefault();
 		form.validateFields(async (err, values) => {
 			if (!err) {
-				console.log('values =', values);
 				if (values.password === values.passwordConfirm) {
 					values.token = match.params.token;
 					const response = await generatenewpassword({ ...values });
@@ -35,6 +50,17 @@ const GenerateNewPassword = ({ form, match }) => {
 			}
 		});
 	};
+	let loginHasFailedCard = (
+		<div className={styles['login-container']}>
+			<Card title="Authentication error" className={styles['login-card-container']}>
+				<div className={styles['buttons-style']}>
+					<Button type="primary" htmlType="button" className={styles['login-form-button']}>
+						<Link to="/login">Log in</Link>
+					</Button>
+				</div>
+			</Card>
+		</div>
+	);
 
 	let generateNewPasswordCard = (
 		<div className={styles['login-container']}>
@@ -75,7 +101,7 @@ const GenerateNewPassword = ({ form, match }) => {
 		</div>
 	);
 
-	const passwordHasBeenChangedText = (
+	const passwordHasBeenChangedCard = (
 		<div className={styles['login-container']}>
 			<Card title="Password has been changed" className={styles['login-card-container']}>
 				<div className={styles['buttons-style']}>
@@ -87,10 +113,27 @@ const GenerateNewPassword = ({ form, match }) => {
 		</div>
 	);
 
-	let activeCard = passwordHasBeenChanged ? passwordHasBeenChangedText : generateNewPasswordCard;
+	const loadingCard = (
+		<div className={styles['login-container']}>
+			<Card title="Loading" className={styles['login-card-container']}>
+				{loading && <Spin style={{ paddingLeft: '50%' }} />}
+			</Card>
+		</div>
+	);
+
+	let activeCard = <div />;
+	if (loading == true) {
+		activeCard = loadingCard;
+	} else {
+		if (tokenHasBeenValidated == true) {
+			activeCard = passwordHasBeenChanged ? passwordHasBeenChangedCard : generateNewPasswordCard;
+		} else {
+			activeCard = loginHasFailedCard;
+		}
+	}
 
 	const session = useContext(SessionContext.context);
-	
+
 	return session.logged ? <Redirect to="/admin/home" /> : activeCard;
 };
 

@@ -20,6 +20,8 @@ const RECOVERPASSWORD_URL = `auth/recovery/email/`; // axios baseURL is ${API_DO
 
 const GENERATENEWPASSWORD_URL = `auth/recovery/password`; // axios baseURL is ${API_DOMAIN}
 
+const VALIDATETOKEN_URL = `auth/recovery/valid`; // axios baseURL is ${API_DOMAIN}
+
 const SESSION_STORAGE_KEY = 'session';
 
 export {
@@ -31,5 +33,6 @@ export {
 	SESSION_STORAGE_KEY,
 	USER_URL,
 	RECOVERPASSWORD_URL,
-	GENERATENEWPASSWORD_URL
+	GENERATENEWPASSWORD_URL,
+	VALIDATETOKEN_URL
 };
