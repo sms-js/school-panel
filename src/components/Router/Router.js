@@ -49,10 +49,10 @@ const systemRoutes = [
  */
 const privateRoutes = [
 	<PrivateRoute key="route-home" path="/admin/home" component={Home} />,
-	<PrivateRoute key="route-profile" path="/admin/profile" component={Profile} rule={[ 'Profile' ]} />,
+	<PrivateRoute key="route-profile" path="/admin/profile" component={Profile} rule={[ 'Profile']} />,
 
 	// Users
-	<PrivateRoute key="route-users-list" path="/admin/users" component={UsersList} rule="UserReadyOnly" />,
+	<PrivateRoute key="route-users-list" path="/admin/users" component={UsersList} rule="UserFull" />,
 	<PrivateRoute exact key="route-users-create" path="/admin/user" component={UserEdition} rule="UserFull" />,
 	<PrivateRoute key="route-users-edit" path="/admin/user/:id" component={UserEdition} rule="UserFull" />
 ];

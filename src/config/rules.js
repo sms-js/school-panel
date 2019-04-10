@@ -5,6 +5,13 @@ const UserRulesList = [
 	}
 ];
 
+const UserRulesListAndUpdate = [
+	{
+		name: 'User',
+		actions: ['list', 'read','update']
+	}
+];
+
 const UserRulesFull = [
 	{
 		name: 'User',
@@ -14,13 +21,13 @@ const UserRulesFull = [
 
 const rules = {
 	Profile: {
-		rules: UserRulesFull
+		rules: UserRulesListAndUpdate
 	},
-	UserReadyOnly: {
+	UserReadOnly: {
 		rules: UserRulesList
 	},
 	UserFull: {
-		rules: UserRulesList
+		rules: UserRulesFull
 	},
 	AuthComponentCardSuccess: {
 		rules: [

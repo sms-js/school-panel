@@ -5,6 +5,7 @@ import { validateComponent } from 'lib/session';
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
 	const session = useContext(SessionContext.context);
+	console.log('PrivateRoute/session = ', session);
 	return (
 		<Route
 			{...rest}
