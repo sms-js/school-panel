@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom';
 import SessionContext from 'components/SessionContext';
-
+import { Droppable } from '../components/DnD';
 const SubMenu = Menu.SubMenu;
 
 const SideBar = ({ collapsed }) => {
@@ -56,10 +56,8 @@ const SideBar = ({ collapsed }) => {
 							</span>
 						}
 					>
-						{/* Users list screen item */}
 						<Menu.Item key="menu-main-option-1-1">
-							{/* 						<Link to="/admin/users">List</Link>*/}
-							<div>Option 1</div>
+							<div>Option Droppable</div>
 						</Menu.Item>
 						<Menu.Item key="menu-main-option-1-2">
 							<div>Option 2</div>
@@ -81,9 +79,7 @@ const SideBar = ({ collapsed }) => {
 							</span>
 						}
 					>
-						{/* Users list screen item */}
 						<Menu.Item key="menu-main-option-2-1">
-							{/*<Link to="/admin/users">List</Link>*/}
 							<div>Option 1</div>
 						</Menu.Item>
 						<Menu.Item key="menu-main-option-2-2">

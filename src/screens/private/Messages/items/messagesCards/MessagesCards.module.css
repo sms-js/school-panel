@@ -1,21 +1,23 @@
 .mainDiv {
 	font-weight: bold;
-	border: 1px red solid;
+	border: 2px yellowgreen solid;
+	max-height: 200;
 }
 .cardsDiv {
-	padding: 30px;
+	padding: 10px;
+	border: 5px red solid;
+
 }
-.cardsStyle {
-	border: 1px black solid;
-	width: 250;
+.cardStyle {
+	border: 1px red solid;
+	width: 200;
 	background-color: rgb(194, 194, 201);
-	margin:1%;
+	margin: 0.1%;
 }
 .popOverStyle {
 	margin: 0;
 }
 
-.ant-card-head {border:1px red solid}
-
-
-
+.ant-card-head {
+	border: 1px red solid;
+}

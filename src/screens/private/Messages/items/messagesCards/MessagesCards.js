@@ -18,20 +18,20 @@ const CardWithPopOver = ({ props }) => {
 	console.log(props.listener.wapUsername);
 
 	return (
-		<Draggable key={'key_' + props._id} id={props._id}>
-			<Popover overlayClassName={styles.popOverStyle} content={popovercontent} title={props.listener.wapUsername}>
+		<Popover overlayClassName={styles.popOverStyle} content={popovercontent} title={props.listener.wapUsername}>
+			<Draggable key={'key_' + props._id} id={props._id}>
 				<Card
 					size="small"
 					title={props.listener.wapUsername}
 					extra={<a href="#">CouldBeALink</a>}
-					className={styles.cardsStyle}
+					className={styles.cardStyle}
 				>
 					<p>{props.messageData.body}</p>
 					<p>{props.messageData.codeWords[0]}</p>
 					<p>Card content xxxxx</p>
 				</Card>
-			</Popover>
-		</Draggable>
+			</Draggable>
+		</Popover>
 	);
 };
 
@@ -45,11 +45,10 @@ const MessagesCards = ({ messages, onDelete }) => {
 	));
 
 	const SideBarComponent = (
-		<div className={styles['mainDiv']}>
 			<div className={styles.cardsDiv}>
 				<Row gutter={16}>{cardsArray}</Row>
 			</div>
-		</div>
+	
 	);
 
 	return SideBarComponent;
