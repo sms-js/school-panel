@@ -40,7 +40,7 @@ const SideBar = ({ collapsed }) => {
 					{/* Authenticated users screens menu */}
 					<SubMenu
 						key="menu-authenticated-users"
-						disabled={session.user.type=='admin'?false:true}
+						disabled={session.user.type == 'admin' ? false : true}
 						title={
 							<span>
 								<Icon type="user" />
@@ -53,14 +53,23 @@ const SideBar = ({ collapsed }) => {
 							<Link to="/admin/users">List</Link>
 						</Menu.Item>
 						{/* User edition screen item */}
-				
 					</SubMenu>
 				</SubMenu>
+
+					{/* Messages list screen item */}
+					<Menu.Item key="menu-messages-list-list">
+						<Link to="/messages/display">
+							<span>
+								<Icon type="wechat" />
+								<span>Messages</span>
+							</span>
+						</Link>
+					</Menu.Item>
 
 				{/* Public screens menu */}
 
 				{/* Public screen item */}
-					
+
 				{/* Settings menu */}
 				<SubMenu
 					key="config"

@@ -14,6 +14,8 @@ const LOGIN_URL = 'users/login'; // axios baseURL is ${API_DOMAIN}
 
 const USER_URL = `${API_PREFIX}User/`; // axios baseURL is ${API_DOMAIN}
 
+const MESSAGES_URL = `mdata/`; 
+
 const PROFILE_URL = `${API_PREFIX}User/`; // axios baseURL is ${API_DOMAIN}
 
 const RECOVERPASSWORD_URL = `auth/recovery/email/`; // axios baseURL is ${API_DOMAIN}
@@ -34,5 +36,6 @@ export {
 	USER_URL,
 	RECOVERPASSWORD_URL,
 	GENERATENEWPASSWORD_URL,
-	VALIDATETOKEN_URL
+	VALIDATETOKEN_URL,
+	MESSAGES_URL
 };

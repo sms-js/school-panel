@@ -11,6 +11,8 @@ import PrivateRoute from './PrivateRoute';
 import Authenticated from 'screens/private/Authenticated';
 import Home from 'screens/private/Home';
 import Profile from 'screens/private/Profile';
+import Messages from 'screens/private/Messages';
+
 // Users
 import { UserEdition, UsersList } from 'screens/private/users';
 
@@ -54,7 +56,9 @@ const privateRoutes = [
 	// Users
 	<PrivateRoute key="route-users-list" path="/admin/users" component={UsersList} rule="UserFull" />,
 	<PrivateRoute exact key="route-users-create" path="/admin/user" component={UserEdition} rule="UserFull" />,
-	<PrivateRoute key="route-users-edit" path="/admin/user/:id" component={UserEdition} rule="UserFull" />
+	<PrivateRoute key="route-users-edit" path="/admin/user/:id" component={UserEdition} rule="UserFull" />,
+	//Messages
+	<PrivateRoute key="route-display-messages" path="/messages/display" component={Messages} rule="UserFull" />
 ];
 
 /**
