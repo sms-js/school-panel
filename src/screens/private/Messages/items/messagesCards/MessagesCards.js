@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import styles from './MessagesCards.module.css';
 import SideBarContainer from 'components/SideBarContainer';
 import SessionContext from 'components/SessionContext';
-import { Draggable } from '../../../../../components/DnD';
 
 const popovercontent = (
 	<div>
@@ -19,18 +18,16 @@ const CardWithPopOver = ({ props }) => {
 
 	return (
 		<Popover overlayClassName={styles.popOverStyle} content={popovercontent} title={props.listener.wapUsername}>
-			<Draggable key={'key_' + props._id} id={props._id}>
-				<Card
-					size="small"
-					title={props.listener.wapUsername}
-					extra={<a href="#">CouldBeALink</a>}
-					className={styles.cardStyle}
-				>
-					<p>{props.messageData.body}</p>
-					<p>{props.messageData.codeWords[0]}</p>
-					<p>Card content xxxxx</p>
-				</Card>
-			</Draggable>
+			<Card
+				size="small"
+				title={props.listener.wapUsername}
+				extra={<a href="#">CouldBeALink</a>}
+				className={styles.cardStyle}
+			>
+				<p>{props.messageData.body}</p>
+				<p>{props.messageData.codeWords[0]}</p>
+				<p>Card content xxxxx</p>
+			</Card>
 		</Popover>
 	);
 };
@@ -45,10 +42,9 @@ const MessagesCards = ({ messages, onDelete }) => {
 	));
 
 	const SideBarComponent = (
-			<div className={styles.cardsDiv}>
-				<Row gutter={16}>{cardsArray}</Row>
-			</div>
-	
+		<div className={styles.cardsDiv}>
+			<Row gutter={16}>{cardsArray}</Row>
+		</div>
 	);
 
 	return SideBarComponent;
