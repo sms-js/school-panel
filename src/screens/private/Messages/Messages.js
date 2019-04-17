@@ -98,43 +98,49 @@ const Messages = () => {
 		margin: '32px',
 		border: '1px solid magenta'
 	};
+	const droppableParams = {
+		allowDrop: { allowDrop },
+		drop: { drop },
+		droppableContainerId: 'drop4',
+		droppableContainerStyle: { droppableStyle }
+	};
 	//======================DnD Test ENDS HERE ==========================
 	return (
-			<MessageSideBarContainer title="Messages">
-				<div className={styles.mainComponentDiv}>
-					----- Messages.js Main comp div starts here ---------
-					{/*UnComment following line and comment the MessagesCards Line to display a table with the messages. Actual MessagesTable Element is the MessagesTableTest */}
-					{/*<MessagesTable messages={messages} onDelete={onDelete} /> */}
-					<div
-						style={{
-							border: '2px solid black',
-							width: 700,
-							height: 200
-						}}
-					>
-						<MessagesCards messages={messages} onDelete={onDelete} />
-					</div>
-					<div>
-						<Button
-							onClick={() => {
-								loadList();
-							}}
-							type="primary"
-							htmlType="button"
-							className={styles['login-form-button']}
-						>
-							Load List
-						</Button>
-					</div>
-					<div>
-						<Droppable allowDrop={allowDrop} drop={drop} id="drop1" style={droppableStyle} />
-					</div>
-					<div>
-						<Droppable allowDrop={allowDrop} drop={drop} id="drop3" style={droppableStyle} />
-					</div>
+		<MessageSideBarContainer title="Messages" droppableParams={droppableParams}>
+			<div className={styles.mainComponentDiv}>
+				----- Messages.js Main comp div starts here ---------
+				{/*UnComment following line and comment the MessagesCards Line to display a table with the messages. Actual MessagesTable Element is the MessagesTableTest */}
+				{/*<MessagesTable messages={messages} onDelete={onDelete} /> */}
+				<div
+					style={{
+						border: '2px solid black',
+						width: 700,
+						height: 200
+					}}
+				>
+					<MessagesCards messages={messages} onDelete={onDelete} />
 				</div>
-				----- Messages.js Main cmp div ENDS here ---------
-			</MessageSideBarContainer>
+				<div>
+					<Button
+						onClick={() => {
+							loadList();
+						}}
+						type="primary"
+						htmlType="button"
+						className={styles['login-form-button']}
+					>
+						Load List
+					</Button>
+				</div>
+				<div>
+					<Droppable allowDrop={allowDrop} drop={drop} id="drop1" style={droppableStyle} />
+				</div>
+				<div>
+					<Droppable allowDrop={allowDrop} drop={drop} id="drop3" style={droppableStyle} />
+				</div>
+			</div>
+			----- Messages.js Main cmp div ENDS here ---------
+		</MessageSideBarContainer>
 	);
 };
 

@@ -5,7 +5,7 @@ import SessionContext from 'components/SessionContext';
 import { Droppable } from '../components/DnD';
 const SubMenu = Menu.SubMenu;
 
-const SideBar = ({ collapsed }) => {
+const SideBar = ({ collapsed,allowDrop,drop,droppableContainerId,droppableContainerStyle }) => {
 	const session = useContext(SessionContext.context);
 	return (
 		<div style={{ height: '100vh', textAlign: 'left' }}>
@@ -56,9 +56,11 @@ const SideBar = ({ collapsed }) => {
 							</span>
 						}
 					>
-						<Menu.Item key="menu-main-option-1-1">
-							<div>Option Droppable</div>
-						</Menu.Item>
+						<Droppable allowDrop={allowDrop} drop={drop} id={droppableContainerId} style={droppableContainerStyle}>
+							<Menu.Item key="menu-main-option-1-1">
+								<div>Option Droppable</div>
+							</Menu.Item>
+						</Droppable>
 						<Menu.Item key="menu-main-option-1-2">
 							<div>Option 2</div>
 						</Menu.Item>

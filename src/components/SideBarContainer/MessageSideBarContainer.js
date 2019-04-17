@@ -6,11 +6,11 @@ import MessagesSideBar from 'components/MessagesSideBar';
 
 const { Header, Sider, Content } = Layout;
 
-const SideBarContainer = ({ children, title }) => {
+const SideBarContainer = ({ children, title,droppableParams }) => {
 	return (
 		<Layout>
 			<Sider>
-				<MessagesSideBar collapsed={false} />
+				<MessagesSideBar collapsed={false} droppableParams={droppableParams}/>
 			</Sider>
 			<Layout>
 				<Header className="side-bar-container">
