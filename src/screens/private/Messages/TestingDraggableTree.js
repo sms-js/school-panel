@@ -6,7 +6,7 @@ const { TreeNode } = Tree;
 const x = 3;
 const y = 2;
 const z = 1;
-const gData = [];
+let gData = [];
 
 const generateData = (_level, _preKey, _tns) => {
 	const preKey = _preKey || '0';
@@ -29,30 +29,36 @@ const generateData = (_level, _preKey, _tns) => {
 		return generateData(level, key, tns[index].children);
 	});
 };
-generateData(z);
+//generateData(z);
 
-const tNData = {
-	level_1: {
-		key: 'level_0',
-		title: 'Tlevel_0',
-		children: {
-			key: 'level_0-1',
-			title: 'Tlevel_0-1',
-			children: {
-				key: 'level_0-1-0',
-				title: 'Tlevel_0-1-0',
-				key: 'level_0-1-1',
-				title: 'Tlevel_0-1-1',
-				key: 'level_0-1-3',
-				title: 'Tlevel_0-1-2'
+const TN1 = (
+	<TreeNode key="level-0" title="level-0">
+		<TreeNode key="level-0-0" title="level-0-0">
+			<TreeNode key="level-0-0-0" title="level-0-0-0" />
+			<TreeNode key="level-0-0-1" title="level-0-0-1" />
+			<TreeNode key="level-0-0-2" title="level-0-0-2" />
+		</TreeNode>
+	</TreeNode>
+);
+
+// this is my ownData
+gData = [
+	{
+		key: 'level-0',
+		title: 'Tlevel-0',
+		children: [
+			{
+				key: 'level-0-0',
+				title: 'Tlevel-0-0',
+				children: [
+					{ key: 'level-0-0-0', title: 'Tlevel-0-0-0' },
+					{ key: 'level-0-0-1', title: 'Tlevel-0-0-1' },
+					{ key: 'level-0-0-2', title: 'Tlevel-0-0-2' }
+				]
 			}
-		}
+		]
 	}
-};
-
-const TNTest = () => {
-	<TreeNode key={item.key} title={item.title} />;
-};
+];
 
 class Demo extends Component {
 	state = {
@@ -151,7 +157,7 @@ class Demo extends Component {
 				onDragEnter={this.onDragEnter}
 				onDrop={this.onDrop}
 			>
-				{loop(this.state.gData)}
+				{loop(this.state.gData)} 
 			</Tree>
 		);
 	}
