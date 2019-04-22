@@ -8,6 +8,7 @@ import MessageSideBarContainer from '../../../components/SideBarContainer/Messag
 import moment from 'moment';
 import { Droppable } from '../../../components/DnD';
 import UsersTable from '../users/UsersList/UsersTable';
+import Demo from './TestingDraggableTree';
 
 const confirm = Modal.confirm;
 
@@ -258,30 +259,7 @@ const Messages = () => {
 	//======================TREESELECT COMP Test ENDS HERE ==========================
 
 	//--------------------------------------------------------------------------------------
-	const { TreeNode } = Tree;
-	const Demo = () => {
-		const onSelect = (selectedKeys, info) => {
-			console.log('selected', selectedKeys, info);
-		};
-		return (
-			<Tree showLine defaultExpandedKeys={[ '0-0-0' ]} onSelect={onSelect}>
-				<TreeNode title="parent 1" key="0-0">
-					<TreeNode title="parent 1-0" key="0-0-0">
-							<TreeNode allowDrop={allowDrop} drop={drop} id='testDrop' title="leafDrop" key="0-0-0-0" />
-						<TreeNode title="leaf2" key="0-0-0-1" />
-						<TreeNode title="leaf3" key="0-0-0-2" />
-					</TreeNode>
-					<TreeNode title="parent 1-1" key="0-0-1">
-						<TreeNode title="leaf" key="0-0-1-0" />
-					</TreeNode>
-					<TreeNode title="parent 1-2" key="0-0-2">
-						<TreeNode title="leaf" key="0-0-2-0" />
-						<TreeNode title="leaf" key="0-0-2-1" />
-					</TreeNode>
-				</TreeNode>
-			</Tree>
-		);
-	};
+
 	//--------------------------------------------------------------------------------------
 
 	return (
@@ -310,9 +288,8 @@ const Messages = () => {
 				<div>--------------------------------------------------------------------</div>
 				<SwitchDroppableArea showDrop={stateValue} allowDrop={allowDrop} drop={drop} />
 			</div>
-			<div>
-				<Demo />
-			</div>
+
+			<div><Demo/></div>
 			----- Messages.js Main cmp div ENDS here ---------
 		</MessageSideBarContainer>
 	);
