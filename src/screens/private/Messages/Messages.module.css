@@ -1,1 +1,5 @@
-.mainComponentDiv {background-color: rgb(173, 189, 187)}
+.mainComponentDiv {
+	background-color: rgb(173, 189, 187);
+	padding-bottom: 120px;
+	box-sizing: border-box;
+}

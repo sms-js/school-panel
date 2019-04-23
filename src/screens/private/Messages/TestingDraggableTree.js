@@ -46,14 +46,16 @@ gData = [
 	{
 		key: 'level-0',
 		title: 'Tlevel-0',
+		id: 'ID-Level-0',
 		children: [
 			{
 				key: 'level-0-0',
 				title: 'Tlevel-0-0',
+				id: 'ID-Level-0-0',
 				children: [
-					{ key: 'level-0-0-0', title: 'Tlevel-0-0-0' },
-					{ key: 'level-0-0-1', title: 'Tlevel-0-0-1' },
-					{ key: 'level-0-0-2', title: 'Tlevel-0-0-2' }
+					{ key: 'level-0-0-0', title: 'Tlevel-0-0-0', id: 'ID-Level-0-0-0' },
+					{ key: 'level-0-0-1', title: 'Tlevel-0-0-1', id: 'ID-Level-0-0-1' },
+					{ key: 'level-0-0-2', title: 'Tlevel-0-0-2', id: 'ID-Level-0-0-2' }
 				]
 			}
 		]
@@ -76,6 +78,11 @@ class Demo extends Component {
 
 	onDrop = (info) => {
 		console.log(info);
+		info.event.preventDefault();
+		const transferredData = info.event.dataTransfer.getData('transfer');
+		console.log('transferred data = ', transferredData);
+		const originContainerName = info.event.dataTransfer.getData('transfer2');
+
 		const dropKey = info.node.props.eventKey;
 		const dragKey = info.dragNode.props.eventKey;
 		const dropPos = info.node.props.pos.split('-');
@@ -157,7 +164,7 @@ class Demo extends Component {
 				onDragEnter={this.onDragEnter}
 				onDrop={this.onDrop}
 			>
-				{loop(this.state.gData)} 
+				{loop(this.state.gData)}
 			</Tree>
 		);
 	}

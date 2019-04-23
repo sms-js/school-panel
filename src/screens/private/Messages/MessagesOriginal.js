@@ -188,9 +188,51 @@ const Messages = () => {
 	//======================DnD Test ENDS HERE ==========================
 	//======================TREESELECT COMP Test STARTS HERE ==========================
 
+	const treeData = [
+		{
+			title: 'Node1',
+			value: '0-0',
+			key: '0-0',
+			children: [
+				{
+					title: 'Child Node2',
+					value: 'drop2',
+					key: '0-0-1'
+				},
+				{
+					title: 'Child Node3',
+					value: 'drop3',
+					key: '0-0-2'
+				}
+			]
+		},
+		{
+			title: 'Node2',
+			value: '0-1',
+			key: '0-1'
+		}
+	];
+
 	const preSetStateValue = (value) => {
 		console.log(' value es ', value); //0-0-1
 		setStateValue(value);
+	};
+
+	const TreeSelectTest = (props) => {
+		console.log('TreeSelect Test / props =  ', props);
+		return (
+			<TreeSelect
+				style={{ width: 300 }}
+				value={props.value}
+				dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
+				treeData={treeData}
+				placeholder="Please select"
+				treeDefaultExpandAll
+				onChange={(value) => {
+					preSetStateValue(value);
+				}}
+			/>
+		);
 	};
 
 	const SwitchDroppableArea = ({ allowDrop, drop, showDrop }) => {
@@ -229,9 +271,9 @@ const Messages = () => {
 					title: 'Tlevel-0-0',
 					id: 'ID-Level-0-0',
 					children: [
-						{ key: 'level-0-0-0', title: 'Tlevel-0-0-0', id: 'ID-Level-0-0-0', disabled: false, selectable: true },
-						{ key: 'level-0-0-1', title: 'Tlevel-0-0-1', id: 'ID-Level-0-0-1', selectable: true },
-						{ key: 'level-0-0-2', title: 'Tlevel-0-0-2', id: 'ID-Level-0-0-2', selectable: true }
+						{ key: 'level-0-0-0', title: 'Tlevel-0-0-0', id: 'ID-Level-0-0-0', disabled: false },
+						{ key: 'level-0-0-1', title: 'Tlevel-0-0-1', id: 'ID-Level-0-0-1' },
+						{ key: 'level-0-0-2', title: 'Tlevel-0-0-2', id: 'ID-Level-0-0-2' }
 					]
 				}
 			]
@@ -239,7 +281,7 @@ const Messages = () => {
 	];
 
 	const [ gData, setGdata ] = useState(initialGdata);
-	const [ expandedKeys, setExpandedKeys ] = useState([ 'level-0-0-2' ]);
+	const [ expandedKeys, setExpandedKeys ] = useState([ '0-0', '0-0-0', '0-0-0-0' ]);
 
 	const onDragEnter = (info) => {
 		console.log('on Drag Enter= onDragOver');
@@ -329,12 +371,7 @@ const Messages = () => {
 		data.map((item) => {
 			if (item.children && item.children.length) {
 				return (
-					<TreeNode
-						key={item.key}
-						title={item.title}
-						disabled={item.disabled || false}
-						selectable={item.selectable || true}
-					>
+					<TreeNode key={item.key} title={item.title} disabled={item.disabled || false}>
 						{loop(item.children)}
 					</TreeNode>
 				);
@@ -344,7 +381,7 @@ const Messages = () => {
 					key={item.key}
 					title={item.title}
 					disabled={item.disabled || false}
-					selectable={item.selectable || false}
+					allowDrop={false}
 				/>
 			);
 		});
@@ -367,12 +404,13 @@ const Messages = () => {
 	return (
 		<MessageSideBarContainer title="Messages" droppableParams={droppableParams}>
 			<div className={styles.mainComponentDiv}>
+				----- Messages.js Main comp div starts here ---------
 				{/*UnComment following line and comment the MessagesCards Line to display a table with the messages. Actual MessagesTable Element is the MessagesTableTest */}
 				{/*<MessagesTable messages={messages} onDelete={onDelete} /> */}
 				<Droppable allowDrop={allowDrop} drop={drop} id="drop1" style={{ display: 'flex', flexWrap: 'wrap' }}>
 					<MessagesCards messages={messages} onDelete={onDelete} />
 				</Droppable>
-				<div style={{ paddingTop: '150px' }}>
+				<div>
 					<Button
 						onClick={() => {
 							loadList();
@@ -384,6 +422,10 @@ const Messages = () => {
 						Load List
 					</Button>
 				</div>
+				<div>--------------------------------------------------------------------</div>
+				<TreeSelectTest value={stateValue} />
+				<div>--------------------------------------------------------------------</div>
+				<SwitchDroppableArea showDrop={stateValue} allowDrop={allowDrop} drop={drop} />
 			</div>
 			<Tree
 				className="draggable-tree"
@@ -392,10 +434,10 @@ const Messages = () => {
 				blockNode
 				onDragEnter={onDragEnter}
 				onDrop={onDrop}
-				collapsed
 			>
 				{loop(gData)}
 			</Tree>
+			----- Messages.js Main cmp div ENDS here ---------
 		</MessageSideBarContainer>
 	);
 };
