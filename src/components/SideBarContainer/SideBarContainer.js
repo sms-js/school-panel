@@ -1,4 +1,4 @@
-import './side.css';
+import styles from './SideBarContainer.module.css';
 
 import React from 'react';
 import { Layout } from 'antd';
@@ -13,7 +13,7 @@ const SideBarContainer = ({ children, title }) => {
 				<SideBar collapsed={false} />
 			</Sider>
 			<Layout>
-				<Header className="side-bar-container">
+				<Header className={styles["side-bar-container"]}>
 					<h2>{title}</h2>
 				</Header>
 				<Content

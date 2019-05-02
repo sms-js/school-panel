@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const Droppable = (props) => {
 	return (
-		<div  id={props.id} onDrop={props.drop} onDragOver={props.allowDrop} style={props.style}>
+		<div id={props.id} onDrop={props.drop} onDragOver={props.allowDrop} style={props.style}>
 			{props.children}
 		</div>
 	);

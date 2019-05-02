@@ -1,21 +1,28 @@
 const UserRulesList = [
 	{
 		name: 'User',
-		actions: ['list', 'read']
+		actions: [ 'list', 'read' ]
 	}
 ];
 
 const UserRulesListAndUpdate = [
 	{
 		name: 'User',
-		actions: ['list', 'read','update']
+		actions: [ 'list', 'read', 'update' ]
 	}
 ];
 
 const UserRulesFull = [
 	{
 		name: 'User',
-		actions: ['create', 'list', 'read', 'update']
+		actions: [ 'create', 'list', 'read', 'update' ]
+	}
+];
+
+const MessagesRulesListReadUpdate = [
+	{
+		name: 'Messagedata',
+		actions: [ 'list', 'read', 'update' ]
 	}
 ];
 
@@ -33,7 +40,7 @@ const rules = {
 		rules: [
 			{
 				name: 'User',
-				actions: ['list', 'read']
+				actions: [ 'list', 'read' ]
 			}
 		]
 	},
@@ -41,10 +48,11 @@ const rules = {
 		rules: [
 			{
 				name: 'User',
-				actions: ['error']
+				actions: [ 'error' ]
 			}
 		]
-	}
+	},
+	MessagesListReadUpdate: { rules: MessagesRulesListReadUpdate }
 };
 
 export default rules;

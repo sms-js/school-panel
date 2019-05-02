@@ -1,4 +1,4 @@
-import './side.css';
+import styles from './SideBarContainer.module.css';
 
 import React from 'react';
 import { Layout } from 'antd';
@@ -6,14 +6,14 @@ import MessagesSideBar from 'components/MessagesSideBar';
 
 const { Header, Sider, Content } = Layout;
 
-const SideBarContainer = ({ children, title,droppableParams }) => {
+const SideBarContainer = ({ children, title }) => {
 	return (
 		<Layout>
 			<Sider>
-				<MessagesSideBar collapsed={false} droppableParams={droppableParams}/>
+				<MessagesSideBar collapsed={false}  />
 			</Sider>
 			<Layout>
-				<Header className="side-bar-container">
+				<Header className={styles["side-bar-container"]}>
 					<h2>{title}</h2>
 				</Header>
 				<Content

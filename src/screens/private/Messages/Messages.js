@@ -1,222 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, Modal, Spin, TreeSelect, Row, Col, Tree } from 'antd';
-import styles from './Messages.module.css';
+import { Button, Modal, Tree } from 'antd';
 import { MessagesTable, MessagesCards } from './items';
-import { Divider } from 'antd';
 import { messages as msgLib } from 'lib/models';
-import MessageSideBarContainer from '../../../components/SideBarContainer/MessageSideBarContainer';
-import moment from 'moment';
 import { Droppable } from '../../../components/DnD';
-import UsersTable from '../users/UsersList/UsersTable';
-import Demo from './TestingDraggableTree';
+import { generateTreeNodesFunction, manipulateTreeNodeItems } from './helpFunctions';
+import MessageSideBarContainer from '../../../components/SideBarContainer/MessageSideBarContainer';
+import styles from './Messages.module.css';
+import moment from 'moment';
+
+//import { Divider,Form,Spin,TreeSelect, Row, Col, } from 'antd';
+//import UsersTable from '../users/UsersList/UsersTable';
+//import Demo from './TestingDraggableTree';
+
 const { TreeNode } = Tree;
 const confirm = Modal.confirm;
 
 const Messages = () => {
-	const [ messages, setMessages ] = useState([]);
-	const [ data, setData ] = useState([]);
-
-	const [ loading, setLoading ] = useState(true);
 	const [ error, setError ] = useState(false);
 	const [ showDrop1, setShowDrop1 ] = useState(true);
 	const [ showDrop2, setShowDrop2 ] = useState(false);
-	const [ containers, setContainers ] = useState({
+	const [ stateValue, setStateValue ] = useState('drop2');
+	const [ drop2Comps, setDrop2Comps ] = useState([]);
+	const [ dummyName, setDummyName ] = useState('pepe');
+	const [ drop2Count, setDrop2Count ] = useState(0);
+
+	const [ expandedKeys, setExpandedKeys ] = useState([ 'level-0-0-2' ]);
+	const [ messages, setMessages ] = useState([]);
+	const [ loading, setLoading ] = useState(true);
+	const [ dropIdContainers, setDropIdContainers ] = useState({
 		drop1: [],
 		drop2: [],
 		drop3: []
 	});
-	const [ dummyName, setDummyName ] = useState('pepe');
-	const [ dummyBool, setDummyBool ] = useState(false);
-	const [ stateValue, setStateValue ] = useState('drop2');
-
-	const [ drop2Comps, setDrop2Comps ] = useState([]);
-	const [ drop2Count, setDrop2Count ] = useState(0);
-	const [ testArrDrop2, setTestArray ] = useState([]);
-
-	const loadList = async () => {
-		const response = await msgLib.getMessages();
-		return response;
-	};
-
-	//el siguiente useEffect pareciera no estar generando ningun efecto,
-	//data = []
-	useEffect(() => {
-		loadList().then((res) => {
-			setData((prevState) => {
-				return [ ...prevState, ...res ];
-			});
-		});
-		console.log('useEffect / data == ', data);
-	}, []);
-
-	useEffect(
-		() => {
-			console.log('useEffect Nr2');
-			console.log(' data = ', data); //aca data ya tiene los datos
-			const dummy = data.map((msg) => ({
-				...msg,
-				deliveryDate: moment(msg.deliveryDate).format('DD/MM Thh:mm'),
-				key: `list_${msg._id}`
-			}));
-
-			setMessages((prevState) => {
-				return [ ...prevState, ...dummy ];
-			});
-
-			console.log('messages = ', messages); //messages es []
-
-			let dummyContainer = {
-				drop1: data.map((el) => el._id),
-				drop2: [],
-				drop3: []
-			};
-			setContainers(Object.assign(containers, dummyContainer)); //ok
-			setDummyBool(true);
-		},
-		[ data ]
-	);
-
-	useEffect(
-		() => {
-			console.log('dummyBol has changed ');
-			console.log('messages = ', messages);
-		},
-		[ dummyBool ]
-	);
-
-	const onDelete = async (id) => {
-		const msg = messages.find((msg) => msg._id === id);
-		confirm({
-			title: 'Do you want to delete these item?',
-			content: `${msg._id}  will be deleted, are you sure?`,
-			async onOk() {
-				setLoading(true);
-				//const success = await userLib.deleteUser(id);
-				//if (success) setMessages(messages.filter((msg) => msg._id !== id));
-				//else setError(true);
-				setLoading(false);
-			},
-			onCancel() {}
-		});
-	};
-
-	//======================DnD Test STARTS HERE ========================
-
-	const updateArrays = (currentDropTarget, transferredElement, updatedDestinationContainer, originContainerName) => {
-		console.log('currentDropTarget = ', currentDropTarget);
-		console.log('transferredElement = ', transferredElement);
-		console.log('updatedDestinationContainer = ', updatedDestinationContainer);
-		console.log('originContainer = ', originContainerName);
-		let actualOriginContainer = containers[originContainerName];
-		console.log('updateArrays / actualOriginContainer = ', actualOriginContainer);
-		let updatedOriginContainer = [];
-		actualOriginContainer.forEach((el) => {
-			if (el != transferredElement) {
-				updatedOriginContainer.push(el);
-			}
-		});
-
-		let newContainer = { ...containers };
-		newContainer[originContainerName] = updatedOriginContainer;
-		newContainer[currentDropTarget] = updatedDestinationContainer;
-		setContainers(Object.assign(containers, newContainer));
-		console.log('containers = ', containers);
-		//	if (currentDropTarget == 'drop2') ModifyObjectsInDrop2(updatedDestinationContainer);
-		generateTestArray(updatedDestinationContainer);
-	};
-
-	const changeDropCount = () => {
-		setDrop2Count((prevState) => !prevState);
-	};
-	const ModifyObjectsInDrop2 = ({ testparams }) => {
-		let modifiedObjectsArray = testparams.map((el) => <button>{el || 'test'}</button>);
-		//changeDropCount();
-		return modifiedObjectsArray;
-	};
-
-	const generateTestArray = (testparams) => {
-		let testArray = testparams.map((el) => <button>{el || 'test'}</button>);
-		setTestArray(() => [ ...testArray ]);
-	};
-
-	const updateDrop2Count = (params) => {
-		setDrop2Count((prevState) => {
-			return prevState + params;
-		});
-	};
-
-	useEffect(
-		() => {
-			console.log('estoy en useEffect por modificacion de drop2');
-		},
-		[ drop2Count ]
-	);
-
-	const drop = (e) => {
-		e.preventDefault();
-		const transferredData = e.dataTransfer.getData('transfer');
-		console.log('transferred data = ', transferredData);
-		const originContainerName = e.dataTransfer.getData('transfer2');
-		e.target.appendChild(document.getElementById(transferredData));
-		const destinationContainerName = e.currentTarget.id;
-
-		let updatedDestinationContainer = containers[destinationContainerName] || [];
-
-		//prevenir aca que no se pueda auto dropear un objeto druplicando asi un ojeto en un contenedor
-		//vi que cuando drageas algo desde drop1 y volves con el objeto sobre eso, te deja droppearlo y lo duplica en el array drop1
-		updatedDestinationContainer.push(transferredData);
-
-		updateArrays(destinationContainerName, transferredData, updatedDestinationContainer, originContainerName);
-	};
-
-	const allowDrop = (e) => {
-		e.preventDefault();
-	};
-	const droppableStyle = {
-		backgroundColor: '#888',
-		width: '300px',
-		height: '250px',
-		margin: '32px',
-		border: '1px solid magenta'
-	};
-	const droppableParams = {
-		allowDrop: { allowDrop },
-		drop: { drop },
-		droppableContainerId: 'drop4',
-		droppableContainerStyle: { droppableStyle }
-	};
-	//======================DnD Test ENDS HERE ==========================
-	//======================TREESELECT COMP Test STARTS HERE ==========================
-
-	const preSetStateValue = (value) => {
-		console.log(' value es ', value); //0-0-1
-		setStateValue(value);
-	};
-
-	const SwitchDroppableArea = ({ allowDrop, drop, showDrop }) => {
-		console.log('SwitchDroppableArea props = ', showDrop);
-		const dr2 = (
-			<div>
-				DR 2
-				<Droppable allowDrop={allowDrop} drop={drop} id="drop2" style={droppableStyle}>
-					{/* 			<ModifyObjectsInDrop2 testparams={containers.drop2} /> */}
-					{testArrDrop2}
-				</Droppable>
-			</div>
-		);
-
-		const dr3 = (
-			<div>
-				DR 3
-				<Droppable allowDrop={allowDrop} drop={drop} id="drop3" style={droppableStyle} />
-			</div>
-		);
-		return showDrop == 'drop2' ? dr2 : dr3;
-	};
-
-	//======================TREESELECT COMP Test ENDS HERE ==========================
-
-	//--------------------------------------------------------------------------------------
+	const [ triggerReRender, reRenderDOM ] = useState(false);
 
 	const initialGdata = [
 		{
@@ -239,7 +55,106 @@ const Messages = () => {
 	];
 
 	const [ gData, setGdata ] = useState(initialGdata);
-	const [ expandedKeys, setExpandedKeys ] = useState([ 'level-0-0-2' ]);
+
+	const tagsContainersInitialValue = {
+		'ID-Level-0': [],
+		'ID-Level-0-0': [],
+		'ID-Level-0-0-0': [],
+		'ID-Level-0-0-1': [],
+		'ID-Level-0-0-2': []
+	};
+	const [ tagsContainers, setTagsContainers ] = useState(tagsContainersInitialValue);
+
+	const loadList = async () => {
+		const response = await msgLib.getMessages();
+		return response;
+	};
+
+	useEffect(() => {
+		loadList().then((res) => {
+			const dummy = res.map((msg) => ({
+				...msg,
+				deliveryDate: moment(msg.deliveryDate).format('DD/MM Thh:mm'),
+				key: `list_${msg._id}`
+			}));
+
+			setMessages((prevState) => {
+				return [ ...prevState, ...dummy ];
+			});
+			console.log('messages = ', messages); //messages es []
+			let dummyContainer = {
+				drop1: res.map((el) => el._id),
+				drop2: [],
+				drop3: []
+			};
+			setDropIdContainers(Object.assign(dropIdContainers, dummyContainer)); //ok
+		});
+	}, []);
+
+	useEffect(
+		() => {
+			console.log('triggerReRender has changed ');
+			console.log('messages = ', messages);
+		},
+		[ triggerReRender ]
+	);
+
+	const onDelete = async (id) => {
+		const msg = messages.find((msg) => msg._id === id);
+		confirm({
+			title: 'Do you want to delete these item?',
+			content: `${msg._id}  will be deleted, are you sure?`,
+			async onOk() {
+				setLoading(true);
+				//const success = await userLib.deleteUser(id);
+				//if (success) setMessages(messages.filter((msg) => msg._id !== id));
+				//else setError(true);
+				setLoading(false);
+			},
+			onCancel() {}
+		});
+	};
+
+	//======================DnD Test STARTS HERE ====================================================
+
+	const updateDropIdContainers = (
+		currentDropTarget,
+		transferredElement,
+		updatedDestinationContainer,
+		originContainerName
+	) => {
+		console.log('currentDropTarget = ', currentDropTarget);
+		console.log('transferredElement = ', transferredElement);
+		console.log('updatedDestinationContainer = ', updatedDestinationContainer);
+		console.log('originContainer = ', originContainerName);
+		let originContainer = dropIdContainers[originContainerName];
+		console.log('updateDropIdContainers / originContainer = ', originContainer);
+		let newContainer = { ...dropIdContainers };
+		newContainer[originContainerName] = originContainer.filter((el) => el != transferredElement);
+		newContainer[currentDropTarget] = updatedDestinationContainer;
+		setDropIdContainers(Object.assign(dropIdContainers, newContainer));
+		console.log('dropIdContainers = ', dropIdContainers);
+	};
+
+	const drop = (e) => {
+		e.preventDefault();
+		const transferredData = e.dataTransfer.getData('transfer');
+		console.log('transferred data = ', transferredData);
+		const originContainerName = e.dataTransfer.getData('transfer2');
+		e.target.appendChild(document.getElementById(transferredData));
+		const destinationContainerName = e.currentTarget.id;
+		let updatedDestinationContainer = dropIdContainers[destinationContainerName] || [];
+		//prevenir aca que no se pueda auto dropear un objeto druplicando asi un ojeto en un contenedor
+		//vi que cuando drageas algo desde drop1 y volves con el objeto sobre eso, te deja droppearlo y lo duplica en el array drop1
+		updatedDestinationContainer.push(transferredData);
+		updateDropIdContainers(destinationContainerName, transferredData, updatedDestinationContainer, originContainerName);
+	};
+
+	const allowDrop = (e) => {
+		e.preventDefault();
+	};
+
+	//======================DnD Test ENDS HERE ======================================================
 
 	const onDragEnter = (info) => {
 		console.log('on Drag Enter= onDragOver');
@@ -250,122 +165,68 @@ const Messages = () => {
 		// });
 	};
 
+	const onSelect = (e) => {
+		//e equals to the selected treeNode key
+		console.log('itemSelected, params = ', e);
+	};
+
+	const manipulateDraggedAndDroppedElement = (
+		elementToRemoveFromOriginContainer,
+		originContainerName,
+		destinationContainerName
+	) => {
+		console.log('elementToRemoveFromOriginContainer = ', elementToRemoveFromOriginContainer);
+		console.log('originContainerName = ', originContainerName);
+
+		//removing dragged and dropped itemId from its origin id's container.
+		let newContainer = { ...dropIdContainers };
+		newContainer[originContainerName] = dropIdContainers[originContainerName].filter(
+			(el) => el != elementToRemoveFromOriginContainer
+		);
+		setDropIdContainers(Object.assign(dropIdContainers, newContainer));
+		console.log('dropIdContainers = ', dropIdContainers);
+
+		//assigning dragged and dropped itemId to the the tagContainer of destination
+		let newTagContainer = { ...tagsContainers };
+		newTagContainer[destinationContainerName].push(elementToRemoveFromOriginContainer);
+		setTagsContainers(Object.assign(tagsContainers, newTagContainer));
+		console.log('updated tagsContainers = ', tagsContainers);
+
+		//removing dragged and dropped message from message container. This will trigger a useEffect, rendering DOM without the dragged message
+		const newMessages = messages.filter((el) => el._id != elementToRemoveFromOriginContainer);
+		setMessages(newMessages);
+		console.log('messages = ', messages);
+		reRenderDOM((prevState) => !prevState);
+	};
+
 	const onDrop = (info) => {
 		console.log(info);
 		info.event.preventDefault();
 		const transferredData = info.event.dataTransfer.getData('transfer');
 		console.log('transferred data = ', transferredData);
 		const originContainerName = info.event.dataTransfer.getData('transfer2');
+		const destinationContainerName = info.node.props.id;
 
-		//following code block removes the dragged item, when dropped, from its original parent node.
-		const elementToRemoveFromParentNode = document.getElementById(transferredData);
-		let parentElement = document.getElementById(transferredData).parentElement;
-		parentElement.removeChild(elementToRemoveFromParentNode);
+		if (originContainerName != '')
+			manipulateDraggedAndDroppedElement(transferredData, originContainerName, destinationContainerName);
 
-		//following line is resposible for extracting dragged element from drop area "A" and append it to drop area B
-		//info.event.target.appendChild(document.getElementById(transferredData));
-
-		const dropKey = info.node.props.eventKey;
-		const dragKey = info.dragNode.props.eventKey;
-		const dropPos = info.node.props.pos.split('-');
-		const dropPosition = info.dropPosition - Number(dropPos[dropPos.length - 1]);
-
-		const loop = (data, key, callback) => {
-			data.forEach((item, index, arr) => {
-				if (item.key === key) {
-					return callback(item, index, arr);
-				}
-				if (item.children) {
-					return loop(item.children, key, callback);
-				}
-			});
-		};
-
-		const data = [ ...gData ];
-
-		// Find dragObject
-		let dragObj;
-		loop(data, dragKey, (item, index, arr) => {
-			arr.splice(index, 1);
-			dragObj = item;
-		});
-
-		if (!info.dropToGap) {
-			// Drop on the content
-			loop(data, dropKey, (item) => {
-				item.children = item.children || [];
-				// where to insert
-				item.children.push(dragObj);
-			});
-		} else if (
-			(info.node.props.children || []).length > 0 && // Has children
-			info.node.props.expanded && // Is expanded
-			dropPosition === 1 // On the bottom gap
-		) {
-			loop(data, dropKey, (item) => {
-				item.children = item.children || [];
-				// where to insert
-				item.children.unshift(dragObj);
-			});
-		} else {
-			let ar;
-			let i;
-			loop(data, dropKey, (item, index, arr) => {
-				ar = arr;
-				i = index;
-			});
-			if (dropPosition === -1) {
-				ar.splice(i, 0, dragObj);
-			} else {
-				ar.splice(i + 1, 0, dragObj);
-			}
+		//const elementToRemoveFromParentNode = document.getElementById(transferredData);
+		//let parentNode = document.getElementById(transferredData).parentNode;
+		/*
+			We can drag and drop to kind of elements:
+			1) Drag a message-element and drop it into a nodeTree element.
+			2) Drag a nodeTree element and drop it into another nodeTree element. 
+			If situation 2) applies, then following if-statement is true and the (antD) code for handling of nodeTree elements applies. Following code (within the if-block) was delivered with the component and is related to the treeNode elements manipulation.
+		*/
+		if (transferredData == '' || originContainerName == '' || destinationContainerName == '') {
+			const treeData = manipulateTreeNodeItems(info, gData);
+			// if following line is uncommentend, then the tree items became draggable within each other.
+			//setGdata((prevState) => [ ...treeData ]);
 		}
-
-		// if following line is uncommentend, then the tree items became draggable within each other.
-		//	setGdata((prevState) => [ ...data ]);
 	};
 
-	const loop = (data) =>
-		data.map((item) => {
-			if (item.children && item.children.length) {
-				return (
-					<TreeNode
-						key={item.key}
-						title={item.title}
-						disabled={item.disabled || false}
-						selectable={item.selectable || true}
-					>
-						{loop(item.children)}
-					</TreeNode>
-				);
-			}
-			return (
-				<TreeNode
-					key={item.key}
-					title={item.title}
-					disabled={item.disabled || false}
-					selectable={item.selectable || false}
-				/>
-			);
-		});
-
-	const TestingTreeComp = (
-		<Tree
-			className="draggable-tree"
-			defaultExpandedKeys={expandedKeys}
-			draggable
-			blockNode
-			onDragEnter={onDragEnter}
-			onDrop={onDrop}
-		>
-			{loop(gData)}
-		</Tree>
-	);
-
-	//--------------------------------------------------------------------------------------
-
 	return (
-		<MessageSideBarContainer title="Messages" droppableParams={droppableParams}>
+		<MessageSideBarContainer title="Messages">
 			<div className={styles.mainComponentDiv}>
 				{/*UnComment following line and comment the MessagesCards Line to display a table with the messages. Actual MessagesTable Element is the MessagesTableTest */}
 				{/*<MessagesTable messages={messages} onDelete={onDelete} /> */}
@@ -393,8 +254,9 @@ const Messages = () => {
 				onDragEnter={onDragEnter}
 				onDrop={onDrop}
 				collapsed
+				onSelect={onSelect}
 			>
-				{loop(gData)}
+				{generateTreeNodesFunction(gData)}
 			</Tree>
 		</MessageSideBarContainer>
 	);
