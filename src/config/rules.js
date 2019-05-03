@@ -22,7 +22,7 @@ const UserRulesFull = [
 const MessagesRulesListReadUpdate = [
 	{
 		name: 'Messagedata',
-		actions: [ 'list', 'read', 'update' ]
+		actions: [ 'list', 'read' ]
 	}
 ];
 

@@ -5,6 +5,7 @@ import { MessagesTable, MessagesCards } from './items';
 import { Divider } from 'antd';
 import { messages as msgLib } from 'lib/models';
 import MessageSideBarContainer from '../../../components/SideBarContainer/MessageSideBarContainer';
+import Rangepicker from '../../../components/Rangepicker/Index';
 import moment from 'moment';
 
 const confirm = Modal.confirm;
@@ -18,6 +19,10 @@ const Messages = () => {
 		loadList();
 	}, []);
 
+	useEffect(() => {
+		console.log('Messages = ', messages);
+	},[messages])
+
 	const loadList = async () => {
 		const data = await msgLib.getMessages();
 		setLoading(false);
@@ -29,8 +34,6 @@ const Messages = () => {
 				key: `list_${msg._id}`
 			}))
 		);
-
-		console.log('messages = ', messages);
 	};
 
 	const onDelete = async (id) => {
@@ -52,18 +55,9 @@ const Messages = () => {
 	return (
 		<MessageSideBarContainer title="Messages">
 			<div className={styles.mainComponentDiv}>
-				----- Messages.js Main comp div starts here ---------
-				{/*UnComment following line and comment the MessagesCards Line to display a table with the messages. Actual MessagesTable Element is the MessagesTableTest */}
-				{/*<MessagesTable messages={messages} onDelete={onDelete} /> */}
-				<div
-					style={{
-						border: '2px solid black',
-						width: 700,
-						height: 200
-					}}
-				>
-					<MessagesCards messages={messages} onDelete={onDelete} />
-				</div>
+				{/*(Un)Comment following line and (un)comment the MessagesCards Line to display a table with the messages.*/}
+				<MessagesTable messages={messages} onDelete={onDelete} />
+				{/*<MessagesCards messages={messages} onDelete={onDelete} />*/}
 				<div>
 					<Button
 						onClick={() => {
@@ -77,7 +71,6 @@ const Messages = () => {
 					</Button>
 				</div>
 			</div>
-			----- Messages.js Main cmp div ENDS here ---------
 		</MessageSideBarContainer>
 	);
 };

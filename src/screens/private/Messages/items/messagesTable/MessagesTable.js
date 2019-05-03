@@ -11,9 +11,9 @@ const columns = [
 		render: (text) => <p>{text}</p>
 	},
 	{
-		title: 'Carpeta',
-		dataIndex: 'messageData.tags',
-		key: 'tagsLIst',
+		title: 'Usuario',
+		dataIndex: 'listener.wapUsername',
+		key: 'User',
 		render: (text) => <p>{text}</p>
 	},
 	{
@@ -27,7 +27,6 @@ const columns = [
 		key: 'action',
 		render: (text, user) => (
 			<span>
-				<Link to={`/admin/user/${user._id}`}>Edit</Link>
 				<a href="#" style={{ marginLeft: '5px', color: 'red' }} onClick={user.onDelete}>
 					Delete
 				</a>
