@@ -6,6 +6,7 @@ import { Droppable } from '../../../components/DnD';
 import { generateTreeNodesFunction, manipulateTreeNodeItems } from './helpFunctions';
 import MessageSideBarContainer from '../../../components/SideBarContainer/MessageSideBarContainer';
 import styles from './Messages.module.css';
+import Rangepicker from '../../../components/Rangepicker/Index';
 import moment from 'moment';
 
 //import { Divider,Form,Spin,TreeSelect, Row, Col, } from 'antd';
@@ -64,6 +65,10 @@ const Messages = () => {
 		'ID-Level-0-0-2': []
 	};
 	const [ tagsContainers, setTagsContainers ] = useState(tagsContainersInitialValue);
+
+	useEffect(() => {
+		console.log('Messages = ', messages);
+	},[messages])
 
 	const loadList = async () => {
 		const response = await msgLib.getMessages();
@@ -221,7 +226,7 @@ const Messages = () => {
 		if (transferredData == '' || originContainerName == '' || destinationContainerName == '') {
 			const treeData = manipulateTreeNodeItems(info, gData);
 			// if following line is uncommentend, then the tree items became draggable within each other.
-			//setGdata((prevState) => [ ...treeData ]);
+			setGdata((prevState) => [ ...treeData ]);
 		}
 	};
 
@@ -229,10 +234,10 @@ const Messages = () => {
 		<MessageSideBarContainer title="Messages">
 			<div className={styles.mainComponentDiv}>
 				{/*UnComment following line and comment the MessagesCards Line to display a table with the messages. Actual MessagesTable Element is the MessagesTableTest */}
-				{/*<MessagesTable messages={messages} onDelete={onDelete} /> */}
-				<Droppable allowDrop={allowDrop} drop={drop} id="drop1" style={{ display: 'flex', flexWrap: 'wrap' }}>
-					<MessagesCards messages={messages} onDelete={onDelete} />
-				</Droppable>
+				<MessagesTable messages={messages} onDelete={onDelete} />
+				{/*<Droppable allowDrop={allowDrop} drop={drop} id="drop1" style={{ display: 'flex', flexWrap: 'wrap' }}>
+					<MessagesCards messages={messages} onDelete={onDelete} /> 
+				</Droppable>*/}
 				<div style={{ paddingTop: '150px' }}>
 					<Button
 						onClick={() => {
