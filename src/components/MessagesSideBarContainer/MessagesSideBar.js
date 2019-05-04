@@ -2,12 +2,13 @@ import React, { useContext } from 'react';
 import { Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom';
 import SessionContext from 'components/SessionContext';
-import Rangepicker from '../components/Rangepicker/Index';
-import { Droppable } from '../components/DnD';
+import Rangepicker from '../Rangepicker/Index';
+import { Droppable } from '../DnD';
+import SideBarTagTree from './SideBarTagTree';
 
 const SubMenu = Menu.SubMenu;
 
-const SideBar = ({ collapsed }) => {
+const MessagesSideBar = ({ collapsed, getDroppedDataFromTagTreeSideBar }) => {
 	const session = useContext(SessionContext.context);
 	return (
 		<div style={{ height: '100vh', textAlign: 'left' }}>
@@ -35,9 +36,10 @@ const SideBar = ({ collapsed }) => {
 						</span>
 					</Link>
 				</Menu.Item>
+				<SideBarTagTree getDroppedDataFromTagTreeSideBar={getDroppedDataFromTagTreeSideBar} />
 			</Menu>
 		</div>
 	);
 };
 
-export default SideBar;
+export default MessagesSideBar;

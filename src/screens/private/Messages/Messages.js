@@ -4,7 +4,7 @@ import { MessagesTable, MessagesCards } from './items';
 import { messages as msgLib } from 'lib/models';
 import { Droppable } from '../../../components/DnD';
 import { generateTreeNodesFunction, manipulateTreeNodeItems } from './helpFunctions';
-import MessageSideBarContainer from '../../../components/SideBarContainer/MessageSideBarContainer';
+import MessageSideBarContainer from '../../../components/MessagesSideBarContainer/MessageSideBarContainer';
 import styles from './Messages.module.css';
 import Rangepicker from '../../../components/Rangepicker/Index';
 import moment from 'moment';
@@ -66,9 +66,12 @@ const Messages = () => {
 	};
 	const [ tagsContainers, setTagsContainers ] = useState(tagsContainersInitialValue);
 
-	useEffect(() => {
-		console.log('Messages = ', messages);
-	},[messages])
+	useEffect(
+		() => {
+			console.log('Messages = ', messages);
+		},
+		[ messages ]
+	);
 
 	const loadList = async () => {
 		const response = await msgLib.getMessages();
@@ -230,39 +233,32 @@ const Messages = () => {
 		}
 	};
 
+	const testFunc = (infoFromTree) => {
+		console.log('test Function in Messages!. InfoFromTree = ', infoFromTree);
+	};
+
 	return (
-		<MessageSideBarContainer title="Messages">
+		<MessageSideBarContainer title="Messages" getDroppedDataFromTagTreeSideBar={testFunc}>
+			<div>
+				<Button
+					onClick={() => {
+						loadList();
+					}}
+					type="primary"
+					htmlType="button"
+					className={styles['login-form-button']}
+					size={'small'}
+				>
+					Load List
+				</Button>
+			</div>
 			<div className={styles.mainComponentDiv}>
 				{/*UnComment following line and comment the MessagesCards Line to display a table with the messages. Actual MessagesTable Element is the MessagesTableTest */}
 				<MessagesTable messages={messages} onDelete={onDelete} />
 				{/*<Droppable allowDrop={allowDrop} drop={drop} id="drop1" style={{ display: 'flex', flexWrap: 'wrap' }}>
 					<MessagesCards messages={messages} onDelete={onDelete} /> 
 				</Droppable>*/}
-				<div style={{ paddingTop: '150px' }}>
-					<Button
-						onClick={() => {
-							loadList();
-						}}
-						type="primary"
-						htmlType="button"
-						className={styles['login-form-button']}
-					>
-						Load List
-					</Button>
-				</div>
 			</div>
-			<Tree
-				className="draggable-tree"
-				defaultExpandedKeys={expandedKeys}
-				draggable
-				blockNode
-				onDragEnter={onDragEnter}
-				onDrop={onDrop}
-				collapsed
-				onSelect={onSelect}
-			>
-				{generateTreeNodesFunction(gData)}
-			</Tree>
 		</MessageSideBarContainer>
 	);
 };
