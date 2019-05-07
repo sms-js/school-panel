@@ -1,5 +1,5 @@
 // IF U R IN DEV MODE API_DOMAIN IS SET IN DEV.ENV
-let API_DOMAIN = process.env.REACT_APP_API_DOMAIN || 'http://api.whatsapp.khem.io/';
+let API_DOMAIN = process.env.REACT_APP_API_DOMAIN || 'https://api.whatsapp.khem.io/';
 
 // Check if the last index is a /, if not add it:
 if (API_DOMAIN.substr(API_DOMAIN.length - 1) !== '/') {
@@ -14,7 +14,7 @@ const LOGIN_URL = 'users/login'; // axios baseURL is ${API_DOMAIN}
 
 const USER_URL = `${API_PREFIX}User/`; // axios baseURL is ${API_DOMAIN}
 
-const MESSAGES_URL = `mdata/`; 
+const MESSAGES_URL = `mdata/`;
 
 const PROFILE_URL = `${API_PREFIX}User/`; // axios baseURL is ${API_DOMAIN}
 

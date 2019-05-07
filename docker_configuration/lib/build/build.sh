@@ -17,7 +17,6 @@ then
 	printf "\n${bold}==> ********** USING LOCAL API RUNNING IN http://api.whatsapp.local.khem.io **********${normal} \n"
 	echo "ENV_APP_FILE_PATH=./docker_configuration/dev.env" > '.env'
 else
-	printf "\n${bold}==> ********** USING API RUNNING IN http://api.whatsapp.khem.io (@todo fix SSL) **********${normal} \n"
 	echo "ENV_APP_FILE_PATH=./docker_configuration/test.env" > '.env'
 fi
 
