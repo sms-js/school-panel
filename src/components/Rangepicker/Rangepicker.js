@@ -12,14 +12,15 @@ function onOk(value) {
 	console.log('onOk: ', value);
 }
 
-const Rangepicker = ()=>(
+const Rangepicker = ({value})=>(
 	<RangePicker
 		showTime={{ format: 'HH:mm' }}
-		format="YYYY-MM-DD HH:mm"
-		placeholder={[ 'Start Time', 'End Time' ]}
+		format="DD-MM-YY HH:mm"
+		placeholder={['Start Time', 'End Time']}
 		onChange={onChange}
 		onOk={onOk}
 		size={'small'}
+		value={value}
 	/>
 );
 

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Tree } from 'antd';
 const { TreeNode } = Tree;
 
-
 function generateTreeNodesFunction(treeData) {
 	const resultTest = treeData.map((item) => {
 		if (item.children && item.children.length) {
@@ -92,4 +91,51 @@ function manipulateTreeNodeItems(info, gData) {
 	//==== End of antD code======================================================================
 }
 
-export { generateTreeNodesFunction, manipulateTreeNodeItems };
+let tagMap = {};
+function generateTagMapFunction(list, parent, key, title, status, startDate, endDate, codeWord) {
+	return (list || []).map(({ children, key, title, status, startDate, endDate, codeWord }) => {
+		const node = (tagMap[key] = {
+			parent,
+			key,
+			title,
+			status,
+			startDate,
+			endDate,
+			codeWord
+		});
+		node.children = generateTagMapFunction(children, node, key, title, status, startDate, endDate, codeWord);
+		return node;
+	});
+}
+
+const getTagMap = (list, parent) => {
+	generateTagMapFunction(list, parent);
+	return tagMap;
+};
+
+const getTagPath = (key, tagMap) => {
+	const path = [];
+	let current = tagMap[key];
+	while (current) {
+		path.unshift(current.key);
+		current = current.parent;
+	}
+	return path;
+};
+
+//===========================================================================
+
+let tagsWithoutParents = [];
+const generateTreeData = (tagsArrayFromAPI, tagsWithoutParents, firstLoop = true) => {
+	//find tags without parents
+	tagsWithoutParents =
+		firstLoop == true ? tagsArrayFromAPI.filter((el) => el.parentTag == undefined) : tagsWithoutParents;
+	tagsWithoutParents.map((noParentElement, index) => {
+		tagsWithoutParents[index]['children'] = tagsArrayFromAPI.filter((el) => el.parentTag == noParentElement.key);
+		generateTreeData(tagsArrayFromAPI, tagsWithoutParents[index]['children'], false);
+	});
+	return tagsWithoutParents;
+};
+
+//===========================================================================
+export { generateTreeNodesFunction, manipulateTreeNodeItems, generateTagMapFunction, getTagPath, getTagMap,generateTreeData };

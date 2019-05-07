@@ -11,7 +11,6 @@ import moment from 'moment';
 
 //import { Divider,Form,Spin,TreeSelect, Row, Col, } from 'antd';
 //import UsersTable from '../users/UsersList/UsersTable';
-//import Demo from './TestingDraggableTree';
 
 const { TreeNode } = Tree;
 const confirm = Modal.confirm;
