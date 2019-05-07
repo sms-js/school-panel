@@ -2,6 +2,7 @@
 
 const express = require('express'),
 	app = express(),
+	path = require('path'),
 	http = require('http');
 
 const server = http.createServer(app);
