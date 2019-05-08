@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styles from './RightClickMenu.module.css';
 import { Popover, Button, Modal, Switch, DatePicker } from 'antd';
 import { isAbsolute } from 'path';
+import TagDatesRange from './TagDatesRange';
+
 //import Rangepicker from '../Rangepicker/Index';
 import moment from 'moment';
 const { RangePicker } = DatePicker;
@@ -13,12 +15,17 @@ const TagRClickMenu = ({
 	sendNewSelectedTagStateToTagTree
 }) => {
 	const [ visible, setVisible ] = useState(true);
-	const [ selectedTag, setSelctedTag ] = useState({ ...rightClickSelectedTag });
+	const [ selectedTag, setSelectedTag ] = useState({ ...rightClickSelectedTag });
 
 	const switchChange = () => {
 		let newState = { ...selectedTag };
 		newState.status = !newState.status;
-		setSelctedTag(Object.assign(selectedTag, newState));
+		setSelectedTag(Object.assign(selectedTag, newState));
+	};
+
+	const getNewTagStateFromChildCmp = (newState) => {
+		console.log('getNewTagStateFromTagDatesRangeCmp, data =', newState);
+		setSelectedTag(Object.assign(selectedTag, newState));
 	};
 
 	const handleOk = (e) => {
@@ -65,36 +72,6 @@ const TagRClickMenu = ({
 		);
 	};
 
-	const TagRangeDates = () => {
-		const [ selectedTagRange, setSelectedTagRange ] = useState([]);
-		const dateFormat = 'YYYY-MM-DD HH:mm';
-		function onTagRangeChange( dateString) {
-			setSelectedTagRange(dateString);
-		}
-		function onTagRangeOk() {
-			//original antD onOK API not working. That's why I have to get the selectedDatesRange over the onChange API.
-			let newState = { ...selectedTag };
-			newState.startDate = moment(selectedTagRange[0], [ 'DD-MM-YYYY HH:mm' ]).format('YYYY-MM-DDTHH:mm');
-			newState.endDate = moment(selectedTagRange[1], [ 'DD-MM-YYYY HH:mm' ]).format('YYYY-MM-DDTHH:mm');
-			setSelctedTag(Object.assign(selectedTag, newState));
-		}
-		const pickerDate = [ moment(selectedTag.startDate, dateFormat), moment(selectedTag.endDate, dateFormat) ];
-		return (
-			<div style={styles.tagDates}>
-				Time window:
-				<RangePicker
-					showTime={{ format: 'HH:mm' }}
-					format="DD-MM-YYYY HH:mm"
-					placeholder={[ 'Start Time', 'End Time' ]}
-					onChange={onTagRangeChange}
-					onOk={onTagRangeOk}
-					size={'small'}
-					defaultValue={pickerDate}
-				/>
-			</div>
-		);
-	};
-
 	const TagCodeWord = () => (
 		<div style={styles.tagStatus}>
 			<div>Code word:</div>
@@ -106,7 +83,7 @@ const TagRClickMenu = ({
 		<div>
 			<Modal title={selectedTag.title} visible={visible} onOk={handleOk} onCancel={handleCancel} style={modalPosition}>
 				<TagStatus />
-				<TagRangeDates />
+				<TagDatesRange sendNewTagStateToParentCmp={getNewTagStateFromChildCmp} selectedTag={selectedTag} />
 				<TagCodeWord />
 			</Modal>
 		</div>
