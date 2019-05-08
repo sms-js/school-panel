@@ -15,7 +15,6 @@ import moment from 'moment';
 const { TreeNode } = Tree;
 
 const SideBarTagTree = ({ sendDroppedDataToMessages }) => {
-	
 	//tasgArrayFromApi is a data structure similar to the one, which will be received from the API.Only the props: selectable and disable should be added if required. Those porps are used by antd components.
 	const tagsArrayFromAPI = [
 		{
@@ -106,15 +105,16 @@ const SideBarTagTree = ({ sendDroppedDataToMessages }) => {
 			title: 'de los 70',
 			disabled: false,
 			status: false,
-			startDate: '2019-01-01T10:00:00Z',
-			endDate: '2019-01-02T14:00:00Z',
+			startDate: '2015-11-05T10:00:00Z',
+			endDate: '2015-12-31T14:00:00Z',
 			selectable: true
 		}
 	];
 
 	let initialGdata = generateTreeData(tagsArrayFromAPI);
+	const [ tagsArray, setTagsArray ] = useState(tagsArrayFromAPI);
 	const [ gData, setGdata ] = useState(initialGdata);
-	const [ expandedKeys, setExpandedKeys ] = useState([ 'Key-level-0-0-2' ]);
+	const [ expandedKeys, setExpandedKeys ] = useState([ '5ccc37df5ad6ca045cb41f79' ]);
 	const [ showModal, setShowModal ] = useState(false);
 	const [ mouseCoordinates, setMouseCoordinates ] = useState({});
 	const [ rightClickSelectedTag, setRightClickSelectedTag ] = useState({});
@@ -188,7 +188,15 @@ const SideBarTagTree = ({ sendDroppedDataToMessages }) => {
 	};
 
 	const getNewSelectedTagStateFromModal = (newState) => {
-		console.log('getNewSelectedTagStateFromModal = ', newState);
+		delete newState.parent;
+		const selectedTagIndex = tagsArray.findIndex((el) => el.key == newState.key);
+		const newTagsArray = tagsArray;
+		const newTag = Object.assign(tagsArray[selectedTagIndex], newState);
+		/* depending on users Rights: newTag should API-PATCH
+when user changes the tag props using the RCM (status,dates,title,codeword) and clicks on 'ok' the modified tag (named here as newTag) should PATCH the old tag. This step will be added to a later point. 
+*/
+		newTagsArray[selectedTagIndex] = newTag;
+		setTagsArray(newTagsArray);
 	};
 
 	return (

@@ -3,16 +3,15 @@ import styles from './Rangepicker.module.css';
 import { DatePicker } from 'antd';
 const { RangePicker } = DatePicker;
 
-function onChange(value, dateString) {
-	console.log('Selected Time: ', value);
-	console.log('Formatted Selected Time: ', dateString);
+function onChange(date, dateString) {
+  console.log(date, dateString);
 }
 
-function onOk(value) {
-	console.log('onOk: ', value);
+function onOk(date) {
+	console.log('onOk: ', date);
 }
 
-const Rangepicker = ({value})=>(
+const Rangepicker = ()=>(
 	<RangePicker
 		showTime={{ format: 'HH:mm' }}
 		format="DD-MM-YY HH:mm"
@@ -20,7 +19,6 @@ const Rangepicker = ({value})=>(
 		onChange={onChange}
 		onOk={onOk}
 		size={'small'}
-		value={value}
 	/>
 );
 
