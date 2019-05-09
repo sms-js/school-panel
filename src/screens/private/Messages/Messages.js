@@ -6,7 +6,6 @@ import { Droppable } from '../../../components/DnD';
 import { generateTreeNodesFunction, manipulateTreeNodeItems } from './helpFunctions';
 import MessageSideBarContainer from '../../../components/MessagesSideBarContainer/MessageSideBarContainer';
 import styles from './Messages.module.css';
-import Rangepicker from '../../../components/Rangepicker/Index';
 import moment from 'moment';
 
 //import { Divider,Form,Spin,TreeSelect, Row, Col, } from 'antd';
