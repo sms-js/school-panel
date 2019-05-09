@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Modal, Tree } from 'antd';
-import { Droppable } from '../DnD/Droppable';
+import { Tree } from 'antd';
 import {
 	generateTreeNodesFunction,
 	manipulateTreeNodeItems,
@@ -10,7 +9,10 @@ import {
 	generateTreeData
 } from '../../screens/private/Messages/helpFunctions';
 import TagRClickMenu from './RightClickMenu';
+import TagRClickWMenu from './RightClickWMenu';
 import moment from 'moment';
+//import moment from 'moment';
+//import { Droppable } from '../DnD/Droppable';
 
 const { TreeNode } = Tree;
 
@@ -117,10 +119,18 @@ const SideBarTagTree = ({ sendDroppedDataToMessages }) => {
 	const [ expandedKeys, setExpandedKeys ] = useState([ '5ccc37df5ad6ca045cb41f79' ]);
 	const [ showModal, setShowModal ] = useState(false);
 	const [ mouseCoordinates, setMouseCoordinates ] = useState({});
-	const [ rightClickSelectedTag, setRightClickSelectedTag ] = useState({});
+	const [ actualSelectedTag, setActualSelectedTag ] = useState({});
 
 	let tagMap = getTagMap(gData);
-	console.log('tagMap = ', tagMap);
+	useEffect(() => {}, [ gData ]);
+
+	useEffect(
+		() => {
+			let newGData = generateTreeData(tagsArray);
+			setGdata((prevState) => [ ...newGData ]);
+		},
+		[ tagsArray ]
+	);
 
 	const onDragEnter = (info) => {
 		console.log('on Drag Enter= onDragOver');
@@ -134,8 +144,8 @@ const SideBarTagTree = ({ sendDroppedDataToMessages }) => {
 	const onSelect = (e) => {
 		//e equals to the selected treeNode key
 		console.log('itemSelected, key = ', e[0]);
-		const selectedTag = getTagPath(e[0], tagMap);
-		console.log(selectedTag);
+		const selectedTagPath = getTagPath(e[0], tagMap);
+		console.log(selectedTagPath);
 		//sendDroppedDataToMessages(e);//sends id selected TreeNode to Messages Component
 	};
 
@@ -168,23 +178,21 @@ const SideBarTagTree = ({ sendDroppedDataToMessages }) => {
 			// if following line is uncommentend, then the tree items became draggable within each other.
 			setGdata((prevState) => [ ...treeData ]);
 		}
-		console.log('onDrop / gData = ', gData);
+		//console.log('onDrop / gData = ', gData);
 	};
 
 	const rightClickFunction = ({ event, node }) => {
-		console.log('rcFct, node = ', node);
-		console.log('rcFct, event = ', event);
-		console.log('event.clientX = ', event.clientX);
-		console.log('event.clientY = ', event.clientY);
 		setMouseCoordinates({ mouseX: event.clientX, mouseY: event.clientY });
 		getSelectedTagPropsAndSendToRClickMenu(node.props);
-		setShowModal((prevState) => !prevState);
+		//setShowModal((prevState) => !prevState);
 	};
 
 	const getSelectedTagPropsAndSendToRClickMenu = (props) => {
-		const selectedTag = tagMap[props.eventKey];
-		console.log('selected Tag with Right Click = ', selectedTag);
-		setRightClickSelectedTag(selectedTag);
+		const rightClickSelectedTag = tagMap[props.eventKey];
+		console.log('selected Tag with Right Click = ', rightClickSelectedTag);
+		console.log('tagMap = ', tagMap);
+		console.log('selectedTagPath = ', getTagPath(rightClickSelectedTag.key, tagMap));
+		setActualSelectedTag(rightClickSelectedTag);
 	};
 
 	const getNewSelectedTagStateFromModal = (newState) => {
@@ -199,30 +207,82 @@ when user changes the tag props using the RCM (status,dates,title,codeword) and 
 		setTagsArray(newTagsArray);
 	};
 
+	/*
+	generateNewTag gets called when user click generate New Tag in the RCM. It adds a child tag to the selected tag.
+
+	Some considerations: 
+	1) User clicks on create new tag.
+	2) New (child) tag is created with the title 'new tag' in edition mode. 
+	3) This new tag could be renamed at that point. Further props edition can be executed with the RCM option edit properties.
+	4) When should this tag be sent to API? After definition of new name? In that case we would receive a complete tag tree again? Or should a provisory object be client side created and silently be sent to API?
+
+	*/
+	const generateNewTag = () => {
+		//newKey will be replaced with some id generator
+		const newKey = getTagPath(actualSelectedTag.key, tagMap).reverse()[0] + 'x';
+		const newTag = {
+			key: newKey,
+			title: 'new tag',
+			parentTag: getTagPath(actualSelectedTag.key, tagMap).reverse()[0],
+			startDate: moment().format('YYYY-MM-DD-THH:mm:ss'),
+			endDate: '',
+			autoAssignTagToIncomingMessage: false,
+			status: true,
+			selectable: true,
+			newTagStatus: true
+		}; //newTagStatus will be used to identify the tags that should be sent to API and dessen Title should be editable.
+		let newTagsArray = tagsArray;
+		const indexOfParentTag = tagsArray.filter((el, index) => {
+			if (el.key == newTag.parentTag) return index;
+		});
+		//tag will be created directly under its parentTag
+		newTagsArray.splice(indexOfParentTag, 0, newTag);
+		setTagsArray([ ...newTagsArray ]);
+	};
+
+	const getSelectedOptionFromRCM = (selectedOption) => {
+		if (selectedOption.key == 'createNewTag') generateNewTag();
+		if (selectedOption.key == 'editTagProperties') {
+			setShowModal((prevState) => !prevState);
+		}
+	};
+
 	return (
 		<div>
-			<Tree
-				className="draggable-tree"
-				defaultExpandedKeys={expandedKeys}
-				draggable
-				blockNode
-				onDragEnter={onDragEnter}
-				onDrop={onDrop}
-				collapsed
-				onSelect={onSelect}
-				onRightClick={rightClickFunction}
-				//treeData={gData}
+			<TagRClickWMenu
+				rightClickSelectedTag={actualSelectedTag}
+				sendNewSelectedTagStateToTagTree={getNewSelectedTagStateFromModal}
+				mouseRightClickPosition={mouseCoordinates}
+				resetShowModal={() => setShowModal(false)}
+				sendSelectedOptionToParentCmp={getSelectedOptionFromRCM}
 			>
-				{generateTreeNodesFunction(gData)}
-			</Tree>
-			{showModal ? (
-				<TagRClickMenu
-					rightClickSelectedTag={rightClickSelectedTag}
-					sendNewSelectedTagStateToTagTree={getNewSelectedTagStateFromModal}
-					mouseRightClickPosition={mouseCoordinates}
-					resetShowModal={() => setShowModal(false)}
-				/>
-			) : null}
+				<div>
+					<Tree
+						className="draggable-tree"
+						defaultExpandedKeys={expandedKeys}
+						draggable
+						blockNode
+						onDragEnter={onDragEnter}
+						onDrop={onDrop}
+						collapsed
+						onSelect={onSelect}
+						onRightClick={rightClickFunction}
+						//treeData={gData}
+					>
+						{generateTreeNodesFunction(gData)}
+					</Tree>
+				</div>
+			</TagRClickWMenu>
+			<div>
+				{showModal ? (
+					<TagRClickMenu
+						rightClickSelectedTag={actualSelectedTag}
+						sendNewSelectedTagStateToTagTree={getNewSelectedTagStateFromModal}
+						mouseRightClickPosition={mouseCoordinates}
+						resetShowModal={() => setShowModal(false)}
+					/>
+				) : null}
+			</div>
 		</div>
 	);
 };
