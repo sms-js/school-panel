@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styles from './RightClickMenu.module.css';
 import { Popover, Button, Modal, Switch, DatePicker } from 'antd';
 import { isAbsolute } from 'path';
-import TagDatesRange from './TagDatesRange';
+import { TagDatesRange } from '../index';
 
-//import Rangepicker from '../Rangepicker/Index';
 import moment from 'moment';
 const { RangePicker } = DatePicker;
 

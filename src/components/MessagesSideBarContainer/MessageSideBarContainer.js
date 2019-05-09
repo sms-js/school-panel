@@ -1,11 +1,11 @@
 import styles from './MessagesSideBarContainer.module.css';
 import React from 'react';
 import { Layout } from 'antd';
-import MessagesSideBar from './MessagesSideBar'
+import { MessagesSideBar } from './MessagesSideBar/index';
 
 const { Header, Sider, Content } = Layout;
 
-const MessagesSideBarContainer = ({ children, title,getDroppedDataFromTagTreeSideBar }) => {
+const MessagesSideBarContainer = ({ children, title, getDroppedDataFromTagTreeSideBar }) => {
 	return (
 		<Layout>
 			<Sider>

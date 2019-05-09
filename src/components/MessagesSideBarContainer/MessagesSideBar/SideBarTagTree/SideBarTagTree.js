@@ -7,9 +7,8 @@ import {
 	getTagPath,
 	getTagMap,
 	generateTreeData
-} from '../../screens/private/Messages/helpFunctions';
-import TagRClickMenu from './RightClickMenu';
-import TagRClickWMenu from './RightClickWMenu';
+} from '../../../../screens/private/Messages/helpFunctions';
+import { TagRClickMenu, TagRClickWMenu } from './index';
 import moment from 'moment';
 //import moment from 'moment';
 //import { Droppable } from '../DnD/Droppable';
@@ -235,7 +234,8 @@ when user changes the tag props using the RCM (status,dates,title,codeword) and 
 		const indexOfParentTag = tagsArray.filter((el, index) => {
 			if (el.key == newTag.parentTag) return index;
 		});
-		//tag will be created directly under its parentTag
+		//tag will be created directly under its parentTag.
+		//modification of tagsArray will reRender cmp.
 		newTagsArray.splice(indexOfParentTag, 0, newTag);
 		setTagsArray([ ...newTagsArray ]);
 	};
@@ -283,6 +283,7 @@ when user changes the tag props using the RCM (status,dates,title,codeword) and 
 					/>
 				) : null}
 			</div>
+
 		</div>
 	);
 };
