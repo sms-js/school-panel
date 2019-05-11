@@ -1,23 +1,32 @@
 import React from 'react';
-import styles from '../Profile.module.css';
-import { Form, Icon, Input } from 'antd';
+import PropTypes from 'prop-types';
+import TextField from '@material-ui/core/TextField';
 
-const getInput = (form, session) => {
-	const { getFieldDecorator } = form;
+const id = 'user-name';
+const label = 'Username';
+const fieldName = 'username';
 
-	return getFieldDecorator('username', {
-		rules: [{ required: true, message: 'Please input your username!' }],
-		initialValue: session.user.username
-	})(
-		<Input
-			key="profile-username-input"
-			disabled
-			prefix={<Icon type="tag" className={styles['profile-icon']} />}
-			placeholder="Username"
+const validateField = value => !value;
+
+const UserName = ({ classes, handleChange, value }) => {
+	return (
+		<TextField
+			required
+			error={validateField(value)}
+			id={id}
+			label={label}
+			className={classes.textField}
+			value={value}
+			onChange={handleChange(fieldName)}
+			margin="normal"
 		/>
 	);
 };
 
-const UserName = ({ form, session }) => <Form.Item label="Username">{getInput(form, session)}</Form.Item>;
+UserName.propTypes = {
+	classes: PropTypes.object.isRequired,
+	handleChange: PropTypes.func.isRequired,
+	value: PropTypes.string.isRequired
+};
 
 export default UserName;

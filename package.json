@@ -3,18 +3,20 @@
 	"version": "0.4.0",
 	"private": true,
 	"dependencies": {
+		"@material-ui/core": "3.9.3",
+		"@material-ui/icons": "3.0.2",
 		"antd": "3.14.1",
-		"axios": "^0.18.0",
+		"axios": "0.18.0",
 		"jwt-decode": "2.2.0",
-		"moment": "^2.24.0",
+		"moment": "2.24.0",
 		"react": "16.8.3",
 		"react-dnd": "^7.4.5",
-		"react-dnd-html5-backend": "^7.4.4",
+		"react-dnd-html5-backend": "7.4.4",
 		"react-dom": "16.8.3",
 		"react-router-dom": "4.3.1",
 		"react-scripts": "2.1.5",
-		"styled-components": "^4.2.0",
-		"typescript": "^3.4.5"
+		"styled-components": "4.2.0",
+		"typescript": "3.4.5"
 	},
 	"scripts": {
 		"react-start": "react-scripts start",

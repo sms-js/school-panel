@@ -1,16 +1,33 @@
 import React from 'react';
-import styles from '../Profile.module.css';
-import { Form, Icon, Input } from 'antd';
+import PropTypes from 'prop-types';
+import TextField from '@material-ui/core/TextField';
 
-const getInput = form => {
-	const { getFieldDecorator } = form;
+const id = 'user-password';
+const label = 'Password';
+const fieldName = 'password';
 
-	return getFieldDecorator('password', {
-		rules: [{ required: true, message: 'Please input your new password' }],
-		initialValue: ''
-	})(<Input prefix={<Icon type="lock" className={styles['profile-icon']} />} type="password" placeholder="Password" />);
+const validateField = (value, confirm) => !value || value.length < 4 || value !== confirm;
+
+const Password = ({ classes, handleChange, value, confirm }) => {
+	return (
+		<TextField
+			required
+			error={validateField(value, confirm)}
+			id={id}
+			label={label}
+			className={classes.textField}
+			value={value}
+			onChange={handleChange(fieldName)}
+			margin="normal"
+			type="password"
+		/>
+	);
 };
 
-const Password = ({ form }) => <Form.Item label="Password">{getInput(form)}</Form.Item>;
+Password.propTypes = {
+	classes: PropTypes.object.isRequired,
+	handleChange: PropTypes.func.isRequired,
+	value: PropTypes.string.isRequired
+};
 
 export default Password;
