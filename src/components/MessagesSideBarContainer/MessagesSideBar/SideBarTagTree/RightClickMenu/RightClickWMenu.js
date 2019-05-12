@@ -34,18 +34,6 @@ const TagRClickWMenu = ({ sendSelectedOptionToParentCmp, children }) => {
 			<Menu.Item onClick={sendSelectedOptionToParentCmp} key="editTagProperties">
 				Editar carpeta
 			</Menu.Item>
-
-			<Popconfirm
-				title={<Input placeholder="new folder name" />}
-				onConfirm={confirm}
-				onCancel={cancel}
-				okText="Yes"
-				cancelText="No"
-			>
-				<Menu.Item onClick={sendSelectedOptionToParentCmp} key="editTagProperties2">
-					Editar carpeta2
-				</Menu.Item>
-			</Popconfirm>
 		</Menu>
 	);
 

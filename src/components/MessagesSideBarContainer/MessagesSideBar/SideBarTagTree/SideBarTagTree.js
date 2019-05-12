@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Tree } from 'antd';
+import { Tree, Input } from 'antd';
 import {
 	generateTreeNodesFunction,
 	manipulateTreeNodeItems,
@@ -10,6 +10,7 @@ import {
 } from '../../../../screens/private/Messages/helpFunctions';
 import { TagRClickMenu, TagRClickWMenu } from './index';
 import moment from 'moment';
+import NewTagNameInputField from './RightClickMenu/NewTagNameInputCmp';
 //import moment from 'moment';
 //import { Droppable } from '../DnD/Droppable';
 
@@ -117,11 +118,12 @@ const SideBarTagTree = ({ sendDroppedDataToMessages }) => {
 	const [ gData, setGdata ] = useState(initialGdata);
 	const [ expandedKeys, setExpandedKeys ] = useState([ '5ccc37df5ad6ca045cb41f79' ]);
 	const [ showModal, setShowModal ] = useState(false);
+	const [ showNewTagNameInputField, setShowNewTagNameInputField ] = useState(false);
 	const [ mouseCoordinates, setMouseCoordinates ] = useState({});
 	const [ actualSelectedTag, setActualSelectedTag ] = useState({});
 
 	let tagMap = getTagMap(gData);
-	useEffect(() => {}, [ gData ]);
+	//useEffect(() => {}, [ gData ]);
 
 	useEffect(
 		() => {
@@ -166,13 +168,13 @@ const SideBarTagTree = ({ sendDroppedDataToMessages }) => {
 		//const elementToRemoveFromParentNode = document.getElementById(transferredData);
 		//let parentNode = document.getElementById(transferredData).parentNode;
 
-		if (transferredData == '' || originContainerName == '' || destinationContainerName == '') {
-			/*
-		We can drag and drop to kind of elements:
+		/*
+		We can drag and drop 2 kind of elements:
 		1) Drag a message-element and drop it into a nodeTree element.
 		2) Drag a nodeTree element and drop it into another nodeTree element. 
 		If situation 2) applies, then following if-statement is true and the (antD) code for handling of nodeTree elements applies. Following code (within the if-block) was delivered with the component and is related to the treeNode elements manipulation.
 	*/
+		if (transferredData == '' || originContainerName == '' || destinationContainerName == '') {
 			const treeData = manipulateTreeNodeItems(info, gData);
 			// if following line is uncommentend, then the tree items became draggable within each other.
 			setGdata((prevState) => [ ...treeData ]);
@@ -206,6 +208,21 @@ when user changes the tag props using the RCM (status,dates,title,codeword) and 
 		setTagsArray(newTagsArray);
 	};
 
+	const NewTagNameInputField2 = ({ sendDataToParentCmp, mouseRightClickPosition }) => {
+		const getInputValue = (e) => {
+			console.log('etInputValue/ e.target.value = ', e.target.value);
+			sendDataToParentCmp(e.target.value);
+		};
+		const modalPosition = {
+			position: 'absolute',
+			top: mouseRightClickPosition.mouseY - 100,
+			left: '220px' //modal left position is independent from VP width
+		};
+		return (
+			<Input style={modalPosition} onPressEnter={getInputValue} size="small" placeholder="enter new folder name" />
+		);
+	};
+
 	/*
 	generateNewTag gets called when user click generate New Tag in the RCM. It adds a child tag to the selected tag.
 
@@ -216,12 +233,12 @@ when user changes the tag props using the RCM (status,dates,title,codeword) and 
 	4) When should this tag be sent to API? After definition of new name? In that case we would receive a complete tag tree again? Or should a provisory object be client side created and silently be sent to API?
 
 	*/
-	const generateNewTag = () => {
+	const generateNewTag = (newTagTitle) => {
 		//newKey will be replaced with some id generator
 		const newKey = getTagPath(actualSelectedTag.key, tagMap).reverse()[0] + 'x';
 		const newTag = {
 			key: newKey,
-			title: 'new tag',
+			title: newTagTitle,
 			parentTag: getTagPath(actualSelectedTag.key, tagMap).reverse()[0],
 			startDate: moment().format('YYYY-MM-DD-THH:mm:ss'),
 			endDate: '',
@@ -234,28 +251,30 @@ when user changes the tag props using the RCM (status,dates,title,codeword) and 
 		const indexOfParentTag = tagsArray.filter((el, index) => {
 			if (el.key == newTag.parentTag) return index;
 		});
+
 		//tag will be created directly under its parentTag.
-		//modification of tagsArray will reRender cmp.
+		//modification of tagsArray will reRender cmp and "new tag" will be shown in the tagTree.
 		newTagsArray.splice(indexOfParentTag, 0, newTag);
 		setTagsArray([ ...newTagsArray ]);
 	};
 
 	const getSelectedOptionFromRCM = (selectedOption) => {
-		if (selectedOption.key == 'createNewTag') generateNewTag();
+		//if (selectedOption.key == 'createNewTag') generateNewTag();
+		if (selectedOption.key == 'createNewTag') setShowNewTagNameInputField(true);
 		if (selectedOption.key == 'editTagProperties') {
 			setShowModal((prevState) => !prevState);
 		}
 	};
 
+	const getDataFromChildCmp = (dataFromChildCmp) => {
+		console.log('getDataFromChildCmp/ dataFromChildCmp = ', dataFromChildCmp);
+		setShowNewTagNameInputField(false);
+		generateNewTag(dataFromChildCmp);
+	};
+
 	return (
 		<div>
-			<TagRClickWMenu
-				rightClickSelectedTag={actualSelectedTag}
-				sendNewSelectedTagStateToTagTree={getNewSelectedTagStateFromModal}
-				mouseRightClickPosition={mouseCoordinates}
-				resetShowModal={() => setShowModal(false)}
-				sendSelectedOptionToParentCmp={getSelectedOptionFromRCM}
-			>
+			<TagRClickWMenu sendSelectedOptionToParentCmp={getSelectedOptionFromRCM}>
 				<div>
 					<Tree
 						className="draggable-tree"
@@ -274,6 +293,11 @@ when user changes the tag props using the RCM (status,dates,title,codeword) and 
 				</div>
 			</TagRClickWMenu>
 			<div>
+				{showNewTagNameInputField ? (
+					<NewTagNameInputField mouseRightClickPosition={mouseCoordinates} sendDataToParentCmp={getDataFromChildCmp} />
+				) : null}
+			</div>
+			<div>
 				{showModal ? (
 					<TagRClickMenu
 						rightClickSelectedTag={actualSelectedTag}
@@ -283,7 +307,6 @@ when user changes the tag props using the RCM (status,dates,title,codeword) and 
 					/>
 				) : null}
 			</div>
-
 		</div>
 	);
 };
