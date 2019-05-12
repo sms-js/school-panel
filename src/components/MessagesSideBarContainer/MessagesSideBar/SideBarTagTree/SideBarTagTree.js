@@ -208,21 +208,6 @@ when user changes the tag props using the RCM (status,dates,title,codeword) and 
 		setTagsArray(newTagsArray);
 	};
 
-	const NewTagNameInputField2 = ({ sendDataToParentCmp, mouseRightClickPosition }) => {
-		const getInputValue = (e) => {
-			console.log('etInputValue/ e.target.value = ', e.target.value);
-			sendDataToParentCmp(e.target.value);
-		};
-		const modalPosition = {
-			position: 'absolute',
-			top: mouseRightClickPosition.mouseY - 100,
-			left: '220px' //modal left position is independent from VP width
-		};
-		return (
-			<Input style={modalPosition} onPressEnter={getInputValue} size="small" placeholder="enter new folder name" />
-		);
-	};
-
 	/*
 	generateNewTag gets called when user click generate New Tag in the RCM. It adds a child tag to the selected tag.
 
