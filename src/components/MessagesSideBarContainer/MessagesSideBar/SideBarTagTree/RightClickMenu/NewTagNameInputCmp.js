@@ -10,7 +10,7 @@ const NewTagNameInputField = ({ sendDataToParentCmp, mouseRightClickPosition }) 
 		modalPosition: {
 			position: 'absolute',
 			zIndex:'500',
-			top: mouseRightClickPosition.mouseY,
+			top: mouseRightClickPosition.mouseY+100,
 			left: mouseRightClickPosition.mouseX+20, //modal left position is independent from VP width
 			boxShadow: '7px 10px 5px 0px rgba(51,51,51,1)',
 			width: '120px',

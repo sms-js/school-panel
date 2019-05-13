@@ -129,6 +129,8 @@ const SideBarTagTree = ({ sendDroppedDataToMessages }) => {
 		() => {
 			let newGData = generateTreeData(tagsArray);
 			setGdata((prevState) => [ ...newGData ]);
+			console.log('useEffect-tagsArray changed / new tagMap = ', getTagMap(gData));
+			console.log('useEffect-tagsArray changed /new tagsAray = ', tagsArray);
 		},
 		[ tagsArray ]
 	);
@@ -153,21 +155,22 @@ const SideBarTagTree = ({ sendDroppedDataToMessages }) => {
 	const onDrop = (info) => {
 		//console.log(info);
 		//sendDroppedDataToMessages(info); //sends dropped element and its (new) parent node to Messages Component
-		console.log('onDrop - event = ', info.event);
-		console.log('onDrop - node = ', info.node);
-		console.log('onDrop - dragNode = ', info.dragNode);
-		console.log('onDrop - dragNodesKeys = ', info.dragNodesKeys);
+		// console.log('onDrop - event = ', info.event);
+		// console.log('onDrop - node = ', info.node);
+		// console.log('onDrop - dragNode = ', info.dragNode);
+		// console.log('onDrop - draggedNodeKeys = ', info.dragNodesKeys); //["id","id","idww"]
 		info.event.preventDefault();
 		const transferredData = info.event.dataTransfer.getData('transfer');
 		console.log('transferred data = ', transferredData);
 		const originContainerName = info.event.dataTransfer.getData('transfer2');
 		const destinationContainerName = info.node.props.id;
 
-		/* 		if (originContainerName != '') manipulateDraggedAndDroppedElement(transferredData, originContainerName, destinationContainerName);
+		/* 		
+		if (originContainerName != '') manipulateDraggedAndDroppedElement(transferredData, originContainerName, destinationContainerName
+			
+			const elementToRemoveFromParentNode = document.getElementById(transferredData);
+			let parentNode = document.getElementById(transferredData).parentNode;
  */
-		//const elementToRemoveFromParentNode = document.getElementById(transferredData);
-		//let parentNode = document.getElementById(transferredData).parentNode;
-
 		/*
 		We can drag and drop 2 kind of elements:
 		1) Drag a message-element and drop it into a nodeTree element.
@@ -177,9 +180,29 @@ const SideBarTagTree = ({ sendDroppedDataToMessages }) => {
 		if (transferredData == '' || originContainerName == '' || destinationContainerName == '') {
 			const treeData = manipulateTreeNodeItems(info, gData);
 			// if following line is uncommentend, then the tree items became draggable within each other.
-			setGdata((prevState) => [ ...treeData ]);
+			//setGdata((prevState) => [ ...treeData ]);
+
+			tagMap = getTagMap(gData);
+
+			//generate array of dragged tags and assign the new parentTag
+			const modifiedTags = info.dragNodesKeys.map((draggedElementKey) => {
+				const newTag = tagMap[draggedElementKey];
+				newTag.parentTag = newTag.parent.key;
+				newTag.selectable = true;
+				delete newTag.parent;
+				return newTag;
+			});
+			let updatedTagsArray = [ ...tagsArray ];
+			modifiedTags.forEach((modifiedTagEl) => {
+				updatedTagsArray.find((tagsArrayEl, index) => {
+					if (tagsArrayEl.key == modifiedTagEl.key) {
+						updatedTagsArray[index] = modifiedTagEl;
+					}
+				});
+			});
+			//this triggers a useEffect operation
+			setTagsArray([ ...updatedTagsArray ]);
 		}
-		//console.log('onDrop / gData = ', gData);
 	};
 
 	const rightClickFunction = ({ event, node }) => {
@@ -251,10 +274,10 @@ when user changes the tag props using the RCM (status,dates,title,codeword) and 
 		}
 	};
 
-	const getDataFromChildCmp = (dataFromChildCmp) => {
-		console.log('getDataFromChildCmp/ dataFromChildCmp = ', dataFromChildCmp);
+	const getDataFromChildCmp = (newTagTitel) => {
+		console.log('getDataFromChildCmp/ newTagTitel = ', newTagTitel);
 		setShowNewTagNameInputField(false);
-		generateNewTag(dataFromChildCmp);
+		if (newTagTitel != '') generateNewTag(newTagTitel);
 	};
 
 	return (
