@@ -5,6 +5,7 @@ import { MessagesSideBar } from './MessagesSideBar/index';
 
 const { Header, Sider, Content } = Layout;
 
+//<MessagesSideBar {...props} collapsed={false} />
 const MessagesSideBarContainer = ({ children, title, getDroppedDataFromTagTreeSideBar }) => {
 	return (
 		<Layout>

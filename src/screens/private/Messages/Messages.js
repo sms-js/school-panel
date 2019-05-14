@@ -93,6 +93,7 @@ const Messages = () => {
 				drop2: [],
 				drop3: []
 			};
+			//{...dropIdContainers, ...dummyContainer}
 			setDropIdContainers(Object.assign(dropIdContainers, dummyContainer)); //ok
 		});
 	}, []);
