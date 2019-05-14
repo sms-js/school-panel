@@ -71,7 +71,7 @@ const DragableBodyRow = DropTarget('row', rowTarget, (connect, monitor) => ({
   }))(BodyRow),
 );
 
-const columns = [
+const columns1 = [
   {
     title: 'Name',
     dataIndex: 'name',
@@ -89,7 +89,40 @@ const columns = [
   },
 ];
 
-const DragSortingTable=()=> {
+const columns = [
+	{
+		title: 'Fecha',
+		dataIndex: 'deliveryDate',
+		key: 'deliveryDate',
+		render: (text) => <p>{text}</p>
+	},
+	{
+		title: 'Usuario',
+		dataIndex: 'listener.wapUsername',
+		key: 'User',
+		render: (text) => <p>{text}</p>
+	},
+	{
+		title: 'Mensaje',
+		dataIndex: 'messageData.body',
+		key: 'messageText',
+		render: (text) => <p>{text}</p>
+	},
+	{
+		title: 'Action',
+		key: 'action',
+		render: (text, user) => (
+			<span>
+				<a href="#" style={{ marginLeft: '5px', color: 'red' }} onClick={user.onDelete}>
+					Delete
+				</a>
+			</span>
+		)
+	}
+];
+
+const DragSortingTable=({messages})=> {
+	console.log('messages = ', messages);
   
     const initialData= [
       {
@@ -111,7 +144,8 @@ const DragSortingTable=()=> {
         address: 'Sidney No. 1 Lake Park',
       },
 		];
-		const [data,setData]=useState(initialData);
+		//const [data,setData]=useState(initialData);
+		const [data,setData]=useState(messages);
   
 
   const components = {
@@ -146,37 +180,7 @@ export default MessagesTable;
 
 
 //=======================================================================================================================
-const columns2 = [
-	{
-		title: 'Fecha',
-		dataIndex: 'deliveryDate',
-		key: 'deliveryDate',
-		render: (text) => <p>{text}</p>
-	},
-	{
-		title: 'Usuario',
-		dataIndex: 'listener.wapUsername',
-		key: 'User',
-		render: (text) => <p>{text}</p>
-	},
-	{
-		title: 'Mensaje',
-		dataIndex: 'messageData.body',
-		key: 'messageText',
-		render: (text) => <p>{text}</p>
-	},
-	{
-		title: 'Action',
-		key: 'action',
-		render: (text, user) => (
-			<span>
-				<a href="#" style={{ marginLeft: '5px', color: 'red' }} onClick={user.onDelete}>
-					Delete
-				</a>
-			</span>
-		)
-	}
-];
+
 
 const MessagesTable2 = ({ messages, onDelete }) => (
 	<Table
@@ -188,4 +192,4 @@ const MessagesTable2 = ({ messages, onDelete }) => (
 	/>
 );
 
-//export default MessagesTable;
+//export default MessagesTable2;
