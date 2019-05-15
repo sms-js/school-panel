@@ -35,7 +35,7 @@ const SideBarTagTree = ({ sendDroppedDataToMessages }) => {
 		() => {
 			let newGData = generateTreeData(tagsArray);
 			setGdata((prevState) => [ ...newGData ]);
-			console.log('useEffect-tagsArray changed / new tagMap = ', getTagMap(gData));
+			console.log('useEffect-tagsArray changed / new tagMap = ', getTagMap(newGData));
 			console.log('useEffect-tagsArray changed /new tagsAray = ', tagsArray);
 		},
 		[ tagsArray ]
@@ -87,24 +87,40 @@ const SideBarTagTree = ({ sendDroppedDataToMessages }) => {
 		if (transferredData == '' || originContainerName == '' || destinationContainerName == '') {
 			const treeData = manipulateTreeNodeItems(info, gData);
 			// if following line is uncommentend, then the tree items became draggable within each other.
-			//setGdata((prevState) => [ ...treeData ]);
+			setGdata((prevState) => [ ...treeData ]);
 
 			tagMap = getTagMap(gData);
 
 			//generate array of dragged tags and assign the new parentTag
-			let updatedTagsArray = tagsArray.map((tag) => {
+			//let updatedTagsArray2 = tagsArray.map((tag) => {
 				// Reassignate dragged tag
-				if (info.dragNodesKeys.indexOf(tag.key) >= 0) {
-					const newTag = tagMap[tag.key];
-					newTag.parentTag = newTag.parent.key;
-					newTag.selectable = true;
-					delete newTag.parent;
-					return newTag;
-				}
-				// Return unmodified tag
-				return tag;
-			});
-
+			// 	if (info.dragNodesKeys.indexOf(tag.key) >= 0) {
+			// 		const newTag = tagMap[tag.key];
+			// 		newTag.parentTag = newTag.parent.key;
+			// 		newTag.selectable = true;
+			// 		delete newTag.parent;
+			// 		return newTag;
+			// 	}
+			// 	// Return unmodified tag
+			// 	return tag;
+			// });
+			//============================================================
+			const modifiedTags = info.dragNodesKeys.map((draggedElementKey) => {
+							const newTag = tagMap[draggedElementKey];
+							newTag.parentTag = newTag.parent.key;
+							newTag.selectable = true;
+							delete newTag.parent;
+							return newTag;
+						});
+						let updatedTagsArray = [ ...tagsArray ];
+			modifiedTags.forEach((modifiedTagEl) => {
+				updatedTagsArray.find((tagsArrayEl, index) => {
+					if (tagsArrayEl.key == modifiedTagEl.key) {
+						updatedTagsArray[index] = modifiedTagEl;
+					}
+				});
+			})
+			//============================================================
 			//this triggers a useEffect operation
 			setTagsArray([ ...updatedTagsArray ]);
 		}
@@ -129,6 +145,7 @@ const SideBarTagTree = ({ sendDroppedDataToMessages }) => {
 		const selectedTagIndex = tagsArray.findIndex((el) => el.key == newState.key);
 		const newTagsArray = tagsArray;
 		const newTag = Object.assign(tagsArray[selectedTagIndex], newState);
+
 		/* depending on users Rights: newTag should API-PATCH
 when user changes the tag props using the RCM (status,dates,title,codeword) and clicks on 'ok' the modified tag (named here as newTag) should PATCH the old tag. This step will be added to a later point. 
 */
