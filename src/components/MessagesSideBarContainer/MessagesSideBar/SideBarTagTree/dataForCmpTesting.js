@@ -1,5 +1,5 @@
 //tasgArrayFromApi is a data structure similar to the one, which will be received from the API.Only the props: selectable and disable should be added if required. Those porps are used by antd components.
-const tagsArrayFromAPI = [
+const tagsArrayFromAPISourceData = [
 	{
 		key: '5ccc37645ad6ca045cb414545',
 		title: 'Saludos de Cumple',
@@ -94,4 +94,4 @@ const tagsArrayFromAPI = [
 	}
 ];
 
-export default tagsArrayFromAPI;
+export default tagsArrayFromAPISourceData;
