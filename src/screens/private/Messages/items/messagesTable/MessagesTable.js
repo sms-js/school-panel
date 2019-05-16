@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import { Table } from 'antd';
 import { Link } from 'react-router-dom';
 import styles from './MessagesTable.module.css';
@@ -29,6 +29,8 @@ class BodyRow extends React.Component {
 
 const rowSource = {
 	beginDrag(props) {
+		console.log(props);
+		console.log('bedinDrag, props = ', props['data-row-key']);
 		dragingIndex = props.index;
 		return {
 			index: props.index
@@ -66,6 +68,10 @@ const DragableBodyRow = DropTarget('row', rowTarget, (connect, monitor) => ({
 	}))(BodyRow)
 );
 
+const drag = (e) => {
+	e.dataTransfer.setData('transfer', e.target.id);
+	e.dataTransfer.setData('transfer2', e.target.parentElement.id);
+};
 const columns = [
 	{
 		title: 'Fecha',
@@ -98,9 +104,7 @@ const columns = [
 	}
 ];
 
-
 const DragSortingTable = ({ messages }) => {
-	
 	const [data, setData] = useState(messages);
 
 	useEffect(() => {
@@ -119,7 +123,6 @@ const DragSortingTable = ({ messages }) => {
 		const newData = update(data, { $splice: [[dragIndex, 1], [hoverIndex, 0, dragRow]] });
 		return setData([...newData]);
 	};
-
 	return (
 		<Table
 			columns={columns}

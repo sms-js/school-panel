@@ -55,6 +55,7 @@ const SideBarTagTree = ({ sendDroppedDataToMessages }) => {
 		//sendDroppedDataToMessages(e);//sends id selected TreeNode to Messages Component
 	};
 
+
 	const onDrop = info => {
 		//console.log(info);
 		//sendDroppedDataToMessages(info); //sends dropped element and its (new) parent node to Messages Component
@@ -63,18 +64,17 @@ const SideBarTagTree = ({ sendDroppedDataToMessages }) => {
 		// console.log('onDrop - dragNode = ', info.dragNode);
 		// console.log('onDrop - draggedNodeKeys = ', info.dragNodesKeys); //["id","id","idww"]
 		info.event.preventDefault();
-		const transferredData = info.event.dataTransfer.getData('transfer');
-		console.log('transferred data = ', transferredData);
-		const originContainerName = info.event.dataTransfer.getData('transfer2');
-		const destinationContainerName = info.node.props.id;
+		const transferredData = info.event.dataTransfer.getData('transfer');//corresponds to dragged message id
+		const originContainerName = info.event.dataTransfer.getData('transfer2');//at this moment this is "" because the messages table is not a container.
+		const destinationContainerName = info.node.props.eventKey;//corresponds to the destination tag id. Eg.: "5ccc37df5ad6ca045cb41f79" 
 
-		/* 		
-		if (originContainerName != '') manipulateDraggedAndDroppedElement(transferredData, originContainerName, destinationContainerName
+		 		
+		//if (transferredData != '') { manipulateDraggedAndDroppedElement(transferredData, originContainerName, destinationContainerName) }
 			
 			const elementToRemoveFromParentNode = document.getElementById(transferredData);
 			let parentNode = document.getElementById(transferredData).parentNode;
- */
-		/*
+ 
+	/*	
 		We can drag and drop 2 kind of elements:
 		1) Drag a message-element and drop it into a nodeTree element.
 		2) Drag a nodeTree element and drop it into another nodeTree element. 

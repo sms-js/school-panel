@@ -7,3 +7,4 @@ docker_configuration/prod.env
 package-lock.json
 npm-debug.log
 yarn.lock
+src/screens/private/Messages/MessagesOrignalBlocked.js
