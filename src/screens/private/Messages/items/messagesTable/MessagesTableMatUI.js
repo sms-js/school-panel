@@ -29,8 +29,8 @@ function MessagesTable({ classes,messages,onDelete,sendSelectedMessageIdToParent
 	const drag = (e) => {
 		console.log('starting to drag, e = ', e);
 		console.log('starting to drag, e.target.id = ', e.target.id);
-		e.dataTransfer.setData('transfer', e.target.id);
-		e.dataTransfer.setData('transfer2', e.target.parentElement.id);
+		e.dataTransfer.setData('draggedMessageId', e.target.id);
+		//e.dataTransfer.setData('transfer2', e.target.parentElement._id);
 	};
 
 	const notAllowDrop = (e) => {
@@ -43,21 +43,21 @@ function MessagesTable({ classes,messages,onDelete,sendSelectedMessageIdToParent
       <Table className={classes.table}>
         <TableHead>
           <TableRow>
-            <TableCell>Fecha</TableCell>
-            <TableCell align="center">Usuario</TableCell>
+            <TableCell align="left">Fecha</TableCell>
+            <TableCell align="left">Usuario</TableCell>
             <TableCell align="center">Mensaje</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {data.map(message => (
 						<TableRow onClick={()=>sendSelectedMessageIdToParentCmp(message._id)} key={message._id}
-							id={message.id} draggable="true"
+							id={message._id} draggable="true"
 						onDragStart={(e) => drag(e)}
 						onDragOver={(e) => notAllowDrop(e)}>
-              <TableCell align='center'>
+              <TableCell align='left'>
                 {message.deliveryDate}
               </TableCell>
-              <TableCell align="center">{message.listener.wapUsername}</TableCell>
+              <TableCell align="left">{message.listener.wapUsername}</TableCell>
               <TableCell align="left">{message.messageData.body}</TableCell>
             </TableRow>
           ))}

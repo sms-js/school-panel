@@ -55,7 +55,6 @@ const SideBarTagTree = ({ sendDroppedDataToMessages }) => {
 		//sendDroppedDataToMessages(e);//sends id selected TreeNode to Messages Component
 	};
 
-
 	const onDrop = info => {
 		//console.log(info);
 		//sendDroppedDataToMessages(info); //sends dropped element and its (new) parent node to Messages Component
@@ -64,23 +63,29 @@ const SideBarTagTree = ({ sendDroppedDataToMessages }) => {
 		// console.log('onDrop - dragNode = ', info.dragNode);
 		// console.log('onDrop - draggedNodeKeys = ', info.dragNodesKeys); //["id","id","idww"]
 		info.event.preventDefault();
-		const transferredData = info.event.dataTransfer.getData('transfer');//corresponds to dragged message id
-		const originContainerName = info.event.dataTransfer.getData('transfer2');//at this moment this is "" because the messages table is not a container.
-		const destinationContainerName = info.node.props.eventKey;//corresponds to the destination tag id. Eg.: "5ccc37df5ad6ca045cb41f79" 
+		const draggedMessageId = info.event.dataTransfer.getData('draggedMessageId'); //corresponds to dragged message id
+		//const originContainerName = info.event.dataTransfer.getData('transfer2');//at this moment this is "" because the messages table is not a container.
+		const destinationTag = info.node.props.eventKey; //corresponds to the destination tag id. Eg.: "5ccc37df5ad6ca045cb41f79"
 
-		 		
-		//if (transferredData != '') { manipulateDraggedAndDroppedElement(transferredData, originContainerName, destinationContainerName) }
-			
-			const elementToRemoveFromParentNode = document.getElementById(transferredData);
-			let parentNode = document.getElementById(transferredData).parentNode;
- 
-	/*	
+		// draggedMessageId is not empty when a message is dropped from the MessageTable cmp into a tag element.
+		if (draggedMessageId != '') {
+			const params = {
+				destinationTag,
+				draggedMessageId
+			};
+			sendDroppedDataToMessages(params);
+		}
+
+		//const elementToRemoveFromParentNode = document.getElementById(draggedMessageId);
+		//let parentNode = document.getElementById(draggedMessageId).parentNode;
+
+		/*	
 		We can drag and drop 2 kind of elements:
 		1) Drag a message-element and drop it into a nodeTree element.
 		2) Drag a nodeTree element and drop it into another nodeTree element. 
 		If situation 2) applies, then following if-statement is true and the (antD) code for handling of nodeTree elements applies. Following code (within the if-block) was delivered with the component and is related to the treeNode elements manipulation.
 	*/
-		if (transferredData == '' || originContainerName == '' || destinationContainerName == '') {
+		if (draggedMessageId == '' || destinationTag == '') {
 			const treeData = manipulateTreeNodeItems(info, gData);
 			// if following line is uncommentend, then the tree items became draggable within each other.
 			//setGdata((prevState) => [ ...treeData ]);
