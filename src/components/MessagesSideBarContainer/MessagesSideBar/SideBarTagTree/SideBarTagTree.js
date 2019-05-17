@@ -184,7 +184,8 @@ when user changes the tag props using the RCM (status,dates,title,codeword) and 
 	const getDataFromChildCmp = newTagTitel => {
 		console.log('getDataFromChildCmp/ newTagTitel = ', newTagTitel);
 		setShowNewTagNameInputField(false);
-		if (newTagTitel != '') generateNewTag(newTagTitel);
+		//we don't create a tag if users enters one or more empty spaces in the titel input field. 
+		if (newTagTitel.trim().length>0) generateNewTag(newTagTitel);
 	};
 
 	return (

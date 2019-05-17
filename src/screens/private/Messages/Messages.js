@@ -39,7 +39,7 @@ const Messages = () => {
 			the if condition (msg.messageData.tags == undefined || msg.messageData.tags.length == 0||msg.messageData.tags[0]=="") will be changed (to a later point) into (msg.messageData.tags == undefined || msg.messageData.tags.length == 0)
 			*/
 			const requestedMessages = res.filter(msg => {
-				if (msg.messageData.tags == undefined || msg.messageData.tags.length == 0 || msg.messageData.tags[0] == '') {
+				if (msg.messageData.tags == undefined || msg.messageData.tags.length == 0) {
 					msg.deliveryDate = moment(msg.deliveryDate).format('DD/MM hh:mm');
 					return { ...msg, _key: `${msg._id}` };
 				}
@@ -82,11 +82,12 @@ const Messages = () => {
 		const newManipulatedMessages = mainScreenMessages.filter(msg => {
 			if (msg._id == draggedMessageId) {
 				const modifiedMsg = { ...msg };
-				modifiedMsg.messageData.tags =
-					modifiedMsg.messageData.tags != undefined
-						? [...modifiedMsg.messageData.tags, destinationTag]
-						: [destinationTag];
-				//API: replace original message object with the modified message, which has the newly assigned tag
+				if (modifiedMsg.messageData.tags == undefined) {
+					modifiedMsg.messageData.tags = [destinationTag];
+				} else {
+					modifiedMsg.messageData.tags = modifiedMsg.messageData.tags.concat([destinationTag]);
+				}
+				//API: replace original message object with the modified message, which has the assigned tag
 				msgLib.updateMessage(modifiedMsg);
 			} else {
 				//we return the messages which have not been affected by the dragging action
