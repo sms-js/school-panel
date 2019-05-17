@@ -23,6 +23,20 @@ export const getMessages = async (params = {}) => {
 	}
 };
 
+export const updateMessage = async (params) => {
+	try {
+		const response = await api.patch(`${MESSAGES_URL}updatemessage`, { params } );
+		if (!checkStatus(response)) {
+			throw new Error('invalid credentials');
+		}
+		return response.data;
+	} catch (error) {
+		console.debug(error);
+		return false;
+	}
+};
+
+
 /**
  * Get user data
  *

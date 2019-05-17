@@ -82,8 +82,12 @@ const Messages = () => {
 		const newManipulatedMessages = mainScreenMessages.filter(msg => {
 			if (msg._id == draggedMessageId) {
 				const modifiedMsg = { ...msg };
-				modifiedMsg.tags = modifiedMsg.tags != undefined ? [...modifiedMsg.tags, destinationTag] : [destinationTag];
-				//send modifiedMsg to API
+				modifiedMsg.messageData.tags =
+					modifiedMsg.messageData.tags != undefined
+						? [...modifiedMsg.messageData.tags, destinationTag]
+						: [destinationTag];
+				//API: replace original message object with the modified message, which has the newly assigned tag
+				msgLib.updateMessage(modifiedMsg);
 			} else {
 				//we return the messages which have not been affected by the dragging action
 				return msg;
