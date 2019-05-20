@@ -1,6 +1,7 @@
 import api from 'lib/api';
 import { checkStatus } from 'lib/validators/response';
 import { MESSAGES_URL } from 'config';
+
 //MESSAGES_URL = mdata/
 /**
  * Get Messages
@@ -26,6 +27,25 @@ export const getMessages = async (params = {}) => {
 export const updateMessage = async (params) => {
 	try {
 		const response = await api.patch(`${MESSAGES_URL}updatemessage`, { params } );
+		if (!checkStatus(response)) {
+			throw new Error('invalid credentials');
+		}
+		return response.data;
+	} catch (error) {
+		console.debug(error);
+		return false;
+	}
+};
+
+
+/**
+ * 
+ * @param {object} params
+ * params={tagsArray:["tagId","tagId",...], status:true|false}  
+ */
+export const getMessagesByTagsAndStatus = async (params) => {
+	try {
+		const response = await api.get(`${MESSAGES_URL}getmessagewithtagsandstatus`, { params } );
 		if (!checkStatus(response)) {
 			throw new Error('invalid credentials');
 		}

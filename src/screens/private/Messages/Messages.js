@@ -11,15 +11,16 @@ const confirm = Modal.confirm;
 
 const Messages = () => {
 	//messages (array) will contain the messages in their original state (as retrieved from API) before any modification
-	const [messages, setMessages] = useState([]);
+	const [messages2, setMessages2] = useState([]);
 	//mainScreenMessages corresponds to the modification of messages and its content will be rendered.
 	const [mainScreenMessages, setMainScreenMessages] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [triggerReRender, reRenderDOM] = useState(false);
+	const [selectedTag, setSelectedTag] = useState(undefined);
 
-	useEffect(() => {
-		console.log('mainScreenMessages = ', mainScreenMessages);
-	}, [mainScreenMessages]);
+	// useEffect(() => {
+	// 	console.log('mainScreenMessages = ', mainScreenMessages);
+	// }, [mainScreenMessages]);
 
 	const loadList = async () => {
 		//only messages with status=true will be retrieved from API. If specified messages with status=false can also be retrieved. See API documentation.
@@ -27,10 +28,14 @@ const Messages = () => {
 		const response = await msgLib.getMessages();
 		return response;
 	};
+	const getMessagesByTagsAndStatus = async params => {
+		const response = await msgLib.getMessagesByTagsAndStatus(params);
+		return response;
+	};
 
 	useEffect(() => {
 		loadList().then(res => {
-			setMessages(() => {
+			setMessages2(() => {
 				return [...res];
 			});
 
@@ -75,17 +80,23 @@ const Messages = () => {
 		console.log('Messages/ onSelect, e = ', e);
 	};
 
-	//@todo: when a message is dragged into a tag, the tagId should be added to message, sent to API and deleted from the actual mainScreenMessages array. Now we will just delete the affected object and re render to simulate this situation.
-	const getDataFromTagTreeSideBar = ({ destinationTag, draggedMessageId }) => {
-		//console.log('test Function in Messages!. destinationTag = ', destinationTag);
-		//console.log('test Function in Messages!. draggedMessageId = ', draggedMessageId);
+	const dragMessageToDestinationTag = ({ destinationTag, draggedMessageId }) => {
+		const destinationTagArray = destinationTag == 'mainTagKey' ? [] : [destinationTag];
 		const newManipulatedMessages = mainScreenMessages.filter(msg => {
 			if (msg._id == draggedMessageId) {
 				const modifiedMsg = { ...msg };
 				if (modifiedMsg.messageData.tags == undefined) {
-					modifiedMsg.messageData.tags = [destinationTag];
+					modifiedMsg.messageData.tags = destinationTagArray;
 				} else {
-					modifiedMsg.messageData.tags = modifiedMsg.messageData.tags.concat([destinationTag]);
+					/* following line means: when a message is dragged from one tag into another it gets 
+					the second tag appended, hence the message can be visualized in both tags. 
+					@todo: in this case the message should be shown in the origin tag after dragging.
+					Actually it can be visualized in the origin tag when user clicks origin tag after 
+					dragging message into destination tag.*/
+					// modifiedMsg.messageData.tags = modifiedMsg.messageData.tags.concat(destinationTagArray);
+
+					//message wont belong to several tags at the same tag. It gets only the dragdestination tag.
+					modifiedMsg.messageData.tags = modifiedMsg.messageData.tags = destinationTagArray;
 				}
 				//API: replace original message object with the modified message, which has the assigned tag
 				msgLib.updateMessage(modifiedMsg);
@@ -94,25 +105,37 @@ const Messages = () => {
 				return msg;
 			}
 		});
-		console.log('newManiMessages = ', newManipulatedMessages);
 		setMainScreenMessages([...newManipulatedMessages]);
 	};
 
+	const getTaggedMessages = selectedTag => {
+		const params = { tagsArray: [selectedTag], status: true };
+		getMessagesByTagsAndStatus(params).then(res => {
+			const requestedMessages = res.map(msg => {
+				msg.deliveryDate = moment(msg.deliveryDate).format('DD/MM hh:mm');
+				return { ...msg, _key: `${msg._id}` };
+			});
+			setMainScreenMessages([...requestedMessages]);
+			console.log('mainScreenMessages = ', mainScreenMessages);
+		});
+	};
+
+	const getDataFromTagTreeSideBar = ({ destinationTag, draggedMessageId }) => {
+		console.log('getDataFromTagTreeCmp, destinationTag, draggedMessageId = ', destinationTag, draggedMessageId);
+		if (destinationTag != undefined && draggedMessageId != undefined) {
+			//check that user is not attempting to drag a message from tag X into tag X. 
+			//In such a case we do not manipulate the rendered messages.
+			const draggedMessage = mainScreenMessages.filter(msg => { if (msg._id == draggedMessageId) return msg });
+			if (draggedMessage[0].messageData.tags[0] == destinationTag||(draggedMessage[0].messageData.tags[0]==undefined&&destinationTag=='mainTagKey')) return; //we dont want to proceed with drag process
+			dragMessageToDestinationTag({ destinationTag, draggedMessageId });
+		}
+		if (destinationTag != undefined && draggedMessageId == undefined) {
+			getTaggedMessages(destinationTag);
+		}
+	};
+
 	return (
-		<MessageSideBarContainer title="Messages" getDroppedDataFromTagTreeSideBar={getDataFromTagTreeSideBar}>
-			<div>
-				<Button
-					onClick={() => {
-						loadList();
-					}}
-					type="primary"
-					htmlType="button"
-					className={styles['login-form-button']}
-					size={'small'}
-				>
-					Load List
-				</Button>
-			</div>
+		<MessageSideBarContainer title="Messages" getDataFromTagTreeSideBar={getDataFromTagTreeSideBar}>
 			<div className={styles.mainComponentDiv}>
 				<MessagesTable
 					sendSelectedMessageIdToParentCmp={getSelectedMessageFromChildCmp}

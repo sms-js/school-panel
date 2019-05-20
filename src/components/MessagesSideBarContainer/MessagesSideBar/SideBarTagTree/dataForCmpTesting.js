@@ -2,7 +2,14 @@
 const testDataFromAPI = {
 	tagsArray: [
 		{
+			key: 'mainTagKey',
+			title: 'Main',
+			status: true,
+			selectable: true
+		},
+		{
 			key: '5ccc37645ad6ca045cb414545',
+			parentTag: 'mainTagKey',
 			title: 'Saludos de Cumple',
 			startDate: '2019-01-01T10:00:00Z',
 			endDate: '2019-01-10T14:00:00Z',
@@ -40,6 +47,7 @@ const testDataFromAPI = {
 		{
 			key: '5ccc37645ad6ca045cb41f73',
 			title: 'Otros Pedidos',
+			parentTag: 'mainTagKey',
 			startDate: '2019-01-01T10:00:00Z',
 			endDate: '2019-01-10T14:00:00Z',
 			autoAssignTagToIncomingMessage: true,
