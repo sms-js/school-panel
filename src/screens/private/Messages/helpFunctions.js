@@ -4,13 +4,13 @@ const { TreeNode } = Tree;
 
 /**
  * Recursive function asdfdsfdsd
- * 
+ *
  * @param {array} treeData [{children: [{key, title, disabled, selectable}]
- * 
+ *
  * @returns {object} antd structure needed for tree render
  */
 function generateTreeNodesFunction(treeData) {
-	const resultTest = treeData.map((item) => {
+	const resultTest = treeData.map(item => {
 		if (item.children && item.children.length) {
 			return (
 				<TreeNode
@@ -38,10 +38,10 @@ function generateTreeNodesFunction(treeData) {
 }
 
 /**
- * 
- * @param {*} treeData 
- * @param {*} key 
- * @param {*} callback 
+ *
+ * @param {*} treeData
+ * @param {*} key
+ * @param {*} callback
  */
 const loop = (treeData, key, callback) => {
 	treeData.forEach((item, index, arr) => {
@@ -58,7 +58,7 @@ function manipulateTreeNodeItems(info, gData) {
 	const dropPosition = info.dropPosition - Number(dropPos[dropPos.length - 1]);
 	/** */
 
-	const treeData = [ ...gData ];
+	const treeData = [...gData];
 
 	// Find dragObject
 	let dragObj;
@@ -69,7 +69,7 @@ function manipulateTreeNodeItems(info, gData) {
 	// paso tal cosa asdsad
 	if (!info.dropToGap) {
 		// Drop on the content
-		loop(treeData, dropKey, (item) => {
+		loop(treeData, dropKey, item => {
 			item.children = item.children || [];
 			// where to insert
 			item.children.push(dragObj);
@@ -82,7 +82,7 @@ function manipulateTreeNodeItems(info, gData) {
 		info.node.props.expanded && // Is expanded
 		dropPosition === 1 // On the bottom gap
 	) {
-		loop(treeData, dropKey, (item) => {
+		loop(treeData, dropKey, item => {
 			item.children = item.children || [];
 			// where to insert
 			item.children.unshift(dragObj);
@@ -108,18 +108,19 @@ function manipulateTreeNodeItems(info, gData) {
 }
 
 let tagMap = {};
-function generateTagMapFunction(list, parent, key, title, status, startDate, endDate, codeWord) {
-	return (list || []).map(({ children, key, title, status, startDate, endDate, codeWord }) => {
+function generateTagMapFunction(list, parent, key, title, status, startDate, endDate, codeWord, _id) {
+	return (list || []).map(({ children, key, title, status, startDate, endDate, codeWord, _id }) => {
 		const node = (tagMap[key] = {
 			parent,
 			key,
+			_id,
 			title,
 			status,
 			startDate,
 			endDate,
 			codeWord
 		});
-		node.children = generateTagMapFunction(children, node, key, title, status, startDate, endDate, codeWord);
+		node.children = generateTagMapFunction(children, node, _id, key, title, status, startDate, endDate, codeWord);
 		return node;
 	});
 }
@@ -144,9 +145,9 @@ const getTagPath = (key, tagMap) => {
 const generateTreeData = (tagsArrayFromAPI, tagsWithoutParents = [], firstLoop = true) => {
 	//find tags without parents
 	tagsWithoutParents =
-		firstLoop == true ? tagsArrayFromAPI.filter((el) => el.parentTag == undefined) : tagsWithoutParents;
+		firstLoop == true ? tagsArrayFromAPI.filter(el => el.parentTag == undefined) : tagsWithoutParents;
 	tagsWithoutParents.map((noParentElement, index) => {
-		tagsWithoutParents[index]['children'] = tagsArrayFromAPI.filter((el) => el.parentTag == noParentElement.key);
+		tagsWithoutParents[index]['children'] = tagsArrayFromAPI.filter(el => el.parentTag == noParentElement.key);
 		generateTreeData(tagsArrayFromAPI, tagsWithoutParents[index]['children'], false);
 	});
 	return tagsWithoutParents;

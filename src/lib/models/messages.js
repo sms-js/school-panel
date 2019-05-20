@@ -6,7 +6,7 @@ import { MESSAGES_URL } from 'config';
 /**
  * Get Messages
  *
- * @param {object} search
+ * @param {object} params
  * params = {} or undefined ->  api return all messages with status true
  * params = { _id: "54dfas5df44sd5f4asdf", status: true[false] }; -> API returns requested message if match exists
  * params = {status: true[false] } -> API returns all messages with requested status

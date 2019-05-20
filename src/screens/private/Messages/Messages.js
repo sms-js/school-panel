@@ -5,8 +5,7 @@ import { messages as msgLib } from 'lib/models';
 import MessageSideBarContainer from '../../../components/MessagesSideBarContainer/MessageSideBarContainer';
 import styles from './Messages.module.css';
 import moment from 'moment';
-
-const { TreeNode } = Tree;
+//const { TreeNode } = Tree;
 const confirm = Modal.confirm;
 
 const Messages = () => {
@@ -40,7 +39,7 @@ const Messages = () => {
 			});
 
 			/*
-			we dont want to display a message in the main screen when: message as a tag or message status is false (not the case with the previous API request). If the message has already a tag assigned, then it will be displayed, when the correspondent tag (in the tagTree) is selected. Only messages with status=true and with no tags should be displayed.
+			we dont want to display a message in the main screen when: message has a tag or message status is false (not the case with the previous API request). If the message has already a tag assigned, then it will be displayed, when the correspondent tag (in the tagTree) is selected. Only messages with status=true and with no tags should be displayed.
 			the if condition (msg.messageData.tags == undefined || msg.messageData.tags.length == 0||msg.messageData.tags[0]=="") will be changed (to a later point) into (msg.messageData.tags == undefined || msg.messageData.tags.length == 0)
 			*/
 			const requestedMessages = res.filter(msg => {
