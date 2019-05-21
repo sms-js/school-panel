@@ -37,6 +37,35 @@ function generateTreeNodesFunction(treeData) {
 	return resultTest;
 }
 
+function generateRecycleBinTreeNodesFunction(treeData) {
+	const resultTest = treeData.map(item => {
+		if (item.children && item.children.length) {
+			return (
+				<TreeNode
+					key={item.key}
+					title={item.title}
+					disabled={item.disabled || false}
+					selectable={item.selectable || true}
+					id={item.id}
+				>
+					{generateTreeNodesFunction(item.children)}
+				</TreeNode>
+			);
+		}
+		return (
+			<TreeNode
+				key={item.key}
+				title={item.title}
+				disabled={item.disabled || false}
+				selectable={item.selectable || false}
+				id={item.id}
+			/>
+		);
+	});
+	return resultTest;
+}
+
+
 /**
  *
  * @param {*} treeData
@@ -126,6 +155,7 @@ function generateTagMapFunction(list, parent, key, title, status, startDate, end
 }
 
 const getTagMap = (list, parent) => {
+	tagMap = {};
 	generateTagMapFunction(list, parent);
 	return tagMap;
 };

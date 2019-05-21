@@ -10,16 +10,11 @@ const confirm = Modal.confirm;
 
 const Messages = () => {
 	//messages (array) will contain the messages in their original state (as retrieved from API) before any modification
-	const [messages2, setMessages2] = useState([]);
 	//mainScreenMessages corresponds to the modification of messages and its content will be rendered.
 	const [mainScreenMessages, setMainScreenMessages] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [triggerReRender, reRenderDOM] = useState(false);
 	const [selectedTag, setSelectedTag] = useState(undefined);
-
-	// useEffect(() => {
-	// 	console.log('mainScreenMessages = ', mainScreenMessages);
-	// }, [mainScreenMessages]);
 
 	const loadList = async () => {
 		//only messages with status=true will be retrieved from API. If specified messages with status=false can also be retrieved. See API documentation.
@@ -34,10 +29,6 @@ const Messages = () => {
 
 	useEffect(() => {
 		loadList().then(res => {
-			setMessages2(() => {
-				return [...res];
-			});
-
 			/*
 			we dont want to display a message in the main screen when: message has a tag or message status is false (not the case with the previous API request). If the message has already a tag assigned, then it will be displayed, when the correspondent tag (in the tagTree) is selected. Only messages with status=true and with no tags should be displayed.
 			the if condition (msg.messageData.tags == undefined || msg.messageData.tags.length == 0||msg.messageData.tags[0]=="") will be changed (to a later point) into (msg.messageData.tags == undefined || msg.messageData.tags.length == 0)
@@ -87,11 +78,8 @@ const Messages = () => {
 				if (modifiedMsg.messageData.tags == undefined) {
 					modifiedMsg.messageData.tags = destinationTagArray;
 				} else {
-					/* following line means: when a message is dragged from one tag into another it gets 
-					the second tag appended, hence the message can be visualized in both tags. 
-					@todo: in this case the message should be shown in the origin tag after dragging.
-					Actually it can be visualized in the origin tag when user clicks origin tag after 
-					dragging message into destination tag.*/
+					/* following line means: when a message is dragged from one tag into another it gets the second tag appended, hence the message can be visualized in both tags. 
+					@todo: in this case the message should be shown in the origin tag after dragging.Actually it can be visualized in the origin tag when user clicks origin tag after dragging message into destination tag.*/
 					// modifiedMsg.messageData.tags = modifiedMsg.messageData.tags.concat(destinationTagArray);
 
 					//message wont belong to several tags at the same tag. It gets only the dragdestination tag.
@@ -120,12 +108,18 @@ const Messages = () => {
 	};
 
 	const getDataFromTagTreeSideBar = ({ destinationTag, draggedMessageId }) => {
-		console.log('getDataFromTagTreeCmp, destinationTag, draggedMessageId = ', destinationTag, draggedMessageId);
+		console.log('getDataFromTagTreeCmp / destinationTag, draggedMessageId = ', destinationTag, draggedMessageId);
 		if (destinationTag != undefined && draggedMessageId != undefined) {
-			//check that user is not attempting to drag a message from tag X into tag X. 
-			//In such a case we do not manipulate the rendered messages.
-			const draggedMessage = mainScreenMessages.filter(msg => { if (msg._id == draggedMessageId) return msg });
-			if (draggedMessage[0].messageData.tags[0] == destinationTag||(draggedMessage[0].messageData.tags[0]==undefined&&destinationTag=='mainTagKey')) return; //we dont want to proceed with drag process
+			//user should not be able to drag a message from tag X into tag X. In such a case we do not manipulate the rendered messages.
+			const draggedMessage = mainScreenMessages.filter(msg => {
+				if (msg._id == draggedMessageId) return msg;
+			});
+			if (
+				draggedMessage[0].messageData.tags[0] == destinationTag ||
+				(draggedMessage[0].messageData.tags[0] == undefined && destinationTag == 'mainTagKey')
+			) {
+				return; //we dont want to proceed with drag process
+			}
 			dragMessageToDestinationTag({ destinationTag, draggedMessageId });
 		}
 		if (destinationTag != undefined && draggedMessageId == undefined) {
