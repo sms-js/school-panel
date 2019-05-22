@@ -12,15 +12,16 @@ import moment from 'moment';
 import NewTagNameInputField from './RightClickMenu/NewTagNameInputCmp';
 
 const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
-	//const [expandedKeys, setExpandedKeys] = useState(['5ccc37df5ad6ca045cb41f79']);
 	const [tagsArray, setTagsArray] = useState([]);
-	const [gData, setGdata] = useState(generateTreeData(tagsArray));
+	const [recycleBinTagsArray, setRecycleBinTagsTagsArray] = useState([]);
+	const [tagsTreeDataStructure, setTagsTreeData] = useState([]);
+	const [recycleBinTreeDataStructure, setRecycleBinTreeData] = useState([]);
 	const [showModal, setShowModal] = useState(false);
 	const [showNewTagNameInputField, setShowNewTagNameInputField] = useState(false);
+	const [recycleBinTagIsSelected, setRecycleBinTagIsSelected] = useState(false);
 	const [mouseCoordinates, setMouseCoordinates] = useState({});
 	const [actualSelectedTag, setActualSelectedTag] = useState({});
 	const [draggedNode, setDraggedNode] = useState();
-	let tagMap = getTagMap(gData);
 
 	const loadTags = async () => {
 		const response = await tagsLib.getTags();
@@ -30,28 +31,48 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 	useEffect(() => {
 		loadTags().then(res => {
 			setTagsArray(
-				res.map(el => {
-					el.key = el.title == 'Main' ? 'mainTagKey' : el._id;
-					return el;
-				})
+				res
+					.map(el => {
+						el.key = el.title == 'Main' ? 'mainTagKey' : el._id;
+						return el;
+					})
+					.filter(el => el.title != 'Recycle Bin')
+			);
+			setRecycleBinTagsTagsArray(
+				res
+					.filter(el => el.title == 'Recycle Bin')
+					.map(el => {
+						el.key = 'recycleBin';
+						return el;
+					})
 			);
 		});
 	}, []);
 
 	useEffect(() => {
-		let newGData = generateTreeData(tagsArray);
-		setGdata(prevState => [...newGData]);
-		console.log('useEffect/ tagsArray changed / new tagMap = ', getTagMap(gData));
-		console.log('useEffect/ tagsArray changed /new tagsAray = ', tagsArray);
+		//const newTagsTreeData = generateTreeData(tagsArray);
+		//setTagsTreeData([...newTagsTreeData]);
+		setRecycleBinTreeData(generateTreeData(recycleBinTagsArray));
+		//console.log('useEffect/ tagsArray changed / new tagMap = ', getTagMap(tagsTreeDataStructure));
+		//console.log('useEffect/ tagsArray changed /new tagsAray = ', tagsArray);
+	}, [recycleBinTagsArray]);
+	useEffect(() => {
+		//const newTagsTreeData = generateTreeData(tagsArray);
+		//setTagsTreeData([...newTagsTreeData]);
+		setTagsTreeData(generateTreeData(tagsArray));
+		//console.log('useEffect/ tagsArray changed / new tagMap = ', getTagMap(tagsTreeDataStructure));
+		//console.log('useEffect/ tagsArray changed /new tagsAray = ', tagsArray);
 	}, [tagsArray]);
 
+	//test Use Effect can be deleted
+	//useEffect(()=>{console.log('UE/ actualSelectedTag = ',actualSelectedTag)},[actualSelectedTag])
+
 	const onSelect = e => {
-		console.log('testing tagsArray = ', tagsArray);
+		//console.log('testing tagsArray = ', tagsArray);
 		//@todo: check this double click situation on same item with PG.
 		if (e.length == 0) return;
 		//e equals to the selected treeNode key
 		//itemSelected key = e[0]
-		const selectedTagPath = getTagPath(e[0], tagMap);
 		const params = {
 			destinationTag: e[0],
 			draggedMessageId: undefined
@@ -81,8 +102,8 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		2) Drag a nodeTree element and drop it into another nodeTree element. 
 		If situation 2) applies, then following if-statement is true and the (antD) code for handling of nodeTree elements applies. Following code (within the if-block) was delivered with the component and is related to the treeNode elements manipulation.
 	*/
-		if (draggedMessageId == '' && destinationTag != '' && destinationTag!=draggedNode) {
-			tagMap = getTagMap(gData);
+		if (draggedMessageId == '' && destinationTag != '' && destinationTag != draggedNode) {
+			const tagMap = getTagMap(tagsTreeDataStructure);
 			let updatedTagsArray = tagsArray.map(tag => {
 				// Reassignate dragged tag
 				if (tag.key == draggedNode) {
@@ -104,8 +125,17 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 	//getting selected tag props and sending them to the RCM
 	//tagMap[node.props.eventKey] is the right click selected tag
 	const rightClickFunction = ({ event, node }) => {
+		console.log('tagsArray = ', tagsArray);
+		const tagMap = getTagMap(tagsTreeDataStructure);
+		console.log('tagsTreeDataStructure = ', tagsTreeDataStructure);
+		console.log('tagMap = ', tagMap);
+		const recycleBinMap = getTagMap(recycleBinTreeDataStructure);
+		console.log('recycleBinTreeDataStructure = ', recycleBinTreeDataStructure);
+		console.log('recycleBinMap = ', recycleBinMap);
 		setMouseCoordinates({ mouseX: event.clientX, mouseY: event.clientY });
-		setActualSelectedTag(tagMap[node.props.eventKey]);
+		setActualSelectedTag(tagMap[node.props.eventKey] || recycleBinMap[node.props.eventKey]);
+		setRecycleBinTagIsSelected(recycleBinMap[node.props.eventKey] != undefined);
+		console.log('actualSelectedTag = ', actualSelectedTag);
 	};
 
 	/* depending on users Rights: newTag should API-PATCH
@@ -128,6 +158,7 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 	3) After a tag creation or a tag edition, an API request gets sent and the tag object is modified on the DB.
 	*/
 	const generateNewTag = async newTagTitle => {
+		const tagMap = getTagMap(tagsTreeDataStructure);
 		/* 
 		@todo: tag edition handling should trigger an API request.
 		 */
@@ -159,10 +190,75 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		setTagsArray([...newTagsArray]);
 	};
 
+	//=====================================================================
+	/* following function generates an array with tags keys. When user deletes a specific tag, this function delivers the key  of the selected tag (the tag selected by user to be deleted) and all its children and children's childrens. Input element (focusedTag) should be an object like "actualSelectedTag" {...,key:'sdfasdf',children:[{},{},{key:'...',children:[...]}]} */
+	let affectedTagsArray = [];
+	const getTagKeyAndItsChildren = focusedTag => {
+		affectedTagsArray.push(focusedTag.key);
+		focusedTag.children.forEach(el => {
+			affectedTagsArray.push(el.key);
+			el.children.forEach(childEl => getTagKeyAndItsChildren(childEl));
+		});
+	};
+	//=====================================================================
+	/* 
+	if (tag.key == draggedNode) {
+		const newTag = tagMap[tag.key];
+		newTag.parentTag = destinationTag;
+		newTag.selectable = true;
+		delete newTag.parent;
+		tagsLib.updateTag(newTag); //PATCH: updates the modified tag
+		return newTag;
+	} */
+	const assignRecycleBinAsParent = () => {
+		getTagKeyAndItsChildren(actualSelectedTag);
+		const updatedTag = actualSelectedTag;
+		updatedTag.parentTag = 'recycleBin';
+		delete updatedTag.children;
+		delete updatedTag.parent;
+		updatedTag.selectable = true;
+		tagsLib.updateTag(updatedTag); //PATCH: updates the modified tag
+
+		//delete tag from tagsArray
+		const newTagsArray = tagsArray.filter(el => {
+			if (affectedTagsArray.indexOf(el.key) == -1) {
+				return el;
+			}
+		});
+		console.log('newTagsArraye = ', newTagsArray);
+		setTagsArray(newTagsArray);
+		//assign new tag to recycleBinTagsArray
+		const newRecycleBinElements = tagsArray.filter(el => {
+			if (affectedTagsArray.indexOf(el.key) > -1) {
+				el.parentTag = el.key == updatedTag.key ? 'recycleBin' : el.parentTag;
+				return el;
+			}
+		});
+		console.log('newRecycleBinElements = ', newRecycleBinElements);
+		const newRecycleBinArray = recycleBinTagsArray.concat(newRecycleBinElements);
+
+		console.log('newRecycleBinArray = ', newRecycleBinArray);
+		setRecycleBinTagsTagsArray(newRecycleBinArray);
+		//PATCH TAGS
+	};
+
 	const getSelectedOptionFromRCM = selectedOption => {
-		if (selectedOption.key == 'createNewTag') setShowNewTagNameInputField(true);
-		if (selectedOption.key == 'editTagProperties') {
-			setShowModal(prevState => !prevState);
+		switch (selectedOption.key) {
+			case 'createNewTag':
+				setShowNewTagNameInputField(true);
+				break;
+			case 'editTagProperties':
+				setShowModal(prevState => !prevState);
+				break;
+			case 'deleteTag':
+				console.log('case deleteTag, actualSelectedTag = ', actualSelectedTag);
+				//getTagKeyAndItsChildren(actualSelectedTag);
+				//change parent of selected tag to be recycleBin
+				assignRecycleBinAsParent();
+				console.log('affectedTagsArray = ', affectedTagsArray);
+				break;
+			default:
+				console.log('switch default case');
 		}
 	};
 
@@ -191,7 +287,7 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 						onRightClick={rightClickFunction}
 						onDragStart={({ node }) => setDraggedNode(node.props.eventKey)}
 					>
-						{generateTreeNodesFunction(gData)}
+						{generateTreeNodesFunction(tagsTreeDataStructure)}
 					</Tree>
 				</div>
 			</TagRClickWMenu>
@@ -209,6 +305,25 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 						resetShowModal={() => setShowModal(false)}
 					/>
 				) : null}
+			</div>
+			<div>
+				<TagRClickWMenu
+					recycleBinTagIsSelected={recycleBinTagIsSelected}
+					sendSelectedOptionToParentCmp={getSelectedOptionFromRCM}
+				>
+					<div>
+						<Tree
+							className="draggable-tree"
+							draggable={false}
+							onDrop={onDrop}
+							onSelect={onSelect}
+							onRightClick={rightClickFunction}
+							onDragStart={({ node }) => setDraggedNode(node.props.eventKey)}
+						>
+							{generateTreeNodesFunction(recycleBinTreeDataStructure)}
+						</Tree>
+					</div>
+				</TagRClickWMenu>
 			</div>
 		</div>
 	);

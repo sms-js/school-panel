@@ -3,16 +3,23 @@ import styles from './RightClickWMenu.module.css';
 import { Menu, Dropdown, Input, Popconfirm, Modal, Button, message } from 'antd';
 
 const TagRClickWMenu = ({ sendSelectedOptionToParentCmp, recycleBinTagIsSelected,actualSelectedTagTitel,children }) => {
-	console.log('actualSelectedTagTitel = ',actualSelectedTagTitel)
+	console.log('actualSelectedTagTitel = ', actualSelectedTagTitel)
+	
+	const modalText = {
+		sendTagToBim: 'Send to recycle bin',
+		recoverTag: 'Send back to Main list',
+		setTagStatusToFalse: 'Delete',
+	}
+
 	const confirmModal = (e) => {
 		Modal.confirm({
-			title: `Send folder "${actualSelectedTagTitel}" to recycle bin`,
-			content: 'Press OK to proceed',
+			title: `Folder: "${actualSelectedTagTitel}"`,
+			content: modalText[e.key],
 			okText: 'OK',
 			cancelText: 'Cancel',
 			okButtonProps: { type: 'danger' },
 			onOk() {
-				message.warning('Folder has been sent to recycle bin');
+				message.warning('Process succesful');
 				sendSelectedOptionToParentCmp(e)
 			}
 		});
@@ -21,17 +28,21 @@ const TagRClickWMenu = ({ sendSelectedOptionToParentCmp, recycleBinTagIsSelected
 	const menu = (
 		<Menu className={styles.testOverlay}>
 			<Menu.Item disabled={recycleBinTagIsSelected} onClick={sendSelectedOptionToParentCmp} key="createNewTag">
-				Crear carpeta
+				New folder
 			</Menu.Item>
 			<Menu.Item disabled={recycleBinTagIsSelected} onClick={sendSelectedOptionToParentCmp} key="editTagProperties">
-				Editar carpeta
+				Edit folder
 			</Menu.Item>
 			<Menu.Divider />
 			<Menu.Item disabled={recycleBinTagIsSelected||actualSelectedTagTitel=='Main'} onClick={confirmModal} key="sendTagToBim">
-				Borrar carpeta
+				send to recycle Bin
 			</Menu.Item>
 			<Menu.Item disabled={!recycleBinTagIsSelected||actualSelectedTagTitel=='Recycle Bin'} onClick={confirmModal} key="recoverTag">
-				Recuperar carpeta
+				Recover Folder
+			</Menu.Item>
+			<Menu.Divider />
+			<Menu.Item disabled={!recycleBinTagIsSelected||actualSelectedTagTitel=='Recycle Bin'} onClick={confirmModal} key="setTagStatusToFalse">
+				Delete folder
 			</Menu.Item>
 		</Menu>
 	);
