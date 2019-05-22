@@ -7,7 +7,7 @@ import { TAGS_URL, MESSAGES_URL } from 'config';
 /**
  * POST a tag
  * @param {object} params
- * tags with autoAssignTagToIncomingMessage=true MUST have a startDate and endDate to be automatically assigned to incoming Messages, if the assignment condition gets fulfilled. 
+ * tags with autoAssignTagToIncomingMessage=true MUST have a startDate and endDate to be automatically assigned to incoming Messages, if the assignment condition gets fulfilled.
  * params= {
  * title:String,
  * [startDate:ISODate,]
@@ -20,7 +20,7 @@ import { TAGS_URL, MESSAGES_URL } from 'config';
 
 export const postTag = async params => {
 	try {
-		const response = await api.post(`${TAGS_URL}posttag`, { params });
+		const response = await api.post(`${TAGS_URL}`, params);
 		console.log('tagsLib / POST tag / response = ', response);
 		if (!checkStatus(response)) {
 			throw new Error('invalid credentials');
@@ -51,7 +51,7 @@ export const postTag = async params => {
  */
 export const getTags = async (params = { status: true, orSearch: false }) => {
 	try {
-		const response = await api.get(`${TAGS_URL}gettags`, { params });
+		const response = await api.get(`${TAGS_URL}`, params);
 		if (!checkStatus(response)) {
 			throw new Error('invalid credentials');
 		}
@@ -69,7 +69,7 @@ export const getTags = async (params = { status: true, orSearch: false }) => {
  */
 export const updateTag = async params => {
 	try {
-		const response = await api.patch(`${TAGS_URL}updatetag`, { params });
+		const response = await api.patch(`${TAGS_URL}${params._id}`, params);
 		if (!checkStatus(response)) {
 			throw new Error('invalid credentials');
 		}

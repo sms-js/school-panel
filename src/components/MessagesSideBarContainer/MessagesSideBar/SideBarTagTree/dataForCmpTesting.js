@@ -1,6 +1,6 @@
-//tasgArrayFromApi is a data structure similar to the one, which will be received from the API.Only the props: selectable and disable should be added if required. Those porps are used by antd components.
+//tasgFromApi is a data structure similar to the one, which will be received from the API.Only the props: selectable and disable should be added if required. Those porps are used by antd components.
 const testDataFromAPI = {
-	tagsArray: [
+	tags: [
 		{
 			key: 'mainTagKey',
 			title: 'Main',

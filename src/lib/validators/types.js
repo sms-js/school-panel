@@ -23,6 +23,8 @@ export const isFunction = el => typeof el === 'function';
 
 export const isArray = (el, isInArray) => Array.isArray(el) && (isUndefined(isInArray) || el.indexOf(isInArray) >= 0);
 
+export const arrayIsNotEmpty = el => isArray(el) && el.length > 0;
+
 export const hasKey = (el, keyName) => isObject(el) && keyName in el;
 
 export const keyExists = hasKey;
