@@ -137,8 +137,8 @@ function manipulateTreeNodeItems(info, gData) {
 }
 
 let tagMap = {};
-function generateTagMapFunction(list, parent, key, title, status, startDate, endDate, codeWord, _id) {
-	return (list || []).map(({ children, key, title, status, startDate, endDate, codeWord, _id }) => {
+function generateTagMapFunction(list, parent, key, title, status, startDate, endDate, codeWord, _id,formerParentTag) {
+	return (list || []).map(({ children, key, title, status, startDate, endDate, codeWord, _id,formerParentTag }) => {
 		const node = (tagMap[key] = {
 			parent,
 			key,
@@ -147,9 +147,10 @@ function generateTagMapFunction(list, parent, key, title, status, startDate, end
 			status,
 			startDate,
 			endDate,
-			codeWord
+			codeWord,
+			formerParentTag
 		});
-		node.children = generateTagMapFunction(children, node, _id, key, title, status, startDate, endDate, codeWord);
+		node.children = generateTagMapFunction(children, node, _id, key, title, status, startDate, endDate, codeWord,formerParentTag);
 		return node;
 	});
 }
