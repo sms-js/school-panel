@@ -35,7 +35,7 @@ const TagRClickWMenu = ({ sendSelectedOptionToParentCmp, recycleBinTagIsSelected
 			</Menu.Item>
 			<Menu.Divider />
 			<Menu.Item disabled={recycleBinTagIsSelected||actualSelectedTagTitel=='Main'} onClick={confirmModal} key="sendTagToBim">
-				send to recycle Bin
+				Send to recycle Bin
 			</Menu.Item>
 			<Menu.Item disabled={!recycleBinTagIsSelected||actualSelectedTagTitel=='Recycle Bin'} onClick={confirmModal} key="recoverTag">
 				Recover Folder

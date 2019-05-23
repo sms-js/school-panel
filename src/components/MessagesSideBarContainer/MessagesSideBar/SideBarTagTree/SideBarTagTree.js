@@ -7,9 +7,9 @@ import {
 	getTagMap,
 	generateTreeData
 } from '../../../../screens/private/Messages/helpFunctions';
-import { TagRClickMenu, TagRClickWMenu, testDataFromAPI } from './index';
+import { TagRClickMenu, TagRClickWMenu } from './index';
 import moment from 'moment';
-import NewTagNameInputField from './RightClickMenu/NewTagNameInputCmp';
+import NewTagNameInputField from './RightClickWMenu/NewTagNameInputCmp';
 
 const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 	const [tagsArray, setTagsArray] = useState([]);
@@ -118,14 +118,19 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		setRecycleBinTagIsSelected(recycleBinMap[node.props.eventKey] != undefined);
 	};
 
-	/* depending on users Rights: newTag should API-PATCH
+	/* depending on users Rights: updatedTag should API-PATCH
 		when user changes the tag props using the RCM (status,dates,title,codeword) and clicks on 'ok' the modified tag (named here as newTag) should PATCH the old tag. This step will be added to a later point.*/
-	const getNewSelectedTagStateFromModal = newState => {
+	const getNewSelectedTagStateFromModal = params => {
+		//when user press on "confirm" the modal closes and we want to set back its state to false (because if not, user has to click twice on edit tag props, to open the modal).
+		setShowModal(false);
+		let newState = { ...actualSelectedTag, ...params };
 		delete newState.parent;
 		const selectedTagIndex = tagsArray.findIndex(el => el.key == newState.key);
 		const newTagsArray = tagsArray;
-		const newTag = Object.assign(tagsArray[selectedTagIndex], newState);
-		newTagsArray[selectedTagIndex] = newTag;
+		const updatedTag = Object.assign(tagsArray[selectedTagIndex], newState);
+		newTagsArray[selectedTagIndex] = updatedTag;
+		//PATCH: updates the modified tag
+		tagsLib.updateTag(updatedTag);
 		setTagsArray(newTagsArray);
 	};
 
@@ -194,7 +199,7 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		//issue with the following code is that we have to "clean" all affected tags when we send one to the bim.
 		//check if parentTag is available in the tagsArray
 		//updatedTag.parentTag = tagsArray.findIndex(el => el._id == updatedTag.parentTag) > -1 ? updatedTag.parentTag : 'mainTagKey';
-		
+
 		//for now we will hardcode to parent tag. Every recovered tag will be displayed under main
 		updatedTag.parentTag = 'mainTagKey';
 
@@ -251,8 +256,8 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		setRecycleBinTagsTagsArray(newRecycleBinTagsArray);
 	};
 
-	const getSelectedOptionFromRCM = selectedOption => {
-		switch (selectedOption.key) {
+	const getSelectedOptionFromRCM = event => {
+		switch (event.key) {
 			case 'createNewTag':
 				setShowNewTagNameInputField(true);
 				break;
@@ -268,7 +273,6 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 			case 'setTagStatusToFalse':
 				setTagStatusToFalse();
 				break;
-
 			default:
 				console.log('switch default case');
 		}
@@ -289,13 +293,6 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 				<div>
 					<Tree
 						className="draggable-tree"
-						//autoExpandParent={true}
-						//expandedKeys={['5ce2aff7154a1d2c93abd7d3']}
-						//defaultExpandParent={true}
-						//defaultExpandAll={true}
-						//defaultExpandedKeys={['5ce2aff7154a1d2c93abd7d3']}
-						//defaultSelectedKeys={['5ce2aff7154a1d2c93abd7d3']}
-						//blockNode
 						draggable
 						onDrop={onDrop}
 						onSelect={onSelect}
@@ -314,7 +311,8 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 			<div>
 				{showModal ? (
 					<TagRClickMenu
-						rightClickSelectedTag={actualSelectedTag}
+						showModal={showModal}
+						actualSelectedTag={actualSelectedTag}
 						sendNewSelectedTagStateToTagTree={getNewSelectedTagStateFromModal}
 						mouseRightClickPosition={mouseCoordinates}
 						resetShowModal={() => setShowModal(false)}
