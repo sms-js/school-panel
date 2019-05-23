@@ -35,7 +35,7 @@ const Messages = () => {
 			*/
 			const requestedMessages = res.filter(msg => {
 				if (msg.messageData.tags == undefined || msg.messageData.tags.length == 0) {
-					msg.deliveryDate = moment(msg.deliveryDate).format('DD/MM hh:mm');
+					msg.deliveryDate = moment(msg.deliveryDate);//.format('DD/MM hh:mm');
 					return { ...msg, _key: `${msg._id}` };
 				}
 			});
@@ -83,7 +83,7 @@ const Messages = () => {
 					// modifiedMsg.messageData.tags = modifiedMsg.messageData.tags.concat(destinationTagArray);
 
 					//message wont belong to several tags at the same tag. It gets only the dragdestination tag.
-					modifiedMsg.messageData.tags = modifiedMsg.messageData.tags = destinationTagArray;
+					modifiedMsg.messageData.tags = destinationTagArray;
 				}
 				//API: replace original message object with the modified message, which has the assigned tag
 				msgLib.updateMessage(modifiedMsg);
@@ -99,7 +99,7 @@ const Messages = () => {
 		const params = { tagsArray: [selectedTag], status: true };
 		getMessagesByTagsAndStatus(params).then(res => {
 			const requestedMessages = res.map(msg => {
-				msg.deliveryDate = moment(msg.deliveryDate).format('DD/MM hh:mm');
+				msg.deliveryDate = moment(msg.deliveryDate);//.format('DD/MM hh:mm');
 				return { ...msg, _key: `${msg._id}` };
 			});
 			setMainScreenMessages([...requestedMessages]);

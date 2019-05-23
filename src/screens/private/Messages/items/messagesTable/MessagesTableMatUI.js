@@ -7,6 +7,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import moment from 'moment';
 
 const styles = theme => ({
   root: {
@@ -27,10 +28,7 @@ function MessagesTable({ classes,messages,onDelete,sendSelectedMessageIdToParent
 	}, [messages]);
 
 	const drag = (e) => {
-		console.log('starting to drag, e = ', e);
-		console.log('starting to drag, e.target.id = ', e.target.id);
 		e.dataTransfer.setData('draggedMessageId', e.target.id);
-		//e.dataTransfer.setData('transfer2', e.target.parentElement._id);
 	};
 
 	const notAllowDrop = (e) => {
@@ -55,7 +53,7 @@ function MessagesTable({ classes,messages,onDelete,sendSelectedMessageIdToParent
 						onDragStart={(e) => drag(e)}
 						onDragOver={(e) => notAllowDrop(e)}>
               <TableCell align='left'>
-                {message.deliveryDate}
+                {message.deliveryDate.format('DD/MM hh:mm')}
               </TableCell>
               <TableCell align="left">{message.listener.wapUsername}</TableCell>
               <TableCell align="left">{message.messageData.body}</TableCell>
