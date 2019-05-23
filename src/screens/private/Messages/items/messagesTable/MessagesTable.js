@@ -1,4 +1,4 @@
-import React, {useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import { Link } from 'react-router-dom';
 import styles from './MessagesTable.module.css';
@@ -68,7 +68,7 @@ const DragableBodyRow = DropTarget('row', rowTarget, (connect, monitor) => ({
 	}))(BodyRow)
 );
 
-const drag = (e) => {
+const drag = e => {
 	e.dataTransfer.setData('transfer', e.target.id);
 	e.dataTransfer.setData('transfer2', e.target.parentElement.id);
 };
@@ -87,7 +87,7 @@ const columns = [
 	},
 	{
 		title: 'Mensaje',
-		dataIndex: 'messageData.body',
+		dataIndex: 'data.body',
 		key: 'messageText',
 		render: text => <p>{text}</p>
 	},
