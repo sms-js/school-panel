@@ -34,13 +34,7 @@ const Messages = () => {
 		/*
 			we dont want to display a message in the main screen when: message has a tag or message status is false (not the case with the previous API request). If the message has already a tag assigned, then it will be displayed, when the correspondent tag (in the tagTree) is selected. Only messages with status=true and with no tags should be displayed.
 		*/
-		// @alexis .filter is not .map (I don't understand this code)
-		const requestedMessages = res.filter(msg => {
-			if (!arrayIsNotEmpty(msg.tags)) {
-				msg.deliveryDate = moment(msg.deliveryDate).format('DD/MM hh:mm');
-				return { ...msg, _key: `${msg._id}` };
-			}
-		});
+		const requestedMessages = res.filter(msg => !arrayIsNotEmpty(msg.tags)).map(msg => ({ ...msg, _key: `${msg._id}` }));
 		setMainScreenMessages([...requestedMessages]);
 		console.log('mainScreenMessages = ', mainScreenMessages);
 	};

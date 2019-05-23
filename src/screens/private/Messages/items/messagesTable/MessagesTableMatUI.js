@@ -57,7 +57,7 @@ function MessagesTable({ classes, messages, onDelete, sendSelectedMessageIdToPar
 							onDragStart={e => drag(e)}
 							onDragOver={e => notAllowDrop(e)}
 						>
-							<TableCell align="left">{message.deliveryDate.format('DD/MM hh:mm')}</TableCell>
+							<TableCell align="left">{moment(message.deliveryDate).format('DD/MM hh:mm')}</TableCell>
 							<TableCell align="left">{message.listener}</TableCell>
 							<TableCell align="left">{message.body}</TableCell>
 						</TableRow>
