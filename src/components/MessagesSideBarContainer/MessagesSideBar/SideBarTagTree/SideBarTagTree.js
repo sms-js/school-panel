@@ -9,7 +9,7 @@ import {
 } from '../../../../screens/private/Messages/helpFunctions';
 import { TagRClickMenu, TagRClickWMenu } from './index';
 import moment from 'moment';
-import NewTagNameInputField from './RightClickWMenu/NewTagNameInputCmp';
+import NewTagNameInputField from './elements/NewTagNameInputCmp';
 
 const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 	const [tags, setTags] = useState([]);
@@ -259,7 +259,7 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 	};
 
 	const getSelectedOptionFromRCM = event => {
-		switch (event.key) {
+		switch (event) {
 			case 'createNewTag':
 				setShowNewTagNameInputField(true);
 				break;

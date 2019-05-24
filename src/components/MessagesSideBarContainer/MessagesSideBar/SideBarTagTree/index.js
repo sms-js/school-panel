@@ -1,3 +1,3 @@
-import RightClickMenu from './RightClickMenu/RightClickMenu';
-import RightClickWMenu from './RightClickWMenu/RightClickWMenu';
+import RightClickMenu from './elements/RightClickMenu/RightClickMenu';
+import RightClickWMenu from './elements/RightClickWMenu/RightClickWMenu';
 export { RightClickMenu as TagRClickMenu, RightClickWMenu as TagRClickWMenu };

@@ -44,7 +44,7 @@ export const updateMessage = async params => {
 export const getMessagesByTagsAndStatus = async params => {
 	try {
 		console.log('test');
-		const response = await api.get(`${MESSAGES_URL}search`, params);
+		const response = await api.get(`${MESSAGES_URL}search`,  params);
 		console.log('test');
 		if (!checkStatus(response)) {
 			throw new Error('invalid credentials');
