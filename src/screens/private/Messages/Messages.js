@@ -24,7 +24,9 @@ const Messages = () => {
 		const response = await msgLib.getMessages();
 		return response;
 	};
+
 	const getMessagesByTagsAndStatus = async params => {
+		console.log(params);
 		const response = await msgLib.getMessagesByTagsAndStatus(params);
 		return response;
 	};

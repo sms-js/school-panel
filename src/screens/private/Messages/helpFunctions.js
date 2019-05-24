@@ -136,34 +136,48 @@ function manipulateTreeNodeItems(info, gData) {
 }
 
 let tagMap = {};
-function generateTagMapFunction(list, parent, key, title, status, startDate, endDate, codeWord, _id, formerParentTag,autoAssignTagToIncomingMessage) {
-	return (list || []).map(({ children, key, title, status, startDate, endDate, codeWord, _id, formerParentTag,autoAssignTagToIncomingMessage }) => {
-		const node = (tagMap[key] = {
-			parent,
+function generateTagMapFunction(list, parent, key, title, status, startDate, endDate, codeWord, _id, formerParentTag) {
+	return (list || []).map(
+		({
+			children,
 			key,
-			_id,
 			title,
 			status,
 			startDate,
 			endDate,
 			codeWord,
+			_id,
 			formerParentTag,
 			autoAssignTagToIncomingMessage
-		});
-		node.children = generateTagMapFunction(
-			children,
-			node,
-			_id,
-			key,
-			title,
-			status,
-			startDate,
-			endDate,
-			codeWord,
-			formerParentTag
-		);
-		return node;
-	});
+		}) => {
+			const node = (tagMap[key] = {
+				parent,
+				key,
+				_id,
+				title,
+				status,
+				startDate,
+				endDate,
+				codeWord,
+				formerParentTag,
+				autoAssignTagToIncomingMessage
+			});
+			node.children = generateTagMapFunction(
+				children,
+				node,
+				_id,
+				key,
+				title,
+				status,
+				startDate,
+				endDate,
+				codeWord,
+				formerParentTag,
+				autoAssignTagToIncomingMessage
+			);
+			return node;
+		}
+	);
 }
 
 const getTagMap = (list, parent) => {
