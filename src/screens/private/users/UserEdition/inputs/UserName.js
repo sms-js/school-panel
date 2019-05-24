@@ -1,26 +1,35 @@
 import React from 'react';
-import styles from '../UserEdition.module.css';
-import { Form, Icon, Input } from 'antd';
+import PropTypes from 'prop-types';
+import TextField from '@material-ui/core/TextField';
+import { isNotEmptyString } from 'lib/validators/types';
 
-const getInput = (form, user) => {
-	const { getFieldDecorator } = form;
+const id = 'user-name';
+const label = 'Username';
+const fieldName = 'username';
 
-	return getFieldDecorator('username', {
-		rules: [ { required: true, message: 'Please enter a username' } ],
-		initialValue: user.username
-	})(
-		<Input
-			key="profile-username-input"
-			prefix={<Icon type="tag" className={styles['home-icon']} />}
-			placeholder="Username"
+const validateField = value => isNotEmptyString(value);
+
+const UserName = ({ classes, handleChange, value, error }) => {
+	return (
+		<TextField
+			name={fieldName}
+			required
+			error={error}
+			id={id}
+			label={label}
+			className={classes.textField}
+			value={value}
+			onChange={ev => handleChange(ev.target.value, !validateField(ev.target.value))}
+			margin="normal"
 		/>
 	);
 };
 
-const UserName = ({ form, user }) => (
-	<Form.Item hasFeedback label="Username">
-		{getInput(form, user)}
-	</Form.Item>
-);
+UserName.propTypes = {
+	classes: PropTypes.object.isRequired,
+	handleChange: PropTypes.func.isRequired,
+	error: PropTypes.bool.isRequired,
+	value: PropTypes.string
+};
 
 export default UserName;
