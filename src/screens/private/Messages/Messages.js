@@ -113,8 +113,8 @@ const Messages = () => {
 				if (msg._id == draggedMessageId) return msg;
 			});
 			if (
-				draggedMessage[0].data.tags[0] == destinationTag ||
-				(!draggedMessage[0].data.tags[0] && destinationTag == 'mainTagKey')
+				draggedMessage[0].tags[0] == destinationTag ||
+				(!draggedMessage[0].tags[0] && destinationTag == 'mainTagKey')
 			) {
 				return; //we dont want to proceed with drag process
 			}

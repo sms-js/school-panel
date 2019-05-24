@@ -132,6 +132,7 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		const selectedTagIndex = tags.findIndex(el => el.key == newState.key);
 		const newTags = tags;
 		const newTag = Object.assign(tags[selectedTagIndex], newState);
+		tagsLib.updateTag(newTag); //PATCH: updates the modified tag
 		newTags[selectedTagIndex] = newTag;
 		setTags(newTags);
 	};
