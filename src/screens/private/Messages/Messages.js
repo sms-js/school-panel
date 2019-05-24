@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal } from 'antd';
 import moment from 'moment';
 import { MessagesTable } from './items';
-import { messages as msgLib } from 'lib/models';
+import { msgLib } from 'lib/models';
 import MessageSideBarContainer from 'components/MessagesSideBarContainer/MessageSideBarContainer';
 import styles from './Messages.module.css';
 import { arrayIsNotEmpty } from 'lib/validators/types';
@@ -34,7 +34,9 @@ const Messages = () => {
 		/*
 			we dont want to display a message in the main screen when: message has a tag or message status is false (not the case with the previous API request). If the message has already a tag assigned, then it will be displayed, when the correspondent tag (in the tagTree) is selected. Only messages with status=true and with no tags should be displayed.
 		*/
-		const requestedMessages = res.filter(msg => !arrayIsNotEmpty(msg.tags)).map(msg => ({ ...msg, _key: `${msg._id}` }));
+		const requestedMessages = res
+			.filter(msg => !arrayIsNotEmpty(msg.tags))
+			.map(msg => ({ ...msg, _key: `${msg._id}` }));
 		setMainScreenMessages([...requestedMessages]);
 		console.log('mainScreenMessages = ', mainScreenMessages);
 	};
