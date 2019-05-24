@@ -1,17 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styles from './RightClickWMenu.module.css';
-import { Menu, Dropdown, Input, Popconfirm, Modal, Button, message } from 'antd';
+import { Menu, Dropdown, Modal, message } from 'antd';
 
-const TagRClickWMenu = ({ sendSelectedOptionToParentCmp, recycleBinTagIsSelected,actualSelectedTagTitel,children }) => {
-	console.log('actualSelectedTagTitel = ', actualSelectedTagTitel)
-	
+const TagRClickWMenu = ({
+	sendSelectedOptionToParentCmp,
+	recycleBinTagIsSelected,
+	actualSelectedTagTitel,
+	children
+}) => {
+	console.log('actualSelectedTagTitel = ', actualSelectedTagTitel);
+
 	const modalText = {
 		sendTagToBim: 'Send to recycle bin',
 		recoverTag: 'Send back to Main list',
-		setTagStatusToFalse: 'Delete',
-	}
+		setTagStatusToFalse: 'Delete'
+	};
 
-	const confirmModal = (e) => {
+	const confirmModal = e => {
 		Modal.confirm({
 			title: `Folder: "${actualSelectedTagTitel}"`,
 			content: modalText[e.key],
@@ -20,7 +25,7 @@ const TagRClickWMenu = ({ sendSelectedOptionToParentCmp, recycleBinTagIsSelected
 			okButtonProps: { type: 'danger' },
 			onOk() {
 				message.warning('Process succesful');
-				sendSelectedOptionToParentCmp(e)
+				sendSelectedOptionToParentCmp(e);
 			}
 		});
 	};
@@ -34,14 +39,26 @@ const TagRClickWMenu = ({ sendSelectedOptionToParentCmp, recycleBinTagIsSelected
 				Edit folder
 			</Menu.Item>
 			<Menu.Divider />
-			<Menu.Item disabled={recycleBinTagIsSelected||actualSelectedTagTitel=='Main'} onClick={confirmModal} key="sendTagToBim">
+			<Menu.Item
+				disabled={recycleBinTagIsSelected || actualSelectedTagTitel === 'Main'}
+				onClick={confirmModal}
+				key="sendTagToBim"
+			>
 				Send to recycle Bin
 			</Menu.Item>
-			<Menu.Item disabled={!recycleBinTagIsSelected||actualSelectedTagTitel=='Recycle Bin'} onClick={confirmModal} key="recoverTag">
+			<Menu.Item
+				disabled={!recycleBinTagIsSelected || actualSelectedTagTitel === 'Recycle Bin'}
+				onClick={confirmModal}
+				key="recoverTag"
+			>
 				Recover Folder
 			</Menu.Item>
 			<Menu.Divider />
-			<Menu.Item disabled={!recycleBinTagIsSelected||actualSelectedTagTitel=='Recycle Bin'} onClick={confirmModal} key="setTagStatusToFalse">
+			<Menu.Item
+				disabled={!recycleBinTagIsSelected || actualSelectedTagTitel === 'Recycle Bin'}
+				onClick={confirmModal}
+				key="setTagStatusToFalse"
+			>
 				Delete folder
 			</Menu.Item>
 		</Menu>

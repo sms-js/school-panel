@@ -1,6 +1,6 @@
 import api from 'lib/api';
 import { checkStatus } from 'lib/validators/response';
-import { TAGS_URL, MESSAGES_URL } from 'config';
+import { TAGS_URL /*, MESSAGES_URL*/ } from 'config';
 
 //TAGS_URL = tags/
 

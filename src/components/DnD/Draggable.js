@@ -1,15 +1,13 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import Aux from '../AUX/Aux';
 
-const Draggable = (props) => {
-	 
-	const drag = (e) => {
+const Draggable = props => {
+	const drag = e => {
 		e.dataTransfer.setData('transfer', e.target.id);
 		e.dataTransfer.setData('transfer2', e.target.parentElement.id);
 	};
 
-	const notAllowDrop = (e) => {
+	const notAllowDrop = e => {
 		e.stopPropagation();
 	};
 
@@ -17,14 +15,14 @@ const Draggable = (props) => {
 		<div
 			id={props.id}
 			draggable="true"
-			onDragStart={(e) => drag(e)}
-			onDragOver={(e) => notAllowDrop(e)}
+			onDragStart={e => drag(e)}
+			onDragOver={e => notAllowDrop(e)}
 			style={props.style}
 		>
 			{props.children}
 		</div>
 	);
-}; 
+};
 
 /*
 class Draggable extends Component {

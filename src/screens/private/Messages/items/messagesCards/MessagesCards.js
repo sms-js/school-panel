@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Form, Modal, Spin, Table, Card, Popover, Row, Col } from 'antd';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { Card, Popover } from 'antd';
 import styles from './MessagesCards.module.css';
-import SideBarContainer from 'components/SideBarContainer';
-import SessionContext from 'components/SessionContext';
 import { Draggable } from '../../../../../components/DnD';
 
 const popovercontent = (
@@ -28,7 +25,7 @@ const CardWithPopOver = ({ props }) => {
 				<Card
 					size="small"
 					title={props.listener.wapUsername}
-					extra={<a href="#">CouldBeALink</a>}
+					extra={<a href="https://google.com">CouldBeALink</a>}
 					className={styles.cardStyle}
 					key={'card_key_' + props._id}
 				>
@@ -59,9 +56,7 @@ const CardWithPopOver = ({ props }) => {
 	return SideBarComponent;
 }; */
 
-const MessagesCards = ({ messages, onDelete }) => {
-	const [error, setError] = useState(false);
-	const [loading, setLoading] = useState(false);
+const MessagesCards = ({ messages }) => {
 	const cardsArray = messages.map(msg => <CardWithPopOver key={'cwpoKey_' + msg._id} props={msg} />);
 
 	return cardsArray;

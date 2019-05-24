@@ -35,7 +35,8 @@ DrawerContainer.propTypes = {
 	// Injected by the documentation to work in an iframe.
 	// You won't need it on your project.
 	container: PropTypes.object,
-	theme: PropTypes.object.isRequired
+	theme: PropTypes.object.isRequired,
+	children: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
 };
 
 export default withStyles(styles, { withTheme: true })(DrawerContainer);

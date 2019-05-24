@@ -21,7 +21,12 @@ const DrawerNav = ({ classes, theme, handleDrawerToggle, container, mobileOpen }
 						paper: classes.drawerPaper
 					}}
 				>
-					{DrawerContent}
+					<DrawerContent
+						handleDrawerToggle={handleDrawerToggle}
+						mobileOpen={mobileOpen}
+						theme={theme}
+						classes={classes}
+					/>
 				</Drawer>
 			</Hidden>
 			<Hidden xsDown implementation="css">
@@ -32,7 +37,12 @@ const DrawerNav = ({ classes, theme, handleDrawerToggle, container, mobileOpen }
 					variant="permanent"
 					open
 				>
-					<DrawerContent classes={classes} />
+					<DrawerContent
+						handleDrawerToggle={handleDrawerToggle}
+						mobileOpen={mobileOpen}
+						theme={theme}
+						classes={classes}
+					/>
 				</Drawer>
 			</Hidden>
 		</nav>

@@ -1,14 +1,9 @@
-import React, { useContext } from 'react';
-import { Menu, Icon, Button } from 'antd';
+import React from 'react';
+import { Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom';
-import SessionContext from 'components/SessionContext';
-import { Droppable } from '../../DnD';
 import { SideBarTagTree } from './index';
 
-const SubMenu = Menu.SubMenu;
-
 const MessagesSideBar = ({ collapsed, getDataFromTagTreeSideBar }) => {
-	const session = useContext(SessionContext.context);
 	return (
 		<div style={{ height: '100vh', textAlign: 'left' }}>
 			<Menu

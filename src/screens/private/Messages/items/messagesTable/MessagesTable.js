@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Table } from 'antd';
-import { Link } from 'react-router-dom';
-import styles from './MessagesTable.module.css';
 import { DragDropContext, DragSource, DropTarget } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import update from 'immutability-helper';

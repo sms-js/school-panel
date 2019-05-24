@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Tree } from 'antd';
 const { TreeNode } = Tree;
 
@@ -37,6 +37,7 @@ function generateTreeNodesFunction(treeData) {
 	return resultTest;
 }
 
+/*
 function generateRecycleBinTreeNodesFunction(treeData) {
 	const resultTest = treeData.map(item => {
 		if (item.children && item.children.length) {
@@ -64,6 +65,7 @@ function generateRecycleBinTreeNodesFunction(treeData) {
 	});
 	return resultTest;
 }
+*/
 
 /**
  *
@@ -199,9 +201,9 @@ const getTagPath = (key, tagMap) => {
 
 const generateTreeData = (tagsFromAPI, tagsWithoutParents = [], firstLoop = true) => {
 	//find tags without parents
-	tagsWithoutParents = firstLoop == true ? tagsFromAPI.filter(el => el.parentTag == undefined) : tagsWithoutParents;
-	tagsWithoutParents.map((noParentElement, index) => {
-		tagsWithoutParents[index]['children'] = tagsFromAPI.filter(el => el.parentTag == noParentElement.key);
+	tagsWithoutParents = firstLoop === true ? tagsFromAPI.filter(el => el.parentTag === undefined) : tagsWithoutParents;
+	tagsWithoutParents.forEach((noParentElement, index) => {
+		tagsWithoutParents[index]['children'] = tagsFromAPI.filter(el => el.parentTag === noParentElement.key);
 		generateTreeData(tagsFromAPI, tagsWithoutParents[index]['children'], false);
 	});
 	return tagsWithoutParents;

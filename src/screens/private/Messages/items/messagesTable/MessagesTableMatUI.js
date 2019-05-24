@@ -7,7 +7,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import moment from 'moment';
 
 const styles = theme => ({
 	root: {
@@ -20,7 +19,7 @@ const styles = theme => ({
 	}
 });
 
-function MessagesTable({ classes, messages, onDelete, sendSelectedMessageIdToParentCmp }) {
+function MessagesTable({ classes, messages, sendSelectedMessageIdToParentCmp }) {
 	const [data, setData] = useState(messages);
 
 	useEffect(() => {
