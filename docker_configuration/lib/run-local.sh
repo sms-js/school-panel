@@ -11,7 +11,8 @@ else
 	cp ./docker_configuration/test.env .env
 fi
 
-printf "\n${bold}==> ********** Installing depedendencies **********${normal} \n"
-npm update
+#printf "\n${bold}==> RUN npm update... ${normal} \n"
+#npm update
+printf "\n${bold}==> WARNING! npm update is not longer donde, you must first run npm install... ${normal} \n"
 
 npm run react-start

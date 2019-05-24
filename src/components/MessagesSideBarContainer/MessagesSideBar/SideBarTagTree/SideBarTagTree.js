@@ -12,8 +12,8 @@ import moment from 'moment';
 import NewTagNameInputField from './RightClickWMenu/NewTagNameInputCmp';
 
 const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
-	const [tagsArray, setTagsArray] = useState([]);
-	const [recycleBinTagsArray, setRecycleBinTagsTagsArray] = useState([]);
+	const [tags, setTags] = useState([]);
+	const [recycleBinTags, setRecycleBinTagsTags] = useState([]);
 	const [tagsTreeDataStructure, setTagsTreeData] = useState([]);
 	const [recycleBinTreeDataStructure, setRecycleBinTreeData] = useState([]);
 	const [showModal, setShowModal] = useState(false);
@@ -28,33 +28,37 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		return response;
 	};
 
+	const initTags = async () => {
+		const res = await loadTags();
+		setTags(
+			res
+				.map(el => {
+					el.key = el.title == 'Main' ? 'mainTagKey' : el._id;
+					return el;
+				})
+				.filter(el => el.title != 'Recycle Bin')
+		);
+		setRecycleBinTagsTags(
+			res
+				.filter(el => el.title == 'Recycle Bin' || el.parentTag == 'recycleBin')
+				.map(el => {
+					el.key = el.title == 'Recycle Bin' ? 'recycleBin' : el._id;
+					return el;
+				})
+		);
+	};
+
 	useEffect(() => {
-		loadTags().then(res => {
-			setTagsArray(
-				res
-					.map(el => {
-						el.key = el.title == 'Main' ? 'mainTagKey' : el._id;
-						return el;
-					})
-					.filter(el => el.title != 'Recycle Bin')
-			);
-			setRecycleBinTagsTagsArray(
-				res
-					.filter(el => el.title == 'Recycle Bin' || el.parentTag == 'recycleBin')
-					.map(el => {
-						el.key = el.title == 'Recycle Bin' ? 'recycleBin' : el._id;
-						return el;
-					})
-			);
-		});
+		initTags();
 	}, []);
 
 	useEffect(() => {
-		setRecycleBinTreeData(generateTreeData(recycleBinTagsArray));
-	}, [recycleBinTagsArray]);
+		setRecycleBinTreeData(generateTreeData(recycleBinTags));
+	}, [recycleBinTags]);
+
 	useEffect(() => {
-		setTagsTreeData(generateTreeData(tagsArray));
-	}, [tagsArray]);
+		setTagsTreeData(generateTreeData(tags));
+	}, [tags]);
 
 	const onSelect = e => {
 		//@todo: check this double click situation on same item with PG.
@@ -90,7 +94,7 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 	*/
 		if (draggedMessageId == '' && destinationTag != '' && destinationTag != draggedNode) {
 			const tagMap = getTagMap(tagsTreeDataStructure);
-			let updatedTagsArray = tagsArray.map(tag => {
+			let updatedTags = tags.map(tag => {
 				// Reassignate dragged tag
 				if (tag.key == draggedNode) {
 					const newTag = tagMap[tag.key];
@@ -104,7 +108,7 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 				return tag;
 			});
 			//this triggers a useEffect operation and updates the DOM.
-			setTagsArray([...updatedTagsArray]);
+			setTags([...updatedTags]);
 		}
 	};
 
@@ -125,13 +129,11 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		setShowModal(false);
 		let newState = { ...actualSelectedTag, ...params };
 		delete newState.parent;
-		const selectedTagIndex = tagsArray.findIndex(el => el.key == newState.key);
-		const newTagsArray = tagsArray;
-		const updatedTag = Object.assign(tagsArray[selectedTagIndex], newState);
-		newTagsArray[selectedTagIndex] = updatedTag;
-		//PATCH: updates the modified tag
-		tagsLib.updateTag(updatedTag);
-		setTagsArray(newTagsArray);
+		const selectedTagIndex = tags.findIndex(el => el.key == newState.key);
+		const newTags = tags;
+		const newTag = Object.assign(tags[selectedTagIndex], newState);
+		newTags[selectedTagIndex] = newTag;
+		setTags(newTags);
 	};
 
 	/*
@@ -158,29 +160,29 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		//POST new tag
 		const response = await tagsLib.postTag(newTag);
 		newTag.key = response._id;
-		let newTagsArray = tagsArray;
-		const indexOfParentTag = tagsArray.findIndex(el => el.key == newTag.parentTag);
+		let newTags = tags;
+		const indexOfParentTag = tags.findIndex(el => el.key == newTag.parentTag);
 
 		//GET new created tag from server: If following line is commented, the tag tree wont update after the new tag is posted.
 		//updateTestArray(prevState => !prevState);//this triggers API GET request to fetch all tags from server
 
 		/*
 		tag will be created directly under its parentTag.
-		modification of tagsArray will reRender cmp and "new tag" will be shown in the tagTree.
+		modification of tags will reRender cmp and "new tag" will be shown in the tagTree.
 		In this case we don't GET the new created tag from API. We just render the object.
-		By commenting the setTagsArray... line, the new tag wont be rendered into DOM and user should reload the browser to see the new created tag.
+		By commenting the setTags... line, the new tag wont be rendered into DOM and user should reload the browser to see the new created tag.
 		 */
-		newTagsArray.splice(indexOfParentTag, 0, newTag);
-		setTagsArray([...newTagsArray]);
+		newTags.splice(indexOfParentTag, 0, newTag);
+		setTags([...newTags]);
 	};
 
 	//=====================================================================
 	/* following function generates an array with tags keys. When user deletes a specific tag, this function delivers the key  of the selected tag (the tag selected by user to be deleted) and all its children and children's childrens. Input element (focusedTag) should be an object like "actualSelectedTag" {...,key:'sdfasdf',children:[{},{},{key:'...',children:[...]}]} */
-	let affectedTagsArray = [];
+	let affectedTags = [];
 	const getTagKeyAndItsChildren = focusedTag => {
-		affectedTagsArray.push(focusedTag.key);
+		affectedTags.push(focusedTag.key);
 		focusedTag.children.forEach(el => {
-			affectedTagsArray.push(el.key);
+			affectedTags.push(el.key);
 			el.children.forEach(childEl => getTagKeyAndItsChildren(childEl));
 		});
 	};
@@ -197,21 +199,21 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		delete updatedTag.children;
 		delete updatedTag.parent;
 		//issue with the following code is that we have to "clean" all affected tags when we send one to the bim.
-		//check if parentTag is available in the tagsArray
-		//updatedTag.parentTag = tagsArray.findIndex(el => el._id == updatedTag.parentTag) > -1 ? updatedTag.parentTag : 'mainTagKey';
+		//check if parentTag is available in the tags
+		//updatedTag.parentTag = tags.findIndex(el => el._id == updatedTag.parentTag) > -1 ? updatedTag.parentTag : 'mainTagKey';
 
 		//for now we will hardcode to parent tag. Every recovered tag will be displayed under main
 		updatedTag.parentTag = 'mainTagKey';
 
 		tagsLib.updateTag(updatedTag); //PATCH: updates the modified tag
-		//update tagsArray
-		const newTagsArray = tagsArray.concat(updatedTag);
-		//delete tag from recycleBinTagsArray
-		const newRecycleBinTagsArray = recycleBinTagsArray.filter(el => el.key != updatedTag.key);
-		//set recycleBinTagsArray
-		setRecycleBinTagsTagsArray(newRecycleBinTagsArray);
-		//set tagsArray
-		setTagsArray(newTagsArray);
+		//update tags
+		const newTags = tags.concat(updatedTag);
+		//delete tag from recycleBinTags
+		const newRecycleBinTags = recycleBinTags.filter(el => el.key != updatedTag.key);
+		//set recycleBinTags
+		setRecycleBinTagsTags(newRecycleBinTags);
+		//set tags
+		setTags(newTags);
 	};
 
 	const assignRecycleBinAsParent = () => {
@@ -228,12 +230,12 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		delete updatedTag.parent;
 		//PATCH: updates the modified tag
 		tagsLib.updateTag(updatedTag);
-		//delete tag from tagsArray
-		const newTagsArray = tagsArray.filter(el => el.key != updatedTag.key);
-		setTagsArray(newTagsArray);
-		//const newRecycleBinArray = recycleBinTagsArray.concat(newRecycleBinElements);
-		const newRecycleBinArray = recycleBinTagsArray.concat(updatedTag);
-		setRecycleBinTagsTagsArray(newRecycleBinArray);
+		//delete tag from tags
+		const newTags = tags.filter(el => el.key != updatedTag.key);
+		setTags(newTags);
+		//const newRecycleBinArray = recycleBinTags.concat(newRecycleBinElements);
+		const newRecycleBinArray = recycleBinTags.concat(updatedTag);
+		setRecycleBinTagsTags(newRecycleBinArray);
 	};
 
 	const setTagStatusToFalse = () => {
@@ -252,8 +254,8 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		//PATCH: updates the modified tag
 		tagsLib.updateTag(updatedTag);
 		//delete tag from recycleBinArray
-		const newRecycleBinTagsArray = recycleBinTagsArray.filter(el => el.key != updatedTag.key);
-		setRecycleBinTagsTagsArray(newRecycleBinTagsArray);
+		const newRecycleBinTags = recycleBinTags.filter(el => el.key != updatedTag.key);
+		setRecycleBinTagsTags(newRecycleBinTags);
 	};
 
 	const getSelectedOptionFromRCM = event => {

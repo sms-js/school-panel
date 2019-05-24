@@ -14,7 +14,7 @@ const LOGIN_URL = 'users/login'; // axios baseURL is ${API_DOMAIN}
 
 const USER_URL = `${API_PREFIX}User/`; // axios baseURL is ${API_DOMAIN}
 
-const MESSAGES_URL = `mdata/`;
+const MESSAGES_URL = `messages/`;
 const TAGS_URL = `tags/`;
 
 const PROFILE_URL = `${API_PREFIX}User/`; // axios baseURL is ${API_DOMAIN}

@@ -2,7 +2,6 @@ import api from 'lib/api';
 import { checkStatus } from 'lib/validators/response';
 import { MESSAGES_URL } from 'config';
 
-//MESSAGES_URL = mdata/
 /**
  * Get Messages
  *
@@ -10,10 +9,10 @@ import { MESSAGES_URL } from 'config';
  * params = {} or undefined ->  api return all messages with status true
  * params = { _id: "54dfas5df44sd5f4asdf", status: true[false] }; -> API returns requested message if match exists
  * params = {status: true[false] } -> API returns all messages with requested status
- *  */
+ **/
 export const getMessages = async (params = {}) => {
 	try {
-		const response = await api.get(`${MESSAGES_URL}getmessage`, { params } );
+		const response = await api.get(`${MESSAGES_URL}`, params);
 		if (!checkStatus(response)) {
 			throw new Error('invalid credentials');
 		}
@@ -24,9 +23,9 @@ export const getMessages = async (params = {}) => {
 	}
 };
 
-export const updateMessage = async (params) => {
+export const updateMessage = async params => {
 	try {
-		const response = await api.patch(`${MESSAGES_URL}updatemessage`, { params } );
+		const response = await api.patch(`${MESSAGES_URL}${params._id}`, params);
 		if (!checkStatus(response)) {
 			throw new Error('invalid credentials');
 		}
@@ -36,16 +35,15 @@ export const updateMessage = async (params) => {
 		return false;
 	}
 };
-
 
 /**
- * 
  * @param {object} params
- * params={tagsArray:["tagId","tagId",...], status:true|false}  
+ *
+ * params={tags:["tagId","tagId",...], status:true|false}
  */
-export const getMessagesByTagsAndStatus = async (params) => {
+export const getMessagesByTagsAndStatus = async params => {
 	try {
-		const response = await api.get(`${MESSAGES_URL}getmessagewithtagsandstatus`, { params } );
+		const response = await api.get(`${MESSAGES_URL}search`, params);
 		if (!checkStatus(response)) {
 			throw new Error('invalid credentials');
 		}
@@ -55,14 +53,13 @@ export const getMessagesByTagsAndStatus = async (params) => {
 		return false;
 	}
 };
-
 
 /**
  * Get user data
  *
  * @param {string} id
  */
-export const getUser = async (id) => {
+export const getUser = async id => {
 	try {
 		const response = await api.get(`${MESSAGES_URL}${id}`);
 		if (!checkStatus(response)) {
@@ -75,7 +72,7 @@ export const getUser = async (id) => {
 	}
 };
 
-export const deleteUser = async (id) => {
+export const deleteUser = async id => {
 	try {
 		const response = await api.delete(`${MESSAGES_URL}${id}`);
 		if (!checkStatus(response)) {
@@ -94,7 +91,7 @@ export const deleteUser = async (id) => {
  * @param {string} id
  * @param {object} data
  */
-export const createUser = async (data) => {
+export const createUser = async data => {
 	try {
 		if (!data.type) data.type = 'admin';
 		const response = await api.post(MESSAGES_URL, data);

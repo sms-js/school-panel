@@ -18,17 +18,22 @@ const CardWithPopOver = ({ props }) => {
 	// console.log(props.listener.wapUsername);
 
 	return (
-		<Popover key={'popover_key_' + props._id} overlayClassName={styles.popOverStyle} content={popovercontent} title={props.listener.wapUsername}>
+		<Popover
+			key={'popover_key_' + props._id}
+			overlayClassName={styles.popOverStyle}
+			content={popovercontent}
+			title={props.listener.wapUsername}
+		>
 			<Draggable key={'key_' + props._id} id={props._id}>
 				<Card
 					size="small"
 					title={props.listener.wapUsername}
 					extra={<a href="#">CouldBeALink</a>}
 					className={styles.cardStyle}
-					key={'card_key_'+props._id}
+					key={'card_key_' + props._id}
 				>
-					<p>{props.messageData.body}</p>
-					<p>{props.messageData.codeWords[0]}</p>
+					<p>{props.data.body}</p>
+					<p>{props.data.codeWords[0]}</p>
 					<p>Card content xxxxx</p>
 				</Card>
 			</Draggable>
@@ -55,15 +60,11 @@ const CardWithPopOver = ({ props }) => {
 }; */
 
 const MessagesCards = ({ messages, onDelete }) => {
-	const [ error, setError ] = useState(false);
-	const [ loading, setLoading ] = useState(false);
-	const cardsArray = messages.map((msg) => (
-		<CardWithPopOver key={'cwpoKey_'+msg._id} props={msg} />
-	));
+	const [error, setError] = useState(false);
+	const [loading, setLoading] = useState(false);
+	const cardsArray = messages.map(msg => <CardWithPopOver key={'cwpoKey_' + msg._id} props={msg} />);
 
-	return  cardsArray;
+	return cardsArray;
 };
-
-
 
 export default MessagesCards;
