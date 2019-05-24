@@ -10,7 +10,7 @@ import { isString, isNotEmptyString, keyIsObject, keyisArray, keyExists, getJSON
 // Create a storage object that saves data in the sessionStorage
 const storage = new storageLib('session');
 
-const validateSession = (stored) => {
+const validateSession = stored => {
 	if (!stored || !stored.logged || !validUser(stored.user)) return false;
 	setToken(`Bearer ${stored.token}`);
 	return true;
@@ -24,7 +24,7 @@ export const defaultSession = {
 	user: {}
 };
 
-export const getUser = (session) => {
+export const getUser = session => {
 	return {
 		_id: session._id,
 		username: session.username,
@@ -41,13 +41,13 @@ export const removeSession = () => {
 	setToken(null);
 };
 
-export const setSession = (response) => {
+export const setSession = response => {
 	const session = getSessionFromResponse(response);
 	storage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
 	setToken(`Bearer ${response.token}`);
 };
 
-export const getSessionFromResponse = (response) => {
+export const getSessionFromResponse = response => {
 	const session = getJSONOrValue(response);
 	if (!session || !validUser(session)) return null;
 	return {
@@ -59,7 +59,7 @@ export const getSessionFromResponse = (response) => {
 
 const ruleValidationFailed = (user, { name, actions }) => {
 	if (!keyExists(user.rules, name)) return true;
-	return actions.find((action) => !keyExists(user.rules[name], action));
+	return actions.find(action => !keyExists(user.rules[name], action));
 };
 
 const validRule = (ruleName, user) => {
@@ -72,14 +72,14 @@ const validRule = (ruleName, user) => {
 			keyIsObject(rules, ruleName) &&
 			keyisArray(rules[ruleName], 'rules') &&
 			// If one rule fails, all validation fails
-			!rules[ruleName].rules.find((rule) => ruleValidationFailed(user, rule)))
+			!rules[ruleName].rules.find(rule => ruleValidationFailed(user, rule)))
 	);
 };
 
 export const validateRules = (ruleNames, user) => {
 	if (!ruleNames || isString(ruleNames, '*')) return true;
 	if (isNotEmptyString(ruleNames)) return validRule(ruleNames, user);
-	return !ruleNames.find((ruleName) => !validRule(ruleName, user));
+	return !ruleNames.find(ruleName => !validRule(ruleName, user));
 };
 
 export const validateComponent = (Component, user, props = {}) => {

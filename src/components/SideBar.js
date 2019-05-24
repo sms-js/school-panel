@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 import { Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom';
 import SessionContext from 'components/SessionContext';
@@ -79,6 +80,10 @@ const SideBar = ({ collapsed }) => {
 			</Menu>
 		</div>
 	);
+};
+
+SideBar.propTypes = {
+	collapsed: PropTypes.bool.isRequired
 };
 
 export default SideBar;

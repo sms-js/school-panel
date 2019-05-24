@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
 import SessionContext from 'components/SessionContext';
 import { validateComponent } from 'lib/session';
@@ -17,6 +18,10 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
 			}
 		/>
 	);
+};
+
+PrivateRoute.propTypes = {
+	component: PropTypes.oneOfType([PropTypes.node, PropTypes.func]).isRequired
 };
 
 export default PrivateRoute;

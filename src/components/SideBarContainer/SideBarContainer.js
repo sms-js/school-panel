@@ -1,6 +1,7 @@
 import styles from './SideBarContainer.module.css';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Layout } from 'antd';
 import SideBar from 'components/SideBar';
 
@@ -13,7 +14,7 @@ const SideBarContainer = ({ children, title }) => {
 				<SideBar collapsed={false} />
 			</Sider>
 			<Layout>
-				<Header className={styles["side-bar-container"]}>
+				<Header className={styles['side-bar-container']}>
 					<h2>{title}</h2>
 				</Header>
 				<Content
@@ -31,4 +32,8 @@ const SideBarContainer = ({ children, title }) => {
 	);
 };
 
+SideBarContainer.propTypes = {
+	children: PropTypes.node.isRequired,
+	title: PropTypes.string.isRequired
+};
 export default SideBarContainer;

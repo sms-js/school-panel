@@ -11,13 +11,17 @@ const getInput = (form, user) => {
 	})(
 		<Input
 			key="profile-email-input"
-			disabled={user._id}
+			disabled={user._id ? true : false}
 			prefix={<Icon type="tag" className={styles['home-icon']} />}
 			placeholder="Email"
 		/>
 	);
 };
 
-const Email = ({ form, user }) => <Form.Item hasFeedback label="Email">{getInput(form, user)}</Form.Item>;
+const Email = ({ form, user }) => (
+	<Form.Item hasFeedback label="Email">
+		{getInput(form, user)}
+	</Form.Item>
+);
 
 export default Email;
