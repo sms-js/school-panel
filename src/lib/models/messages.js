@@ -12,7 +12,7 @@ import { MESSAGES_URL } from 'config';
  **/
 export const getMessages = async (params = {}) => {
 	try {
-		const response = await api.get(`${MESSAGES_URL}`, params);
+		const response = await api.get(`${MESSAGES_URL}`, { params });
 		if (!checkStatus(response)) {
 			throw new Error('invalid credentials');
 		}
@@ -43,7 +43,8 @@ export const updateMessage = async params => {
  */
 export const getMessagesByTagsAndStatus = async params => {
 	try {
-		const response = await api.get(`${MESSAGES_URL}search`, params);
+		console.log(params);
+		const response = await api.get(`${MESSAGES_URL}search`, { params });
 		if (!checkStatus(response)) {
 			throw new Error('invalid credentials');
 		}

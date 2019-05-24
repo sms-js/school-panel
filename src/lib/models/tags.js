@@ -51,7 +51,7 @@ export const postTag = async params => {
  */
 export const getTags = async (params = { status: true, orSearch: false }) => {
 	try {
-		const response = await api.get(`${TAGS_URL}`, params);
+		const response = await api.get(`${TAGS_URL}`, { params });
 		if (!checkStatus(response)) {
 			throw new Error('invalid credentials');
 		}
