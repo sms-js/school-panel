@@ -11,8 +11,8 @@ const SideBar = ({ collapsed }) => {
 		<div style={{ height: '100vh', textAlign: 'left' }}>
 			<Menu
 				style={{ height: '100%' }}
-				defaultSelectedKeys={[ '1' ]}
-				defaultOpenKeys={[ 'sub1' ]}
+				defaultSelectedKeys={['1']}
+				defaultOpenKeys={['sub1']}
 				mode="inline"
 				inlineCollapsed={collapsed}
 			>
@@ -25,46 +25,26 @@ const SideBar = ({ collapsed }) => {
 						</span>
 					</span>
 				</Menu.Item>
-				{/* Authenticated screens menu */}
-				<SubMenu
-					key="menu-authenticated"
-					title={
-						<span>
-							<Icon type="login" />
-							<span>Panel screens</span>
-						</span>
-					}
-				>
-					{/* Authenticated screen item *
-								
-					{/* Authenticated users screens menu */}
-					<SubMenu
-						key="menu-authenticated-users"
-						disabled={session.user.type == 'admin' ? false : true}
-						title={
-							<span>
-								<Icon type="user" />
-								<span>Users</span>
-							</span>
-						}
-					>
-						{/* Users list screen item */}
-						<Menu.Item key="menu-authenticated-authenticated">
-							<Link to="/admin/users">List</Link>
-						</Menu.Item>
-						{/* User edition screen item */}
-					</SubMenu>
-				</SubMenu>
 
-					{/* Messages list screen item */}
-					<Menu.Item key="menu-messages-list-list">
-						<Link to="/messages/display">
-							<span>
-								<Icon type="wechat" />
-								<span>Messages</span>
-							</span>
-						</Link>
-					</Menu.Item>
+				{/* Users list screen item */}
+				<Menu.Item disabled={session.user.type === 'admin' ? false : true} key="menu-authenticated-authenticated">
+					<Link to="/admin/users">
+						<span>
+							<Icon type="user" />
+							<span>Users</span>
+						</span>
+					</Link>
+				</Menu.Item>
+
+				{/* Messages list screen item */}
+				<Menu.Item key="menu-messages-list-list">
+					<Link to="/messages/display">
+						<span>
+							<Icon type="wechat" />
+							<span>Messages</span>
+						</span>
+					</Link>
+				</Menu.Item>
 
 				{/* Public screens menu */}
 

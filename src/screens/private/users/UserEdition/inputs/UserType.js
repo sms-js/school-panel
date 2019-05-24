@@ -1,13 +1,12 @@
 import React from 'react';
-import styles from '../UserEdition.module.css';
-import { Form, Icon, Input, Select } from 'antd';
+import { Form, Select } from 'antd';
 
 const { Option } = Select;
 
 const getInput = (form, user) => {
 	const { getFieldDecorator } = form;
 	const userTypeCombo = getFieldDecorator('type', {
-		rules: [ { required: true, message: 'Please define a user type' } ],
+		rules: [{ required: true, message: 'Please define a user type' }],
 		initialValue: user.type
 	})(
 		<Select defaultValue="admin">
