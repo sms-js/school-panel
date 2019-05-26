@@ -6,17 +6,17 @@ const styles = theme => {
 		},
 		root: {
 			width: '100%',
-			marginBottom: theme.spacing.unit,
+			marginBottom: theme.spacing(1),
 			overflowX: 'auto'
 		},
 		button: {
-			marginBottom: theme.spacing.unit
+			marginBottom: theme.spacing(1)
 		},
 		buttonLink: {
 			color: theme.palette.primary.contrastText
 		},
 		tableButton: {
-			margin: theme.spacing.unit
+			margin: theme.spacing(1)
 		},
 		table: {
 			minWidth: 650

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styles from './RightClickWMenu.module.css';
 import { Menu, Dropdown } from 'antd';
 import ConfirmationModal from './elements/ConfirmationModal';
@@ -9,7 +9,6 @@ const TagRClickWMenu = ({
 	actualSelectedTagTitel,
 	children
 }) => {
-	console.log('actualSelectedTagTitel = ', actualSelectedTagTitel);
 	const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
 	const [muiModalContent, setMuiModalContent] = useState({ title: actualSelectedTagTitel, content: '' });
 
@@ -48,14 +47,14 @@ const TagRClickWMenu = ({
 				</Menu.Item>
 				<Menu.Divider />
 				<Menu.Item
-					disabled={recycleBinTagIsSelected || actualSelectedTagTitel == 'Main'}
+					disabled={recycleBinTagIsSelected || actualSelectedTagTitel === 'Main'}
 					onClick={openModal}
 					key="sendTagToBim"
 				>
 					Send to recycle Bin
 				</Menu.Item>
 				<Menu.Item
-					disabled={!recycleBinTagIsSelected || actualSelectedTagTitel == 'Recycle Bin'}
+					disabled={!recycleBinTagIsSelected || actualSelectedTagTitel === 'Recycle Bin'}
 					onClick={openModal}
 					key="recoverTag"
 				>
@@ -63,7 +62,7 @@ const TagRClickWMenu = ({
 				</Menu.Item>
 				<Menu.Divider />
 				<Menu.Item
-					disabled={!recycleBinTagIsSelected || actualSelectedTagTitel == 'Recycle Bin'}
+					disabled={!recycleBinTagIsSelected || actualSelectedTagTitel === 'Recycle Bin'}
 					onClick={openModal}
 					key="setTagStatusToFalse"
 				>

@@ -16,18 +16,18 @@ const GenerateNewPassword = ({ form, match }) => {
 	const { getFieldDecorator } = form;
 
 	useEffect(() => {
+		const validateTokenProcess = async () => {
+			if (match.params.token !== undefined) {
+				const response = await validateToken({ token: match.params.token });
+				if (response.success) {
+					setTokenHasBeenValidated(true);
+				}
+			}
+			setLoading(false);
+		};
+
 		validateTokenProcess();
 	}, []);
-
-	const validateTokenProcess = async () => {
-		if (match.params.token !== undefined) {
-			const response = await validateToken({ token: match.params.token });
-			if (response.success) {
-				setTokenHasBeenValidated(true);
-			}
-		}
-		setLoading(false);
-	};
 
 	const handleSubmit = (session, e) => {
 		setRequestError(false);

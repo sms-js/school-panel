@@ -12,7 +12,6 @@ import { Redirect } from 'react-router-dom';
 import { keyIsObject } from 'lib/validators/types';
 
 const UserEdition = ({ classes, match }) => {
-	const params = keyIsObject(match, 'params') ? match.params : {};
 	const [user, setUser] = useState({
 		email: '',
 		firstName: '',
@@ -62,23 +61,24 @@ const UserEdition = ({ classes, match }) => {
 		setSuccess(true);
 	};
 
-	const loadUser = async () => {
-		if (params.id) {
-			const data = await userLib.getUser(params.id);
-			if (!data) {
-				setError(true);
-			} else {
-				setUser(data);
-			}
-			setLoading(false);
-		} else {
-			setLoading(false);
-		}
-	};
-
 	useEffect(() => {
+		const loadUser = async () => {
+			const params = keyIsObject(match, 'params') ? match.params : {};
+			if (params.id) {
+				const data = await userLib.getUser(params.id);
+				if (!data) {
+					setError(true);
+				} else {
+					setUser(data);
+				}
+				setLoading(false);
+			} else {
+				setLoading(false);
+			}
+		};
+
 		loadUser();
-	}, []);
+	}, [match]);
 
 	if (mustReturn) return <Redirect to="/admin/users" />;
 

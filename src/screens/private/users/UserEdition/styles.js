@@ -7,9 +7,9 @@ const styles = theme => {
 			flexWrap: 'wrap'
 		},
 		textField: {
-			marginLeft: theme.spacing.unit,
-			marginRight: theme.spacing.unit,
-			width: `calc(100% - ${theme.spacing.unit * 2}px)`
+			marginLeft: theme.spacing(1),
+			marginRight: theme.spacing(1),
+			width: `calc(100% - ${theme.spacing(2)}px)`
 		},
 		dense: {
 			marginTop: 19
@@ -24,8 +24,8 @@ const styles = theme => {
 			margin: '5px'
 		},
 		selectInput: {
-			marginTop: theme.spacing.unit,
-			marginBottom: theme.spacing.unit
+			marginTop: theme.spacing(1),
+			marginBottom: theme.spacing(1)
 		},
 		success: {
 			...theme.typography.subtitle1,

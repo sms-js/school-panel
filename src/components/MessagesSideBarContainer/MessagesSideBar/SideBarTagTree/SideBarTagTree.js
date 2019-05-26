@@ -28,27 +28,27 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		return response;
 	};
 
-	const initTags = async () => {
-		const res = await loadTags();
-		setTags(
-			res
-				.map(el => {
-					el.key = el.title === 'Main' ? 'mainTagKey' : el._id;
-					return el;
-				})
-				.filter(el => el.title !== 'Recycle Bin')
-		);
-		setRecycleBinTagsTags(
-			res
-				.filter(el => el.title === 'Recycle Bin' || el.parentTag === 'recycleBin')
-				.map(el => {
-					el.key = el.title === 'Recycle Bin' ? 'recycleBin' : el._id;
-					return el;
-				})
-		);
-	};
-
 	useEffect(() => {
+		const initTags = async () => {
+			const res = await loadTags();
+			setTags(
+				res
+					.map(el => {
+						el.key = el.title === 'Main' ? 'mainTagKey' : el._id;
+						return el;
+					})
+					.filter(el => el.title !== 'Recycle Bin')
+			);
+			setRecycleBinTagsTags(
+				res
+					.filter(el => el.title === 'Recycle Bin' || el.parentTag === 'recycleBin')
+					.map(el => {
+						el.key = el.title === 'Recycle Bin' ? 'recycleBin' : el._id;
+						return el;
+					})
+			);
+		};
+
 		initTags();
 	}, []);
 

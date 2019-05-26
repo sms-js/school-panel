@@ -38,28 +38,8 @@ const CardWithPopOver = ({ props }) => {
 	);
 };
 
-/* const MessagesCards = ({ messages, onDelete }) => {
-	const [ error, setError ] = useState(false);
-	const [ loading, setLoading ] = useState(false);
-	const cardsArray = messages.map((msg) => (
-		<Col key={'_id' + msg._id} span={8}>
-			<CardWithPopOver props={msg} />
-		</Col>
-	));
-
-	const SideBarComponent = (
-		<div className={styles.cardsDiv}>
-			<Row gutter={16}>{cardsArray}</Row>
-		</div>
-	);
-
-	return SideBarComponent;
-}; */
-
 const MessagesCards = ({ messages }) => {
-	const cardsArray = messages.map(msg => <CardWithPopOver key={'cwpoKey_' + msg._id} props={msg} />);
-
-	return cardsArray;
+	return messages.map(msg => <CardWithPopOver key={'cwpoKey_' + msg._id} props={msg} />);
 };
 
 export default MessagesCards;
