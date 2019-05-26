@@ -33,16 +33,16 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		setTags(
 			res
 				.map(el => {
-					el.key = el.title == 'Main' ? 'mainTagKey' : el._id;
+					el.key = el.title === 'Main' ? 'mainTagKey' : el._id;
 					return el;
 				})
-				.filter(el => el.title != 'Recycle Bin')
+				.filter(el => el.title !== 'Recycle Bin')
 		);
 		setRecycleBinTagsTags(
 			res
-				.filter(el => el.title == 'Recycle Bin' || el.parentTag == 'recycleBin')
+				.filter(el => el.title === 'Recycle Bin' || el.parentTag === 'recycleBin')
 				.map(el => {
-					el.key = el.title == 'Recycle Bin' ? 'recycleBin' : el._id;
+					el.key = el.title === 'Recycle Bin' ? 'recycleBin' : el._id;
 					return el;
 				})
 		);
@@ -62,12 +62,14 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 
 	const onSelect = e => {
 		//@todo: check this double click situation on same item with PG.
-		if (e.length == 0) return;
+		if (e.length === 0) return;
 		//e equals to the selected treeNode key
+		/*
 		const params = {
 			destinationTag: e[0],
 			draggedMessageId: undefined
 		};
+		*/
 		sendDataToMessagesCmp({
 			destinationTag: e[0],
 			draggedMessageId: undefined
@@ -79,7 +81,7 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		const draggedMessageId = info.event.dataTransfer.getData('draggedMessageId'); //corresponds to dragged message id
 		const destinationTag = info.node.props.eventKey; //corresponds to the destination tag id. Eg.: "5ccc37df5ad6ca045cb41f79"
 		// draggedMessageId is not empty when a message is dropped from the MessageTable cmp into a tag element.
-		if (draggedMessageId != '') {
+		if (draggedMessageId !== '') {
 			const params = {
 				destinationTag,
 				draggedMessageId
@@ -92,11 +94,11 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		2) Drag a nodeTree element and drop it into another nodeTree element. 
 		If situation 2) applies, then following if-statement is true and the (antD) code for handling of nodeTree elements applies. Following code (within the if-block) was delivered with the component and is related to the treeNode elements manipulation.
 	*/
-		if (draggedMessageId == '' && destinationTag != '' && destinationTag != draggedNode) {
+		if (draggedMessageId === '' && destinationTag !== '' && destinationTag !== draggedNode) {
 			const tagMap = getTagMap(tagsTreeDataStructure);
 			let updatedTags = tags.map(tag => {
 				// Reassignate dragged tag
-				if (tag.key == draggedNode) {
+				if (tag.key === draggedNode) {
 					const newTag = tagMap[tag.key];
 					newTag.parentTag = destinationTag;
 					newTag.selectable = true;
@@ -119,7 +121,7 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		const recycleBinMap = getTagMap(recycleBinTreeDataStructure);
 		setMouseCoordinates({ mouseX: event.clientX, mouseY: event.clientY });
 		setActualSelectedTag(tagMap[node.props.eventKey] || recycleBinMap[node.props.eventKey]);
-		setRecycleBinTagIsSelected(recycleBinMap[node.props.eventKey] != undefined);
+		setRecycleBinTagIsSelected(recycleBinMap[node.props.eventKey] !== undefined);
 	};
 
 	/* depending on users Rights: updatedTag should API-PATCH
@@ -129,7 +131,7 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		setShowModal(false);
 		let newState = { ...actualSelectedTag, ...params };
 		delete newState.parent;
-		const selectedTagIndex = tags.findIndex(el => el.key == newState.key);
+		const selectedTagIndex = tags.findIndex(el => el.key === newState.key);
 		const newTags = tags;
 		const newTag = Object.assign(tags[selectedTagIndex], newState);
 		tagsLib.updateTag(newTag); //PATCH: updates the modified tag
@@ -162,7 +164,7 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		const response = await tagsLib.postTag(newTag);
 		newTag.key = response._id;
 		let newTags = tags;
-		const indexOfParentTag = tags.findIndex(el => el.key == newTag.parentTag);
+		const indexOfParentTag = tags.findIndex(el => el.key === newTag.parentTag);
 
 		//GET new created tag from server: If following line is commented, the tag tree wont update after the new tag is posted.
 		//updateTestArray(prevState => !prevState);//this triggers API GET request to fetch all tags from server
@@ -179,7 +181,8 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 
 	//=====================================================================
 	/* following function generates an array with tags keys. When user deletes a specific tag, this function delivers the key  of the selected tag (the tag selected by user to be deleted) and all its children and children's childrens. Input element (focusedTag) should be an object like "actualSelectedTag" {...,key:'sdfasdf',children:[{},{},{key:'...',children:[...]}]} */
-	let affectedTags = [];
+	//let affectedTags = [];
+	/*
 	const getTagKeyAndItsChildren = focusedTag => {
 		affectedTags.push(focusedTag.key);
 		focusedTag.children.forEach(el => {
@@ -187,6 +190,7 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 			el.children.forEach(childEl => getTagKeyAndItsChildren(childEl));
 		});
 	};
+	*/
 	//=====================================================================
 
 	const recoverSelectedTag = () => {
@@ -201,7 +205,7 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		delete updatedTag.parent;
 		//issue with the following code is that we have to "clean" all affected tags when we send one to the bim.
 		//check if parentTag is available in the tags
-		//updatedTag.parentTag = tags.findIndex(el => el._id == updatedTag.parentTag) > -1 ? updatedTag.parentTag : 'mainTagKey';
+		//updatedTag.parentTag = tags.findIndex(el => el._id === updatedTag.parentTag) > -1 ? updatedTag.parentTag : 'mainTagKey';
 
 		//for now we will hardcode to parent tag. Every recovered tag will be displayed under main
 		updatedTag.parentTag = 'mainTagKey';
@@ -210,7 +214,7 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		//update tags
 		const newTags = tags.concat(updatedTag);
 		//delete tag from recycleBinTags
-		const newRecycleBinTags = recycleBinTags.filter(el => el.key != updatedTag.key);
+		const newRecycleBinTags = recycleBinTags.filter(el => el.key !== updatedTag.key);
 		//set recycleBinTags
 		setRecycleBinTagsTags(newRecycleBinTags);
 		//set tags
@@ -232,7 +236,7 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		//PATCH: updates the modified tag
 		tagsLib.updateTag(updatedTag);
 		//delete tag from tags
-		const newTags = tags.filter(el => el.key != updatedTag.key);
+		const newTags = tags.filter(el => el.key !== updatedTag.key);
 		setTags(newTags);
 		//const newRecycleBinArray = recycleBinTags.concat(newRecycleBinElements);
 		const newRecycleBinArray = recycleBinTags.concat(updatedTag);
@@ -255,7 +259,7 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		//PATCH: updates the modified tag
 		tagsLib.updateTag(updatedTag);
 		//delete tag from recycleBinArray
-		const newRecycleBinTags = recycleBinTags.filter(el => el.key != updatedTag.key);
+		const newRecycleBinTags = recycleBinTags.filter(el => el.key !== updatedTag.key);
 		setRecycleBinTagsTags(newRecycleBinTags);
 	};
 

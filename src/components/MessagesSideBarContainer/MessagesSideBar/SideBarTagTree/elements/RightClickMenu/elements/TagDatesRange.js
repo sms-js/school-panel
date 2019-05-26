@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import moment from 'moment';
 
-const TagDatesRange = ({ sendSelectedDates, handleDatesChange,actualStartDate,actualEndDate }) => {
-
+const TagDatesRange = ({ handleDatesChange, actualStartDate, actualEndDate }) => {
 	const styles = {
 		container: {
 			display: 'flex',

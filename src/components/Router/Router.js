@@ -8,7 +8,7 @@ import PrivateRoute from './PrivateRoute';
 
 // Screens
 // Private screens
-import Authenticated from 'screens/private/Authenticated';
+/*import Authenticated from 'screens/private/Authenticated';*/
 import Home from 'screens/private/Home';
 import Profile from 'screens/private/Profile';
 import Messages from 'screens/private/Messages';
@@ -17,7 +17,7 @@ import Messages from 'screens/private/Messages';
 import { UserEdition, UsersList } from 'screens/private/users';
 
 // Public screens
-import Example from 'screens/public/Example';
+/*import Example from 'screens/public/Example';*/
 // System screens
 import Login from 'screens/system/Login';
 import Unauthorized from 'screens/system/Unauthorized';
@@ -51,7 +51,7 @@ const systemRoutes = [
  */
 const privateRoutes = [
 	<PrivateRoute key="route-home" path="/admin/home" component={Home} />,
-	<PrivateRoute key="route-profile" path="/admin/profile" component={Profile} rule={[ 'Profile' ]} />,
+	<PrivateRoute key="route-profile" path="/admin/profile" component={Profile} rule={['Profile']} />,
 
 	// Users
 	<PrivateRoute key="route-users-list" path="/admin/users" component={UsersList} rule="UserFull" />,

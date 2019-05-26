@@ -8,10 +8,10 @@ import { Redirect } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 const GenerateNewPassword = ({ form, match }) => {
-	const [ requestError, setRequestError ] = useState(false);
-	const [ passwordHasBeenChanged, setPasswordHasBeenChanged ] = useState(false);
-	const [ tokenHasBeenValidated, setTokenHasBeenValidated ] = useState(false);
-	const [ loading, setLoading ] = useState(true);
+	const [requestError, setRequestError] = useState(false);
+	const [passwordHasBeenChanged, setPasswordHasBeenChanged] = useState(false);
+	const [tokenHasBeenValidated, setTokenHasBeenValidated] = useState(false);
+	const [loading, setLoading] = useState(true);
 
 	const { getFieldDecorator } = form;
 
@@ -20,7 +20,7 @@ const GenerateNewPassword = ({ form, match }) => {
 	}, []);
 
 	const validateTokenProcess = async () => {
-		if (match.params.token != undefined) {
+		if (match.params.token !== undefined) {
 			const response = await validateToken({ token: match.params.token });
 			if (response.success) {
 				setTokenHasBeenValidated(true);
@@ -64,10 +64,10 @@ const GenerateNewPassword = ({ form, match }) => {
 	let generateNewPasswordCard = (
 		<div className={styles['login-container']}>
 			<Card title="Generate your new password" className={styles['login-card-container']}>
-				<Form onSubmit={(e) => handleSubmit(session, e)} className={styles['login-form']}>
+				<Form onSubmit={e => handleSubmit(session, e)} className={styles['login-form']}>
 					<Form.Item>
 						{getFieldDecorator('password', {
-							rules: [ { required: true, message: 'Please enter your new password' } ]
+							rules: [{ required: true, message: 'Please enter your new password' }]
 						})(
 							<Input
 								prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -78,7 +78,7 @@ const GenerateNewPassword = ({ form, match }) => {
 					</Form.Item>
 					<Form.Item>
 						{getFieldDecorator('passwordConfirm', {
-							rules: [ { required: true, message: 'Please confirm your new password' } ]
+							rules: [{ required: true, message: 'Please confirm your new password' }]
 						})(
 							<Input
 								prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
@@ -121,10 +121,10 @@ const GenerateNewPassword = ({ form, match }) => {
 	);
 
 	let activeCard = <div />;
-	if (loading == true) {
+	if (loading === true) {
 		activeCard = loadingCard;
 	} else {
-		if (tokenHasBeenValidated == true) {
+		if (tokenHasBeenValidated === true) {
 			activeCard = passwordHasBeenChanged ? passwordHasBeenChangedCard : generateNewPasswordCard;
 		} else {
 			activeCard = loginHasFailedCard;

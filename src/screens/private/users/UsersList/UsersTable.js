@@ -1,48 +1,56 @@
 import React from 'react';
-import { Table } from 'antd';
+import { withStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
+import styles from './styles';
 
-const columns = [
-	{
-		title: 'First name',
-		dataIndex: 'firstName',
-		key: 'firstName',
-		render: (text) => <p>{text}</p>
-	},
-	{
-		title: 'Last name',
-		dataIndex: 'lastName',
-		key: 'lastName',
-		render: (text) => <p>{text}</p>
-	},
-	{
-		title: 'Email',
-		dataIndex: 'email',
-		key: 'email',
-		render: (text) => <p>{text}</p>
-	},
-	{
-		title: 'Action',
-		key: 'action',
-		render: (text, user) => (
-			<span>
-				<Link to={`/admin/user/${user._id}`}>Edit</Link>
-				<a href="#" style={{ marginLeft: '5px', color: 'red' }} onClick={user.onDelete}>
-					Delete
-				</a>
-			</span>
-		)
-	}
-];
+const UsersTable = ({ classes, users, onDelete }) => {
+	return (
+		<Table className={classes.table}>
+			<TableHead>
+				<TableRow>
+					<TableCell>Username</TableCell>
+					<TableCell align="left">Last name</TableCell>
+					<TableCell align="left">Last name</TableCell>
+					<TableCell align="left">Email</TableCell>
+					<TableCell align="left">Action</TableCell>
+				</TableRow>
+			</TableHead>
+			<TableBody>
+				{users.map(user => (
+					<TableRow key={user._id}>
+						<TableCell component="th" scope="row">
+							{user.username}
+						</TableCell>
+						<TableCell align="left">{user.firstName}</TableCell>
+						<TableCell align="left">{user.lastName}</TableCell>
+						<TableCell align="left">{user.email}</TableCell>
+						<TableCell align="left">
+							<Button color="primary" variant="contained" className={classes.tableButton}>
+								<Link to={`/admin/user/${user._id}`} className={classes.buttonLink}>
+									Edit
+								</Link>
+							</Button>
+							<Button
+								disabled={user.username === 'admin'}
+								color="secondary"
+								variant="contained"
+								className={classes.tableButton}
+								onClick={() => onDelete(user._id)}
+							>
+								Delete
+							</Button>
+						</TableCell>
+					</TableRow>
+				))}
+			</TableBody>
+		</Table>
+	);
+};
 
-const UsersTable = ({ users, onDelete }) => (
-	<Table
-		columns={columns}
-		dataSource={users.map((user) => {
-			user.onDelete = () => onDelete(user._id);
-			return user;
-		})}
-	/>
-);
-
-export default UsersTable;
+export default withStyles(styles, { withTheme: true })(UsersTable);

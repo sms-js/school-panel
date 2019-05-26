@@ -9,7 +9,7 @@ import { UserName, FirstName, LastName, Password, PasswordConfirm } from './inpu
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 
-const Profile = ({ form, classes }) => {
+const Profile = ({ classes }) => {
 	const session = useContext(SessionContext.context);
 
 	const [profile, setProfile] = useState(session.user);

@@ -1,20 +1,66 @@
-import styles from './UserEdition.module.css';
-
+import styles from './styles.js';
+import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Spin } from 'antd';
-import SideBarContainer from 'components/SideBarContainer';
+import Paper from '@material-ui/core/Paper';
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import DrawerContainer from 'components/DrawerContainer';
 import { user as userLib } from 'lib/models';
-import { Email, FirstName, LastName, UserType,UserName } from './inputs';
+import { Email, FirstName, LastName, UserType, UserName } from './inputs';
 import { Redirect } from 'react-router-dom';
 import { keyIsObject } from 'lib/validators/types';
 
-const UserEdition = ({ form, match }) => {
+const UserEdition = ({ classes, match }) => {
 	const params = keyIsObject(match, 'params') ? match.params : {};
-	const [ user, setUser ] = useState({});
-	const [ loading, setLoading ] = useState(true);
-	const [ success, setSuccess ] = useState(false);
-	const [ error, setError ] = useState(false);
-	const [ mustReturn, setReturn ] = useState(false);
+	const [user, setUser] = useState({
+		email: '',
+		firstName: '',
+		lastName: '',
+		username: '',
+		type: ''
+	});
+	const [errors, setErrors] = useState({
+		clean: true,
+		email: false,
+		firstName: false,
+		lastName: false,
+		username: false,
+		type: false
+	});
+	const [loading, setLoading] = useState(true);
+	const [success, setSuccess] = useState(false);
+	const [error, setError] = useState(false);
+	const [mustReturn] = useState(false);
+
+	const handleChange = name => {
+		return (value, error) => {
+			setLoading(false);
+			setSuccess(false);
+			setError(false);
+			setErrors({ ...errors, [name]: error, clean: false });
+			setUser({ ...user, [name]: value });
+		};
+	};
+
+	const handleSubmit = async e => {
+		e.preventDefault();
+		if (errors.clean) {
+			setError(true);
+			return;
+		}
+		setLoading(true);
+		setSuccess(false);
+		setError(false);
+		if (Object.values(errors).indexOf(true) >= 0) {
+			setLoading(false);
+			return;
+		}
+		const response = user._id ? await userLib.updateUser(user._id, user) : await userLib.createUser(user);
+		setLoading(false);
+		if (!response) return setError(true);
+		setSuccess(true);
+	};
 
 	const loadUser = async () => {
 		if (params.id) {
@@ -34,59 +80,51 @@ const UserEdition = ({ form, match }) => {
 		loadUser();
 	}, []);
 
-	const handleSubmit = (user, e) => {
-		setLoading(true);
-		setSuccess(false);
-		setError(false);
-		e.preventDefault();
-		form.validateFields(async (err, values) => {
-			if (err) setLoading(false);
-			const response = user._id ? await userLib.updateUser(user._id, values) : await userLib.createUser(values, values);
-			setLoading(false);
-			if (!response) return setError(true);
-			setSuccess(true);
-			// If you dont want to redirect user after saving uncomment next line
-			//setReturn(true);
-		});
-	};
-
-	const Messages = () => (
-		<div>
-			{error && <Form.Item validateStatus="error" help="Request failed" />}
-			{success && <Form.Item style={{ color: 'green' }} help="Saved!" />}
-		</div>
-	);
-
 	if (mustReturn) return <Redirect to="/admin/users" />;
 
 	return (
-		<SideBarContainer title={user._id ? 'Update user' : 'Create user'}>
-			<div className={styles['user-edit-container']}>
-				<Form onSubmit={(e) => handleSubmit(user, e)} className={styles['login-form']}>
-					<FirstName form={form} user={user} />
-					<LastName form={form} user={user} />
-					<UserName form={form} user={user} />
-					<Email form={form} user={user} />
-					<UserType form={form} user={user} />
-					<Messages />
-					<Form.Item>
-						<Button type="primary" htmlType="submit" className={styles['login-form-button']}>
-							{loading && <Spin />}
-							{user._id ? 'Save' : 'Create'}
-						</Button>
-						<Button
-							type="secondary"
-							htmlType="button"
-							className={styles['login-form-button']}
-							onClick={() => setReturn(true)}
-						>
-							{success ? 'Back' : 'Cancel'}
-						</Button>
-					</Form.Item>
-				</Form>
-			</div>
-		</SideBarContainer>
+		<DrawerContainer title={user._id ? 'Update user' : 'Create user'}>
+			<Paper className={classes.root} elevation={1}>
+				{loading && <LinearProgress />}
+				<form
+					onSubmit={handleSubmit}
+					className={[classes.container, classes.form].join(' ')}
+					noValidate
+					autoComplete="off"
+				>
+					<FirstName
+						classes={classes}
+						handleChange={handleChange('firstName')}
+						value={user.firstName}
+						error={errors.firstName}
+					/>
+					<LastName
+						classes={classes}
+						handleChange={handleChange('lastName')}
+						value={user.lastName}
+						error={errors.lastName}
+					/>
+					<UserName
+						classes={classes}
+						handleChange={handleChange('username')}
+						value={user.username}
+						error={errors.username}
+					/>
+					<Email classes={classes} handleChange={handleChange('email')} value={user.email} error={errors.email} />
+					<UserType classes={classes} handleChange={handleChange('type')} value={user.type} error={errors.type} />
+					{success && <span className={classes.success}>Profile update success</span>}
+					{error && <span className={classes.error}>Profile update error</span>}
+					<Button variant="contained" color="primary" className={classes.button} type="submit">
+						Save
+					</Button>
+				</form>
+			</Paper>
+		</DrawerContainer>
 	);
 };
 
-export default Form.create({ name: 'user_edition_form' })(UserEdition);
+UserEdition.propTypes = {
+	classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(UserEdition);

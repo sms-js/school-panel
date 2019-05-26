@@ -12,7 +12,7 @@ const DrawerBody = ({ children, classes }) => {
 
 DrawerBody.propTypes = {
 	classes: PropTypes.object.isRequired,
-	children: PropTypes.object.isRequired
+	children: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
 };
 
 export default DrawerBody;

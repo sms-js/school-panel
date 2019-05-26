@@ -8,7 +8,6 @@ import {
 } from 'config';
 import axios from 'axios';
 import { checkStatus } from './validators/response';
-import { validLoginResponse } from './validators/user';
 
 const api = axios.create({ baseURL: API_DOMAIN });
 
@@ -17,7 +16,7 @@ const api = axios.create({ baseURL: API_DOMAIN });
  *
  * @param {string} AUTH_TOKEN
  */
-export const setToken = (AUTH_TOKEN) => {
+export const setToken = AUTH_TOKEN => {
 	if (AUTH_TOKEN) {
 		api.defaults.headers.common['Authorization'] = AUTH_TOKEN;
 		return;
@@ -30,7 +29,7 @@ export const setToken = (AUTH_TOKEN) => {
  *
  * @param {string} userId
  */
-export const testAuthenticatedRequest = async (userId) => {
+export const testAuthenticatedRequest = async userId => {
 	try {
 		const response = await api.get(`${PROFILE_URL}${userId}`);
 		if (!checkStatus(response)) {
@@ -85,7 +84,7 @@ export const updateProfile = async (id, data) => {
  *
  * @param {string} emailadress
  */
-export const recoverpassword = async (email) => {
+export const recoverpassword = async email => {
 	try {
 		const response = await api.post(RECOVERPASSWORD_URL, { email });
 		if (!checkStatus(response)) {
@@ -103,7 +102,7 @@ export const recoverpassword = async (email) => {
  *
  * @param {string} password
  */
-export const generatenewpassword = async (params) => {
+export const generatenewpassword = async params => {
 	try {
 		let targetURL = GENERATENEWPASSWORD_URL + '?auth_token=' + params.token;
 		delete params.token;
@@ -118,7 +117,7 @@ export const generatenewpassword = async (params) => {
 	}
 };
 
-export const validateToken = async (params) => {
+export const validateToken = async params => {
 	try {
 		let targetURL = VALIDATETOKEN_URL + '?auth_token=' + params.token;
 		const response = await api.post(targetURL);

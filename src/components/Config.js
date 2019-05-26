@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Router from './Router';
-import Loading from './Loading';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 /**
  * This component is used to configure the app before it's rendered
@@ -25,7 +25,7 @@ const Config = () => {
 		return cleanUp();
 	}, []);
 
-	return loading ? <Loading /> : <Router />;
+	return loading ? <CircularProgress /> : <Router />;
 };
 
 export default Config;

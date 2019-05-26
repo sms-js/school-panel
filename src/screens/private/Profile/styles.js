@@ -1,3 +1,5 @@
+import green from '@material-ui/core/colors/green';
+
 const styles = theme => ({
 	container: {
 		display: 'flex',
@@ -21,20 +23,14 @@ const styles = theme => ({
 		margin: '5px'
 	},
 	success: {
-		width: '100%',
-		marginTop: '5px',
-		marginBottom: '5px',
-		marginLeft: '5px',
-		fontSize: '15px',
-		color: 'green'
+		...theme.typography.subtitle1,
+		color: green[100],
+		width: '100%'
 	},
 	error: {
-		width: '100%',
-		marginTop: '5px',
-		marginBottom: '5px',
-		marginLeft: '5px',
-		fontSize: '15px',
-		color: 'red'
+		...theme.typography.subtitle1,
+		color: theme.palette.error[theme.palette.type],
+		width: '100%'
 	}
 });
 

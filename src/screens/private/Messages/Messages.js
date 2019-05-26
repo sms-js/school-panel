@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from 'antd';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import moment from 'moment';
 import { MessagesTable } from './items';
 import { msgLib } from 'lib/models';
@@ -15,8 +16,8 @@ const Messages = () => {
 	// mainScreenMessages corresponds to the modification of messages and its content will be rendered.
 	const [mainScreenMessages, setMainScreenMessages] = useState([]);
 	const [loading, setLoading] = useState(true);
-	const [triggerReRender, reRenderDOM] = useState(false);
-	const [selectedTag, setSelectedTag] = useState(undefined);
+	const [triggerReRender] = useState(false);
+	//const [selectedTag, setSelectedTag] = useState(undefined);
 
 	const loadList = async () => {
 		//only messages with status=true will be retrieved from API. If specified messages with status=false can also be retrieved. See API documentation.
@@ -36,11 +37,16 @@ const Messages = () => {
 		/*
 			we dont want to display a message in the main screen when: message has a tag or message status is false (not the case with the previous API request). If the message has already a tag assigned, then it will be displayed, when the correspondent tag (in the tagTree) is selected. Only messages with status=true and with no tags should be displayed.
 		*/
+		// @alexis .filter is not .map (I don't understand this code)
 		const requestedMessages = res
 			.filter(msg => !arrayIsNotEmpty(msg.tags))
-			.map(msg => ({ ...msg, _key: `${msg._id}` }));
+			.map(msg => {
+				msg.deliveryDate = moment(msg.deliveryDate).format('DD/MM hh:mm');
+				return { ...msg, _key: `${msg._id}` };
+			});
 		setMainScreenMessages([...requestedMessages]);
 		console.log('mainScreenMessages = ', mainScreenMessages);
+		setLoading(false);
 	};
 
 	useEffect(() => {
@@ -73,10 +79,10 @@ const Messages = () => {
 	};
 
 	const dragMessageToDestinationTag = ({ destinationTag, draggedMessageId }) => {
-		const destinationTagArray = destinationTag == 'mainTagKey' ? [] : [destinationTag];
+		const destinationTagArray = destinationTag === 'mainTagKey' ? [] : [destinationTag];
 		const newManipulatedMessages = mainScreenMessages.filter(msg => {
 			// We return the messages which have not been affected by the dragging action
-			if (msg._id != draggedMessageId) return msg;
+			if (msg._id !== draggedMessageId) return true;
 			const modifiedMsg = { ...msg };
 			if (!modifiedMsg.tags) {
 				modifiedMsg.tags = destinationTagArray;
@@ -90,6 +96,7 @@ const Messages = () => {
 			}
 			//API: replace original message object with the modified message, which has the assigned tag
 			msgLib.updateMessage(modifiedMsg);
+			return false;
 		});
 		setMainScreenMessages([...newManipulatedMessages]);
 	};
@@ -110,11 +117,11 @@ const Messages = () => {
 		if (destinationTag && draggedMessageId) {
 			//user should not be able to drag a message from tag X into tag X. In such a case we do not manipulate the rendered messages.
 			const draggedMessage = mainScreenMessages.filter(msg => {
-				if (msg._id == draggedMessageId) return msg;
+				return msg._id === draggedMessageId;
 			});
 			if (
-				draggedMessage[0].tags[0] == destinationTag ||
-				(!draggedMessage[0].tags[0] && destinationTag == 'mainTagKey')
+				draggedMessage[0].data.tags[0] === destinationTag ||
+				(!draggedMessage[0].data.tags[0] && destinationTag === 'mainTagKey')
 			) {
 				return; //we dont want to proceed with drag process
 			}
@@ -128,6 +135,7 @@ const Messages = () => {
 	return (
 		<MessageSideBarContainer title="Messages" getDataFromTagTreeSideBar={getDataFromTagTreeSideBar}>
 			<div className={styles.mainComponentDiv}>
+				{loading && <LinearProgress />}
 				<MessagesTable
 					sendSelectedMessageIdToParentCmp={getSelectedMessageFromChildCmp}
 					messages={mainScreenMessages}

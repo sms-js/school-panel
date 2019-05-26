@@ -1,4 +1,4 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Draggable from './Draggable';
 import Droppable from './Droppable';
@@ -50,7 +50,7 @@ const data = [
 	}
 ];
 
-const draggableArray = data.map((el) => {
+const draggableArray = data.map(el => {
 	return (
 		<Draggable key={'key_' + el.id} id={el.id} style={{ margin: '8px' }}>
 			<Item>{el.bodyText}</Item>
@@ -59,9 +59,8 @@ const draggableArray = data.map((el) => {
 });
 
 const DnDTest = () => {
-	const [ dataSource, setDataSource ] = useState(data);
-	const [ containers, setContainers ] = useState({
-		drop1: data.map((el) => el.id),
+	const [containers, setContainers] = useState({
+		drop1: data.map(el => el.id),
 		drop2: [],
 		drop3: []
 	});
@@ -73,8 +72,8 @@ const DnDTest = () => {
 		console.log('originContainer = ', originContainerName);
 		let actualOriginContainer = containers[originContainerName];
 		let updatedOriginContainer = [];
-		actualOriginContainer.forEach((el) => {
-			if (el != transferredElement) {
+		actualOriginContainer.forEach(el => {
+			if (el !== transferredElement) {
 				updatedOriginContainer.push(el);
 			}
 		});
@@ -85,19 +84,19 @@ const DnDTest = () => {
 		setContainers(newContainer);
 	};
 
-	const drop = (e) => {
+	const drop = e => {
 		e.preventDefault();
 		const transferredData = e.dataTransfer.getData('transfer');
 		const originContainerName = e.dataTransfer.getData('transfer2');
 		e.target.appendChild(document.getElementById(transferredData));
 		const destinationContainerName = e.currentTarget.id;
 		let updatedDestinationContainer = [];
-		e.currentTarget.childNodes.forEach((el) => updatedDestinationContainer.push(el.id));
+		e.currentTarget.childNodes.forEach(el => updatedDestinationContainer.push(el.id));
 
 		updateArrays(destinationContainerName, transferredData, updatedDestinationContainer, originContainerName);
 	};
 
-	const allowDrop = (e) => {
+	const allowDrop = e => {
 		e.preventDefault();
 	};
 

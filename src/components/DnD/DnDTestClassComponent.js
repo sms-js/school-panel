@@ -50,7 +50,7 @@ const data = [
 	}
 ];
 
-const draggableArray = data.map((el) => {
+const draggableArray = data.map(el => {
 	return (
 		<Draggable key={'key_' + el.id} id={el.id} style={{ margin: '8px' }}>
 			<Item>{el.bodyText}</Item>
@@ -62,7 +62,7 @@ class DnDTest extends Component {
 	state = {
 		dataSource: data,
 		containers: {
-			drop1: data.map((el) => el.id),
+			drop1: data.map(el => el.id),
 			drop2: [],
 			drop3: []
 		}
@@ -77,8 +77,8 @@ class DnDTest extends Component {
 		let actualOriginContainer = this.state.containers[originContainerName];
 		let actualDestinationContainer = this.state.containers[currentDropTarget];
 		let updatedOriginContainer = [];
-		actualOriginContainer.forEach((el) => {
-			if (el != transferredElement) {
+		actualOriginContainer.forEach(el => {
+			if (el !== transferredElement) {
 				updatedOriginContainer.push(el);
 			}
 		});
@@ -89,19 +89,19 @@ class DnDTest extends Component {
 		this.setState(state);
 	}
 
-	drop = (e) => {
+	drop = e => {
 		e.preventDefault();
 		const transferredData = e.dataTransfer.getData('transfer');
 		const originContainerName = e.dataTransfer.getData('transfer2');
 		e.target.appendChild(document.getElementById(transferredData));
 		const destinationContainerName = e.currentTarget.id;
 		let updatedDestinationContainer = [];
-		e.currentTarget.childNodes.forEach((el) => updatedDestinationContainer.push(el.id));
+		e.currentTarget.childNodes.forEach(el => updatedDestinationContainer.push(el.id));
 
 		this.updateArrays(destinationContainerName, transferredData, updatedDestinationContainer, originContainerName);
 	};
 
-	allowDrop = (e) => {
+	allowDrop = e => {
 		e.preventDefault();
 	};
 

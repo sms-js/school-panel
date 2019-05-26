@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -11,21 +11,20 @@ import TagDatesRange from './elements/TagDatesRange';
 import AutoAssignTagSwitch from './elements/AutoAssignTagSwitch';
 import CodeWordField from './elements/CodeWordField';
 import moment from 'moment';
-const TagRClickMenu = ({
-	resetShowModal,
-	mouseRightClickPosition,
-	actualSelectedTag,
-	sendNewSelectedTagStateToTagTree,
-	showModal}) => {
+
+const TagRClickMenu = ({ resetShowModal, actualSelectedTag, sendNewSelectedTagStateToTagTree, showModal }) => {
 	const [open, setOpen] = useState(showModal);
-	const [autoAssignTagToIncomingMessage, setShowTagDatesRange] = useState(actualSelectedTag.autoAssignTagToIncomingMessage);
+	const [autoAssignTagToIncomingMessage, setShowTagDatesRange] = useState(
+		actualSelectedTag.autoAssignTagToIncomingMessage
+	);
 	const [codeWord, setCodeWord] = useState(actualSelectedTag.codeWord);
-	
-	const startDefaultDate = actualSelectedTag.startDate != undefined ? moment(actualSelectedTag.startDate) : moment();
-	const endDefaultDate = actualSelectedTag.endDate != undefined ? moment(actualSelectedTag.endDate) : moment().add(24,'h');
+
+	const startDefaultDate = actualSelectedTag.startDate !== undefined ? moment(actualSelectedTag.startDate) : moment();
+	const endDefaultDate =
+		actualSelectedTag.endDate !== undefined ? moment(actualSelectedTag.endDate) : moment().add(24, 'h');
 	const [range, setRange] = useState({
 		startDate: startDefaultDate.format('YYYY-MM-DDTHH:mm'),
-		endDate:endDefaultDate.format('YYYY-MM-DDTHH:mm')
+		endDate: endDefaultDate.format('YYYY-MM-DDTHH:mm')
 	});
 
 	const handleClose = () => {
