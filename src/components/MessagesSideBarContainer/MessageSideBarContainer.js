@@ -2,10 +2,9 @@ import styles from './MessagesSideBarContainer.module.css';
 import React from 'react';
 import { Layout } from 'antd';
 import { MessagesSideBar } from './MessagesSideBar/index';
-
+import PropTypes from 'prop-types';
 const { Header, Sider, Content } = Layout;
 
-//<MessagesSideBar {...props} collapsed={false} />
 const MessagesSideBarContainer = ({ children, title, getDataFromTagTreeSideBar }) => {
 	return (
 		<Layout>
@@ -20,6 +19,12 @@ const MessagesSideBarContainer = ({ children, title, getDataFromTagTreeSideBar }
 			</Layout>
 		</Layout>
 	);
+};
+
+MessagesSideBarContainer.propTypes = {
+	title: PropTypes.string.isRequired,
+	getDataFromTagTreeSideBar: PropTypes.func.isRequired,
+	children: PropTypes.object.isRequired
 };
 
 export default MessagesSideBarContainer;

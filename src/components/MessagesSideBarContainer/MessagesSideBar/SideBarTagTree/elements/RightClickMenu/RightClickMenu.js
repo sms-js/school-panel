@@ -11,6 +11,7 @@ import TagDatesRange from './elements/TagDatesRange';
 import AutoAssignTagSwitch from './elements/AutoAssignTagSwitch';
 import CodeWordField from './elements/CodeWordField';
 import moment from 'moment';
+import PropTypes from 'prop-types';
 
 const TagRClickMenu = ({ resetShowModal, actualSelectedTag, sendNewSelectedTagStateToTagTree, showModal }) => {
 	const [open, setOpen] = useState(showModal);
@@ -93,6 +94,13 @@ const TagRClickMenu = ({ resetShowModal, actualSelectedTag, sendNewSelectedTagSt
 			</div>
 		</form>
 	);
+};
+
+TagRClickMenu.propTypes = {
+	resetShowModal: PropTypes.func.isRequired,
+	actualSelectedTag: PropTypes.object.isRequired,
+	sendNewSelectedTagStateToTagTree: PropTypes.func.isRequired,
+	showModal:PropTypes.bool.isRequired
 };
 
 export default TagRClickMenu;

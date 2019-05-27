@@ -1,5 +1,6 @@
 import React from 'react';
 import { Input } from 'antd';
+import PropTypes from 'prop-types'
 
 const NewTagNameInputField = ({ sendDataToParentCmp, mouseRightClickPosition }) => {
 	const getInputValue = e => {
@@ -24,6 +25,11 @@ const NewTagNameInputField = ({ sendDataToParentCmp, mouseRightClickPosition }) 
 			<Input onPressEnter={getInputValue} size="small" placeholder="enter new folder name" />
 		</div>
 	);
+};
+
+NewTagNameInputField.propTypes = {
+	mouseRightClickPosition: PropTypes.object.isRequired,
+	sendDataToParentCmp: PropTypes.func.isRequired,
 };
 
 export default NewTagNameInputField;

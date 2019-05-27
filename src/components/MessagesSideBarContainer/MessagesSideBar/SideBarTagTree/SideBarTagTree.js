@@ -10,6 +10,7 @@ import {
 import { TagRClickMenu, TagRClickWMenu } from './index';
 import moment from 'moment';
 import NewTagNameInputField from './elements/NewTagNameInputCmp';
+import PropTypes from 'prop-types'
 
 const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 	const [tags, setTags] = useState([]);
@@ -317,13 +318,15 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 			</div>
 			<div>
 				{showModal ? (
+					<div>
 					<TagRClickMenu
 						showModal={showModal}
 						actualSelectedTag={actualSelectedTag}
 						sendNewSelectedTagStateToTagTree={getNewSelectedTagStateFromModal}
 						mouseRightClickPosition={mouseCoordinates}
 						resetShowModal={() => setShowModal(false)}
-					/>
+						/>
+						</div>
 				) : null}
 			</div>
 			<div>
@@ -347,6 +350,10 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 			</div>
 		</div>
 	);
+};
+
+SideBarTagTree.propTypes = {
+	sendDataToMessagesCmp: PropTypes.func.isRequired,
 };
 
 export default SideBarTagTree;

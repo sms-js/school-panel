@@ -17,8 +17,6 @@ const MessagesTable = ({ classes, messages, sendSelectedMessageIdToParentCmp }) 
 	}, [messages]);
 
 	const drag = e => {
-		console.log('starting to drag, e = ', e);
-		console.log('starting to drag, e.target.id = ', e.target.id);
 		e.dataTransfer.setData('draggedMessageId', e.target.id);
 	};
 

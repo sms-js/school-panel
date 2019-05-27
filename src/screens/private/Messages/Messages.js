@@ -10,6 +10,7 @@ import { msgLib } from 'lib/models';
 import { MessagesSideBar } from 'components/MessagesSideBarContainer/MessagesSideBar';
 import styles from './styles.js';
 import { arrayIsNotEmpty } from 'lib/validators/types';
+import PropTypes from 'prop-types';
 
 const confirm = Modal.confirm;
 
@@ -30,7 +31,6 @@ const Messages = ({ classes }) => {
 	};
 
 	const getMessagesByTagsAndStatus = async params => {
-		console.log(params);
 		const response = await msgLib.getMessagesByTagsAndStatus(params);
 		return response;
 	};
@@ -42,21 +42,17 @@ const Messages = ({ classes }) => {
 			const requestedMessages = res
 				.filter(msg => !arrayIsNotEmpty(msg.tags))
 				.map(msg => {
-					msg.deliveryDate = moment(msg.deliveryDate).format('DD/MM hh:mm');
+					//msg.deliveryDate = moment(msg.deliveryDate).format('DD/MM hh:mm');
 					return { ...msg, _key: `${msg._id}` };
 				});
 			setMainScreenMessages([...requestedMessages]);
 			//console.log('mainScreenMessages = ', mainScreenMessages);
 			setLoading(false);
 		};
-
-		console.log(`Calling initList()...`);
 		initList();
 	}, []);
 
-	useEffect(() => {
-		console.log('triggerReRender has changed ');
-	}, [triggerReRender]);
+	useEffect(() => {}, [triggerReRender]);
 
 	const onDelete = async id => {
 		const msg = mainScreenMessages.find(msg => msg._id === id);
@@ -82,7 +78,7 @@ const Messages = ({ classes }) => {
 	const dragMessageToDestinationTag = ({ destinationTag, draggedMessageId }) => {
 		const destinationTagArray = destinationTag === 'mainTagKey' ? [] : [destinationTag];
 		const dragMessageIndex = mainScreenMessages.findIndex(message => message._id === draggedMessageId);
-		const draggedMessage = mainScreenMessages.splice(dragMessageIndex, 1);
+		const draggedMessage = mainScreenMessages.splice(dragMessageIndex, 1)[0];
 		draggedMessage.tags = destinationTagArray;
 		msgLib.updateMessage(draggedMessage);
 		setMainScreenMessages([...mainScreenMessages]);
@@ -92,21 +88,19 @@ const Messages = ({ classes }) => {
 		const params = { tags: [selectedTag], status: true };
 		const res = await getMessagesByTagsAndStatus(params);
 		const requestedMessages = res.map(msg => {
-			msg.deliveryDate = moment(msg.deliveryDate).format('DD/MM hh:mm');
+			//msg.deliveryDate = moment(msg.deliveryDate).format('DD/MM hh:mm');
 			return { ...msg, _key: `${msg._id}` };
 		});
 		setMainScreenMessages([...requestedMessages]);
-		console.log('mainScreenMessages = ', mainScreenMessages);
 	};
 
 	const getDataFromTagTreeSideBar = ({ destinationTag, draggedMessageId }) => {
-		console.log('getDataFromTagTreeCmp / destinationTag, draggedMessageId = ', destinationTag, draggedMessageId);
 		if (destinationTag && draggedMessageId) {
 			const draggedMessage = mainScreenMessages.find(msg => {
 				return msg._id === draggedMessageId;
 			});
 			// User shouldn't be able to drag a message from and to the same tag
-			const tags = arrayIsNotEmpty(draggedMessage.data.tags) ? draggedMessage.data.tags : [];
+			const tags = arrayIsNotEmpty(draggedMessage.tags) ? draggedMessage.tags : [];
 			if ((!tags[0] && destinationTag === 'mainTagKey') || tags[0] === destinationTag) {
 				return;
 			}
@@ -134,4 +128,7 @@ const Messages = ({ classes }) => {
 	);
 };
 
+Messages.propTypes = {
+	classes: PropTypes.object.isRequired
+}
 export default withStyles(styles, { withTheme: true })(Messages);

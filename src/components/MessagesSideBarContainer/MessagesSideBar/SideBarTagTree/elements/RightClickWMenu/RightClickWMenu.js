@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styles from './RightClickWMenu.module.css';
 import { Menu, Dropdown } from 'antd';
 import ConfirmationModal from './elements/ConfirmationModal';
+import PropTypes from 'prop-types'
 
 const TagRClickWMenu = ({
 	sendSelectedOptionToParentCmp,
@@ -88,6 +89,13 @@ const TagRClickWMenu = ({
 			</div>
 		</div>
 	);
+};
+
+TagRClickWMenu.propTypes = {
+	sendSelectedOptionToParentCmp: PropTypes.func.isRequired,
+	recycleBinTagIsSelected: PropTypes.bool,
+	actualSelectedTagTitel: PropTypes.string,
+	children: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
 };
 
 export default TagRClickWMenu;
