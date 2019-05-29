@@ -59,40 +59,43 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 	};
 	const [state, dispatch] = useReducer(reducerFunction, initialState);
 
+	//-----------------------------------------------------------------
 	const loadTags = async () => {
 		const response = await tagsLib.getTags();
 		return response;
 	};
 
+	const initTags = async () => {
+		const res = await tagsLib.getTags();
+		const tags = res
+			.map(el => {
+				el.key = el.title === 'Main' ? 'mainTagKey' : el._id;
+				return el;
+			})
+			.filter(el => el.title !== 'Recycle Bin');
+		dispatch({
+			type: 'setTags',
+			payLoad: tags
+		});
+		dispatch({ type: 'setTagsTreeData', payLoad: generateTreeData(tags) });
+		const recycleTags = res
+			.filter(el => el.title === 'Recycle Bin' || el.parentTag === 'recycleBin')
+			.map(el => {
+				el.key = el.title === 'Recycle Bin' ? 'recycleBin' : el._id;
+				return el;
+			});
+		dispatch({
+			type: 'setRecycleBinTagsTags',
+			payLoad: recycleTags
+		});
+		dispatch({ type: 'setRecycleBinTreeData', payLoad: generateTreeData(recycleTags) });
+	};
+	//-----------------------------------------------------------------
+
 	useEffect(() => {
-		console.log('UE');
-		const initTags = async () => {
-			const res = await loadTags();
-			const tags = res
-				.map(el => {
-					el.key = el.title === 'Main' ? 'mainTagKey' : el._id;
-					return el;
-				})
-				.filter(el => el.title !== 'Recycle Bin');
-			dispatch({
-				type: 'setTags',
-				payLoad: tags
-			});
-			dispatch({ type: 'setTagsTreeData', payLoad: generateTreeData(tags) });
-			const recycleTags = res
-				.filter(el => el.title === 'Recycle Bin' || el.parentTag === 'recycleBin')
-				.map(el => {
-					el.key = el.title === 'Recycle Bin' ? 'recycleBin' : el._id;
-					return el;
-				});
-			dispatch({
-				type: 'setRecycleBinTagsTags',
-				payLoad: recycleTags
-			});
-			dispatch({ type: 'setRecycleBinTreeData', payLoad: generateTreeData(recycleTags) });
-		};
 		initTags();
 	}, []);
+
 	const onSelect = e => {
 		//@todo: check this double click situation on same item with PG.
 		if (e.length === 0) return;
@@ -336,6 +339,8 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		const newRecycleBinTags = state.recycleBinTags.filter(el => el.key !== updatedTag.key);
 		//setRecycleBinTagsTags(newRecycleBinTags);
 		dispatch({ type: 'setRecycleBinTagsTags', payLoad: newRecycleBinTags });
+		//renders DOM
+		dispatch({ type: 'setRecycleBinTreeData', payLoad: generateTreeData(newRecycleBinTags) });
 	};
 
 	const getSelectedOptionFromRCM = event => {
