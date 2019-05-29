@@ -128,29 +128,31 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		If situation 2) applies, then following if-statement is true and the (antD) code for handling of nodeTree elements applies. Following code (within the if-block) was delivered with the component and is related to the treeNode elements manipulation.
 	*/
 		if (draggedMessageId === '' && destinationTag !== '' && destinationTag !== state.draggedNode) {
-			//const tagMap = getTagMap(tagsTreeDataStructure);
-			const tagMap = getTagMap(state.tagsTreeDataStructure);
-			//==============================
-			const newTagA = state.tags
-				.filter(tag => tag._id == state.draggedNode)
-				.map(el => {
-					el.formerParentTag = el.parentTag;
-					el.parentTag = destinationTag;
-					el.selectable = true;
-					delete el.parent;
-					return el;
-				})[0];
-			debugger;
-			const indexNewTag = state.tags.findIndex(el => el._id === newTagA._id);
-			let newTags = state.tags;
-			newTags.splice(indexNewTag, 1, newTagA);
-			debugger;
-			dispatch({ type: 'setTags', payLoad: newTags });
-			//renders DOM
-			dispatch({ type: 'setTagsTreeData', payLoad: generateTreeData(newTags) });
+			//==============================================================================
+			/**
+			 * Code inside the ======== lines is to be shown to PG. Problem: I had to comment out some node_module code to make this work. After review this code can be deleted.
+			 *
+			 */
+			// const newTagA = state.tags
+			// 	.filter(tag => tag._id == state.draggedNode)
+			// 	.map(el => {
+			// 		el.formerParentTag = el.parentTag;
+			// 		el.parentTag = destinationTag;
+			// 		el.selectable = true;
+			// 		delete el.parent;
+			// 		return el;
+			// 	})[0];
+			// tagsLib.updateTag(newTagA); //PATCH: updates the modified tag
+			// const indexNewTag = state.tags.findIndex(el => el._id === newTagA._id);
+			// let newTags = state.tags;
+			// newTags.splice(indexNewTag, 1, newTagA);
+			// dispatch({ type: 'setTags', payLoad: newTags });
+			// //renders DOM
+			// dispatch({ type: 'setTagsTreeData', payLoad: generateTreeData(newTags) });
+			//==============================================================================
 
-			//===============================
-		/* 	let updatedTags = state.tags.map(tag => {
+			const tagMap = getTagMap(state.tagsTreeDataStructure);
+			let updatedTags = state.tags.map(tag => {
 				// Reassignate dragged tag
 				if (tag.key === state.draggedNode) {
 					const newTag = tagMap[tag.key];
@@ -167,7 +169,6 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 			dispatch({ type: 'setTags', payLoad: updatedTags });
 			//renders DOM
 			dispatch({ type: 'setTagsTreeData', payLoad: generateTreeData(updatedTags) });
-		 */
 		}
 	};
 
