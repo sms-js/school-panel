@@ -21,7 +21,6 @@ import { TAGS_URL /*, MESSAGES_URL*/ } from 'config';
 export const postTag = async params => {
 	try {
 		const response = await api.post(`${TAGS_URL}`, params);
-		console.log('tagsLib / POST tag / response = ', response);
 		if (!checkStatus(response)) {
 			throw new Error('invalid credentials');
 		}

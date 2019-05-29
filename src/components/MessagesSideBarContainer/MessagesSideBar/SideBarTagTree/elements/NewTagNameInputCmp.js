@@ -3,6 +3,7 @@ import { Input } from 'antd';
 import PropTypes from 'prop-types'
 
 const NewTagNameInputField = ({ sendDataToParentCmp, mouseRightClickPosition }) => {
+	console.log('newTagInput / mosecoord = ',mouseRightClickPosition)
 	const getInputValue = e => {
 		console.log('etInputValue/ e.target.value = ', e.target.value);
 		sendDataToParentCmp(e.target.value);
