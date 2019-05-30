@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useReducer } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -12,70 +12,72 @@ import AutoAssignTagSwitch from './elements/AutoAssignTagSwitch';
 import CodeWordField from './elements/CodeWordField';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import { reducerFunction } from '../../libSideBarTT';
 
 const TagRClickMenu = ({ resetShowModal, actualSelectedTag, sendNewSelectedTagStateToTagTree, showModal }) => {
-	const [open, setOpen] = useState(showModal);
-	const [autoAssignTagToIncomingMessage, setShowTagDatesRange] = useState(
-		actualSelectedTag.autoAssignTagToIncomingMessage
-	);
-	const [codeWord, setCodeWord] = useState(actualSelectedTag.codeWord);
 
 	const startDefaultDate = actualSelectedTag.startDate !== undefined ? moment(actualSelectedTag.startDate) : moment();
 	const endDefaultDate =
 		actualSelectedTag.endDate !== undefined ? moment(actualSelectedTag.endDate) : moment().add(24, 'h');
-	const [range, setRange] = useState({
-		startDate: startDefaultDate.format('YYYY-MM-DDTHH:mm'),
-		endDate: endDefaultDate.format('YYYY-MM-DDTHH:mm')
-	});
+	
+	const initialReducerState = {
+		open: showModal,
+		autoAssignTagToIncomingMessage: actualSelectedTag.autoAssignTagToIncomingMessage,
+		codeWord: actualSelectedTag.codeWord,
+		range: {
+			startDate: startDefaultDate.format('YYYY-MM-DDTHH:mm'),
+			endDate: endDefaultDate.format('YYYY-MM-DDTHH:mm')
+		}
+	};
+	
+	const [state, dispatch] = useReducer(reducerFunction, initialReducerState);
 
-	const handleClose = () => {
-		setOpen(false);
-	};
-	const handleShowTagDatesRange = switchState => {
-		setShowTagDatesRange(switchState);
-	};
 	const getSelectedDates = params => {
 		console.log('getSelectedDates, params ', params);
 	};
-	const getCodeWord = value => {
-		setCodeWord(value);
-	};
+
 	const handleDatesChange = name => {
 		return event => {
-			return setRange(Object.assign(range, { [name]: event.target.value }));
+			state.range[name] = event.target.value;
+			dispatch({ type: 'setRange', payLoad: state.range });
 		};
 	};
 
 	const handleSubmit = () => {
 		sendNewSelectedTagStateToTagTree({
-			...range,
-			codeWord,
-			autoAssignTagToIncomingMessage
+			range: state.range,
+			codeWord: state.codeWord,
+			autoAssignTagToIncomingMessage: state.autoAssignTagToIncomingMessage
 		});
-		setOpen(false);
+		dispatch({ type: 'closeMenu' });
 	};
 
 	return (
 		<form noValidate autoComplete="off">
 			<div>
-				<Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+				<Dialog open={state.open} onClose={() => dispatch({ type: 'closeMenu' })} aria-labelledby="form-dialog-title">
 					<DialogTitle id="form-dialog-title">{`Edit folder: ${actualSelectedTag.title}`}</DialogTitle>
 					<Divider />
 					<DialogContent>
-						<CodeWordField sendCodeWordToModal={getCodeWord} actualTagCodeWord={actualSelectedTag.codeWord} />
+						<CodeWordField
+							sendCodeWordToModal={value => dispatch({ type: 'setCodeWord', payLoad: value })}
+							actualTagCodeWord={state.codeWord}
+						/>
 						<DialogContentText>
 							<Grid container direction="row" justify="space-between" alignItems="center">
 								Auto-assign incomming messages
 								<AutoAssignTagSwitch
-									handleShowTagDatesRange={handleShowTagDatesRange}
+									handleShowTagDatesRange={switchState =>
+										dispatch({ type: 'setShowTagDatesRange', payLoad: switchState })
+									}
 									actualState={actualSelectedTag.autoAssignTagToIncomingMessage}
 								/>
-								{autoAssignTagToIncomingMessage ? (
+								{state.autoAssignTagToIncomingMessage ? (
 									<TagDatesRange
 										handleDatesChange={handleDatesChange}
 										sendSelectedDates={getSelectedDates}
-										actualEndDate={range.endDate}
-										actualStartDate={range.startDate}
+										actualEndDate={state.range.endDate}
+										actualStartDate={state.range.startDate}
 									/>
 								) : null}
 							</Grid>
@@ -100,7 +102,7 @@ TagRClickMenu.propTypes = {
 	resetShowModal: PropTypes.func.isRequired,
 	actualSelectedTag: PropTypes.object.isRequired,
 	sendNewSelectedTagStateToTagTree: PropTypes.func.isRequired,
-	showModal:PropTypes.bool.isRequired
+	showModal: PropTypes.bool.isRequired
 };
 
 export default TagRClickMenu;

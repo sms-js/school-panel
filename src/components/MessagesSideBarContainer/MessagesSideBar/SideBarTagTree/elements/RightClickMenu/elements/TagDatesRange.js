@@ -17,7 +17,6 @@ const TagDatesRange = ({ handleDatesChange, actualStartDate, actualEndDate }) =>
 					id="startDate"
 					label="Start auto-assign"
 					type="datetime-local"
-					//defaultValue={moment().format('YYYY-MM-DDTHH:mm')}
 					defaultValue={actualStartDate}
 					style={styles.container}
 					InputLabelProps={{

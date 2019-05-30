@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { Tree } from 'antd';
 import { tagsLib } from '../../../../lib/models';
 import {
@@ -42,7 +42,8 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 	};
 
 	const initTags = async () => {
-		dispatchResponse(await fetchTags());
+		const response = await fetchTags();
+		dispatchResponse(response);
 	};
 
 	useEffect(() => {
@@ -138,9 +139,23 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 	/* depending on users Rights: updatedTag should API-PATCH
 		when user changes the tag props using the RCM (status,dates,title,codeword) and clicks on 'ok' the modified tag (named here as newTag) should PATCH the old tag. This step will be added to a later point.*/
 	const getNewSelectedTagStateFromModal = params => {
+		/*
+		const query = {
+    collection: 'Cats',  
+    sort: 'asc',
+
+    ...state && { state },
+    ...priority && { priority },
+};
+		*/
+
 		//when user press on "confirm" the modal closes and we want to set back its state to false (because if not, user has to click twice on edit tag props, to open the modal).
 		dispatch({ type: 'setShowModal' });
-		let newState = { ...state.actualSelectedTag, ...params };
+		let newState = {
+			...state.actualSelectedTag,
+			...params,
+			...{ ...params.range }
+		};
 		delete newState.parent;
 		const selectedTagIndex = state.tags.findIndex(el => el.key === newState.key);
 		const newTags = state.tags;

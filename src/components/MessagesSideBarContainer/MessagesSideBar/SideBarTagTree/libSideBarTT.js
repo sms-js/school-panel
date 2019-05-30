@@ -181,8 +181,7 @@ const generateTreeData = (tagsFromAPI, tagsWithoutParents = [], firstLoop = true
 	return tagsWithoutParents;
 };
 
-//===========================================================================
-
+//==========================================================================
 const fetchTags = async () => {
 	const res = await tagsLib.getTags();
 	const tags = res
@@ -207,38 +206,6 @@ const fetchTags = async () => {
 	return { dispatchTags, dispatchRecycleBinTags, dispatchTagsTreeDataStructure, dispatchRecycleBinTreeDataStructure };
 };
 
-const reducerFunction = (state, action) => {
-	switch (action.type) {
-		case 'setShowModal':
-			return { ...state, showModal: !state.showModal };
-		case 'setShowNewTagNameInputFieldToTrue':
-			return { ...state, showNewTagNameInputField: true };
-		case 'setShowNewTagNameInputFieldToFalse':
-			return { ...state, showNewTagNameInputField: false };
-		case 'setRecycleBinTagIsSelected':
-			return { ...state, recycleBinTagIsSelected: action.payLoad };
-		case 'setTagsTreeData':
-			return { ...state, tagsTreeDataStructure: action.payLoad };
-		case 'setMouseCoordinates':
-			return { ...state, mouseCoordinates: action.payLoad };
-		case 'setActualSelectedTag':
-			return { ...state, actualSelectedTag: action.payLoad };
-		case 'setDraggedNode':
-			return { ...state, draggedNode: action.payLoad };
-		case 'setTags':
-			return { ...state, tags: action.payLoad };
-		case 'setRecycleBinTags':
-			return { ...state, recycleBinTags: action.payLoad };
-		case 'setRecycleBinTreeData':
-			return { ...state, recycleBinTreeDataStructure: action.payLoad };
-		case 'setTestState':
-			return { ...state, testState: !state.testState };
-		default:
-			console.log('reducer function - default case - returning state');
-			return state;
-	}
-};
-
 const recoverSelectedTagLib = (actualSelectedTag, tags, recycleBinTags) => {
 	let updatedTag = {
 		...actualSelectedTag,
@@ -249,11 +216,12 @@ const recoverSelectedTagLib = (actualSelectedTag, tags, recycleBinTags) => {
 	};
 	delete updatedTag.children;
 	delete updatedTag.parent;
-	//issue with the following code is that we have to "clean" all affected tags when we send one to the bim.
+
+	//issue with the following code is that we have to "clean" all affected tags when we send one to the bim. For now we will hardcode to parent tag. Every recovered tag will be displayed under main
+
 	//check if parentTag is available in the tags
 	//updatedTag.parentTag = tags.findIndex(el => el._id === updatedTag.parentTag) > -1 ? updatedTag.parentTag : 'mainTagKey';
 
-	//for now we will hardcode to parent tag. Every recovered tag will be displayed under main
 	updatedTag.parentTag = 'mainTagKey';
 
 	tagsLib.updateTag(updatedTag); //PATCH: updates the modified tag
@@ -321,7 +289,47 @@ const removeTagFromReycleBinLib = (actualSelectedTag, recycleBinTags) => {
 	};
 	return { dispatchRecycleBinTags, dispatchRecycleBinTreeDataStructure };
 };
-//===========================================================================
+
+
+const reducerFunction = (state, action) => {
+	switch (action.type) {
+		case 'setShowModal':
+			return { ...state, showModal: !state.showModal };
+		case 'setShowNewTagNameInputFieldToTrue':
+			return { ...state, showNewTagNameInputField: true };
+		case 'setShowNewTagNameInputFieldToFalse':
+			return { ...state, showNewTagNameInputField: false };
+		case 'setRecycleBinTagIsSelected':
+			return { ...state, recycleBinTagIsSelected: action.payLoad };
+		case 'setTagsTreeData':
+			return { ...state, tagsTreeDataStructure: action.payLoad };
+		case 'setMouseCoordinates':
+			return { ...state, mouseCoordinates: action.payLoad };
+		case 'setActualSelectedTag':
+			return { ...state, actualSelectedTag: action.payLoad };
+		case 'setDraggedNode':
+			return { ...state, draggedNode: action.payLoad };
+		case 'setTags':
+			return { ...state, tags: action.payLoad };
+		case 'setRecycleBinTags':
+			return { ...state, recycleBinTags: action.payLoad };
+		case 'setRecycleBinTreeData':
+			return { ...state, recycleBinTreeDataStructure: action.payLoad };
+			//RightClickMenu: setShowModal belongs also to the RightClickMenu cmp
+		case 'closeMenu':
+			return { open: false };
+		case 'setShowTagDatesRange':
+			return { ...state, autoAssignTagToIncomingMessage: action.payLoad }
+		case 'setCodeWord':
+			return { ...state, codeWord: action.payLoad }
+		case 'setRange':
+			return {...state,range:action.payLoad}
+		default:
+			console.log('reducer function - default case - returning state');
+			return state;
+	}
+};
+
 export {
 	generateTreeNodesFunction,
 	manipulateTreeNodeItems,
