@@ -1,21 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import styles from './styles';
+
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import styles from './styles';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 
-const MessagesTable = ({ classes, messages, sendSelectedMessageIdToParentCmp }) => {
-	const [data, setData] = useState(messages);
-
-	useEffect(() => {
-		setData(messages);
-	}, [messages]);
-
+const MessagesTable = ({ classes, messages, deleteMessage }) => {
+	
 	const drag = e => {
 		e.dataTransfer.setData('draggedMessageId', e.target.id);
 	};
@@ -24,19 +22,23 @@ const MessagesTable = ({ classes, messages, sendSelectedMessageIdToParentCmp }) 
 		e.stopPropagation();
 	};
 
+	const handleDelete = key => {
+		deleteMessage(key);
+	};
+
 	return (
 		<Table className={classes.table}>
 			<TableHead>
 				<TableRow>
-					<TableCell align="left">Fecha</TableCell>
-					<TableCell align="left">Usuario</TableCell>
-					<TableCell align="left">Mensaje</TableCell>
+					<TableCell align="left">Date</TableCell>
+					<TableCell align="left">User</TableCell>
+					<TableCell align="left">Data</TableCell>
+					<TableCell align="left">Action</TableCell>
 				</TableRow>
 			</TableHead>
 			<TableBody>
-				{data.map(message => (
+				{messages.map(message => (
 					<TableRow
-						onClick={() => sendSelectedMessageIdToParentCmp(message._id)}
 						key={message._id}
 						id={message._id}
 						draggable="true"
@@ -46,6 +48,15 @@ const MessagesTable = ({ classes, messages, sendSelectedMessageIdToParentCmp }) 
 						<TableCell align="left">{moment(message.deliveryDate).format('DD/MM hh:mm')}</TableCell>
 						<TableCell align="left">{message.listener}</TableCell>
 						<TableCell align="left">{message.body}</TableCell>
+						<TableCell align="left">
+							<IconButton
+								key={message._id}
+								onClick={() => handleDelete(message._id)}
+								aria-label="Delete"
+							>
+								<DeleteIcon />
+							</IconButton>
+						</TableCell>
 					</TableRow>
 				))}
 			</TableBody>

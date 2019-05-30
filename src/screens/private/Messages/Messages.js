@@ -17,6 +17,7 @@ const Messages = ({ classes }) => {
 	// mainScreenMessages => modified messages
 	const [mainScreenMessages, setMainScreenMessages] = useState([]);
 	const [loading, setLoading] = useState(true);
+	const [selectedTag,setSelectedTag]=useState()
 
 	const loadList = async () => {
 		//only messages with status=true will be retrieved from API.
@@ -40,10 +41,9 @@ const Messages = ({ classes }) => {
 		initList();
 	}, []);
 
-	// Gets clicked message from MessageTable component
-	const getSelectedMessageFromChildCmp = e => {
-		console.log('Messages/ onSelect, e = ', e);
-	};
+	useEffect(() => {
+		getTaggedMessages()
+	},[selectedTag])
 
 	const dragMessageToDestinationTag = ({ destinationTag, draggedMessageId }) => {
 		const destinationTagArray = destinationTag === 'mainTagKey' ? [] : [destinationTag];
@@ -54,7 +54,7 @@ const Messages = ({ classes }) => {
 		setMainScreenMessages([...mainScreenMessages]);
 	};
 
-	const getTaggedMessages = async selectedTag => {
+	const getTaggedMessages = async () => {
 		const params = { tags: [selectedTag], status: true };
 		const res = await await msgLib.getMessagesByTagsAndStatus(params);
 		const requestedMessages = res.map(msg => {
@@ -76,9 +76,17 @@ const Messages = ({ classes }) => {
 			dragMessageToDestinationTag({ destinationTag, draggedMessageId });
 		}
 		if (destinationTag && !draggedMessageId) {
-			getTaggedMessages(destinationTag);
+			setSelectedTag(()=>destinationTag);
 		}
 	};
+
+	const deleteMessage = (msgKey) => {
+		const msgIndex = mainScreenMessages.findIndex(el => el._id == msgKey);
+		const messageToDelete = mainScreenMessages.splice(msgIndex, 1)[0];
+		messageToDelete.status = false;
+		msgLib.updateMessage(messageToDelete);
+		setMainScreenMessages([...mainScreenMessages]);
+	}
 
 	return (
 		<DrawerContainer title="Messages">
@@ -88,8 +96,8 @@ const Messages = ({ classes }) => {
 			<Paper className={classes.tableContainer}>
 				{loading && <LinearProgress />}
 				<MessagesTable
-					sendSelectedMessageIdToParentCmp={getSelectedMessageFromChildCmp}
 					messages={mainScreenMessages}
+					deleteMessage={deleteMessage}
 				/>
 			</Paper>
 		</DrawerContainer>
