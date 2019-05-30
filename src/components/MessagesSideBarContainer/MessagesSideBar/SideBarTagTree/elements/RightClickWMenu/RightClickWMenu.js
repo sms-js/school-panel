@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './RightClickWMenu.module.css';
 import { Menu, Dropdown } from 'antd';
 import ConfirmationModal from './elements/ConfirmationModal';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 
 const TagRClickWMenu = ({
 	sendSelectedOptionToParentCmp,
@@ -12,7 +12,6 @@ const TagRClickWMenu = ({
 }) => {
 	const [openConfirmationModal, setOpenConfirmationModal] = useState(false);
 	const [muiModalContent, setMuiModalContent] = useState({ title: actualSelectedTagTitel, content: '' });
-
 	const modalText = {
 		sendTagToBim: 'Send to recycle bin ?',
 		recoverTag: 'Send back to Main list ?',
