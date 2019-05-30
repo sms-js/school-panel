@@ -5,8 +5,13 @@ import {
 	generateTreeNodesFunction,
 	getTagPath,
 	getTagMap,
-	generateTreeData
-} from '../../../../screens/private/Messages/helpFunctions';
+	generateTreeData,
+	fetchTags,
+	recoverSelectedTagLib,
+	reducerFunction,
+	assignRecycleBinAsParentLib,
+	removeTagFromReycleBinLib
+} from './libSideBarTT';
 import { TagRClickMenu, TagRClickWMenu } from './index';
 import moment from 'moment';
 import NewTagNameInputField from './elements/NewTagNameInputCmp';
@@ -27,70 +32,18 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		testState: false
 	};
 
-	const reducerFunction = (state, action) => {
-		switch (action.type) {
-			case 'setShowModal':
-				return { ...state, showModal: !state.showModal };
-			case 'setShowNewTagNameInputFieldToTrue':
-				return { ...state, showNewTagNameInputField: true };
-			case 'setShowNewTagNameInputFieldToFalse':
-				return { ...state, showNewTagNameInputField: false };
-			case 'setRecycleBinTagIsSelected':
-				return { ...state, recycleBinTagIsSelected: action.payLoad };
-			case 'setTagsTreeData':
-				return { ...state, tagsTreeDataStructure: action.payLoad };
-			case 'setMouseCoordinates':
-				return { ...state, mouseCoordinates: action.payLoad };
-			case 'setActualSelectedTag':
-				return { ...state, actualSelectedTag: action.payLoad };
-			case 'setDraggedNode':
-				return { ...state, draggedNode: action.payLoad };
-			case 'setTags':
-				return { ...state, tags: action.payLoad };
-			case 'setRecycleBinTagsTags':
-				return { ...state, recycleBinTags: action.payLoad };
-			case 'setRecycleBinTreeData':
-				return { ...state, recycleBinTreeDataStructure: action.payLoad };
-			case 'setTestState':
-				return { ...state, testState: !state.testState };
-			default:
-				return state;
-		}
-	};
 	const [state, dispatch] = useReducer(reducerFunction, initialState);
 
-	//-----------------------------------------------------------------
-	const loadTags = async () => {
-		const response = await tagsLib.getTags();
-		return response;
+	const dispatchResponse = params => {
+		if (params.dispatchTags) dispatch(params.dispatchTags);
+		if (params.dispatchTagsTreeDataStructure) dispatch(params.dispatchTagsTreeDataStructure);
+		if (params.dispatchRecycleBinTags) dispatch(params.dispatchRecycleBinTags);
+		if (params.dispatchRecycleBinTreeDataStructure) dispatch(params.dispatchRecycleBinTreeDataStructure);
 	};
 
 	const initTags = async () => {
-		const res = await tagsLib.getTags();
-		const tags = res
-			.map(el => {
-				el.key = el.title === 'Main' ? 'mainTagKey' : el._id;
-				return el;
-			})
-			.filter(el => el.title !== 'Recycle Bin');
-		dispatch({
-			type: 'setTags',
-			payLoad: tags
-		});
-		dispatch({ type: 'setTagsTreeData', payLoad: generateTreeData(tags) });
-		const recycleTags = res
-			.filter(el => el.title === 'Recycle Bin' || el.parentTag === 'recycleBin')
-			.map(el => {
-				el.key = el.title === 'Recycle Bin' ? 'recycleBin' : el._id;
-				return el;
-			});
-		dispatch({
-			type: 'setRecycleBinTagsTags',
-			payLoad: recycleTags
-		});
-		dispatch({ type: 'setRecycleBinTreeData', payLoad: generateTreeData(recycleTags) });
+		dispatchResponse(await fetchTags());
 	};
-	//-----------------------------------------------------------------
 
 	useEffect(() => {
 		initTags();
@@ -99,13 +52,7 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 	const onSelect = e => {
 		//@todo: check this double click situation on same item with PG.
 		if (e.length === 0) return;
-		//e equals to the selected treeNode key
-		/*
-		const params = {
-			destinationTag: e[0],
-			draggedMessageId: undefined
-		};
-		*/
+		//e[0] is the selected treeNode key
 		sendDataToMessagesCmp({
 			destinationTag: e[0],
 			draggedMessageId: undefined
@@ -246,111 +193,30 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		dispatch({ type: 'setTagsTreeData', payLoad: generateTreeData(newTags) });
 	};
 
-	//=====================================================================
-	/* following function generates an array with tags keys. When user deletes a specific tag, this function delivers the key  of the selected tag (the tag selected by user to be deleted) and all its children and children's childrens. Input element (focusedTag) should be an object like "state.actualSelectedTag" {...,key:'sdfasdf',children:[{},{},{key:'...',children:[...]}]} */
-	//let affectedTags = [];
-	/*
-	const getTagKeyAndItsChildren = focusedTag => {
-		affectedTags.push(focusedTag.key);
-		focusedTag.children.forEach(el => {
-			affectedTags.push(el.key);
-			el.children.forEach(childEl => getTagKeyAndItsChildren(childEl));
-		});
-	};
-	*/
-	//=====================================================================
-
+	//sends selected tag back to main
 	const recoverSelectedTag = () => {
-		let updatedTag = {
-			...state.actualSelectedTag,
-			parentTag: state.actualSelectedTag.formerParentTag,
-			selectable: true,
-			_id: state.actualSelectedTag.key,
-			tagSentToRecycleBin: false
-		};
-		delete updatedTag.children;
-		delete updatedTag.parent;
-		//issue with the following code is that we have to "clean" all affected tags when we send one to the bim.
-		//check if parentTag is available in the tags
-		//updatedTag.parentTag = tags.findIndex(el => el._id === updatedTag.parentTag) > -1 ? updatedTag.parentTag : 'mainTagKey';
-
-		//for now we will hardcode to parent tag. Every recovered tag will be displayed under main
-		updatedTag.parentTag = 'mainTagKey';
-
-		tagsLib.updateTag(updatedTag); //PATCH: updates the modified tag
-		//update tags
-		const newTags = state.tags.concat(updatedTag);
-		//delete tag from recycleBinTags
-		const newRecycleBinTags = state.recycleBinTags.filter(el => el.key !== updatedTag.key);
-		//set recycleBinTags
-		dispatch({ type: 'setRecycleBinTagsTags', payLoad: newRecycleBinTags });
-		//renders DOM
-		dispatch({ type: 'setRecycleBinTreeData', payLoad: generateTreeData(newRecycleBinTags) });
-		//set tags
-		dispatch({ type: 'setTags', payLoad: newTags });
-		//renders DOM
-		dispatch({ type: 'setTagsTreeData', payLoad: generateTreeData(newTags) });
+		const response = recoverSelectedTagLib(state.actualSelectedTag, state.tags, state.recycleBinTags);
+		dispatchResponse(response);
 	};
 
+	//send selected Tag to recycle bin
 	const assignRecycleBinAsParent = () => {
-		//getTagKeyAndItsChildren(state.actualSelectedTag);
-		let updatedTag = {
-			...state.actualSelectedTag,
-			formerParentTag: state.actualSelectedTag.parent.key,
-			parentTag: 'recycleBin',
-			selectable: true,
-			_id: state.actualSelectedTag.key,
-			tagSentToRecycleBin: true
-		};
-		delete updatedTag.children;
-		delete updatedTag.parent;
-		//PATCH: updates the modified tag
-		tagsLib.updateTag(updatedTag);
-		//delete tag from tags
-		const newTags = state.tags.filter(el => el.key !== updatedTag.key);
-		//setTags(newTags);
-		dispatch({ type: 'setTags', payLoad: newTags });
-		//renders DOM
-		dispatch({ type: 'setTagsTreeData', payLoad: generateTreeData(newTags) });
-		//const newRecycleBinArray = recycleBinTags.concat(newRecycleBinElements);
-		const newRecycleBinArray = state.recycleBinTags.concat(updatedTag);
-		//setRecycleBinTagsTags(newRecycleBinArray);
-		dispatch({ type: 'setRecycleBinTagsTags', payLoad: newRecycleBinArray });
-		//renders DOM
-		dispatch({ type: 'setRecycleBinTreeData', payLoad: generateTreeData(newRecycleBinArray) });
+		const response = assignRecycleBinAsParentLib(state.actualSelectedTag, state.tags, state.recycleBinTags);
+		dispatchResponse(response);
 	};
 
-	const setTagStatusToFalse = () => {
-		//getTagKeyAndItsChildren(state.actualSelectedTag);
-		let updatedTag = {
-			...state.actualSelectedTag,
-			parentTag: 'recycleBin',
-			selectable: true,
-			_id: state.actualSelectedTag.key,
-			tagSentToRecycleBin: true
-		};
-		//wehn tag status is false, it wont be downloaded from server
-		updatedTag.status = false;
-		delete updatedTag.children;
-		delete updatedTag.parent;
-		//PATCH: updates the modified tag
-		tagsLib.updateTag(updatedTag);
-		//delete tag from recycleBinArray
-		const newRecycleBinTags = state.recycleBinTags.filter(el => el.key !== updatedTag.key);
-		//setRecycleBinTagsTags(newRecycleBinTags);
-		dispatch({ type: 'setRecycleBinTagsTags', payLoad: newRecycleBinTags });
-		//renders DOM
-		dispatch({ type: 'setRecycleBinTreeData', payLoad: generateTreeData(newRecycleBinTags) });
+	//removes tag from recycle bin and wont be visualized because new status is set to false
+	const removeTagFromReycleBin = () => {
+		const response = removeTagFromReycleBinLib(state.actualSelectedTag, state.recycleBinTags);
+		dispatchResponse(response);
 	};
 
 	const getSelectedOptionFromRCM = event => {
 		switch (event) {
 			case 'createNewTag':
-				//setShowNewTagNameInputField(true);
 				dispatch({ type: 'setShowNewTagNameInputFieldToTrue' });
 				break;
 			case 'editTagProperties':
-				//setShowModal(prevState => !prevState);
 				dispatch({ type: 'setShowModal' });
 				break;
 			case 'sendTagToBim':
@@ -360,7 +226,7 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 				recoverSelectedTag();
 				break;
 			case 'setTagStatusToFalse':
-				setTagStatusToFalse();
+				removeTagFromReycleBin();
 				break;
 			default:
 				console.log('switch default case');
@@ -368,7 +234,6 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 	};
 
 	const getDataFromChildCmp = newTagTitel => {
-		//setShowNewTagNameInputField(false);
 		dispatch({ type: 'setShowNewTagNameInputFieldToFalse' });
 		//we don't create a tag if users enters one or more empty spaces in the titel input field.
 		if (newTagTitel.trim().length > 0) generateNewTag(newTagTitel);
