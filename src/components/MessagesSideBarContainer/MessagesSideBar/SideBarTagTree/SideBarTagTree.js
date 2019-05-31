@@ -134,11 +134,11 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		};
 		delete newState.parent;
 		const selectedTagIndex = state.tags.findIndex(el => el.key === newState.key);
-		const newTags = state.tags;
+		const updatedTags = state.tags;
 		const newTag = Object.assign(state.tags[selectedTagIndex], newState);
 		tagsLib.updateTag(newTag); //PATCH: updates the modified tag
-		newTags[selectedTagIndex] = newTag;
-		dispatch({ type: 'setTags', payLoad: newTags });
+		updatedTags[selectedTagIndex] = newTag;
+		dispatch({ type: 'setTags', payLoad: updatedTags });
 	};
 
 	/*
@@ -163,14 +163,14 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		const response = await tagsLib.postTag(newTag);
 		newTag.key = response._id;
 		newTag._id = response._id;
-		let newTags = state.tags;
+		let updatedTags = state.tags;
 		const indexOfParentTag = state.tags.findIndex(el => el.key === newTag.parentTag);
 		
 		//tag will be created and rendered under its parentTag.
-		newTags.splice(indexOfParentTag, 0, newTag);
-		dispatch({ type: 'setTags', payLoad: newTags });
+		updatedTags.splice(indexOfParentTag, 0, newTag);
+		dispatch({ type: 'setTags', payLoad: updatedTags });
 		//renders DOM
-		dispatch({ type: 'setTagsTreeData', payLoad: generateTreeData(newTags) });
+		dispatch({ type: 'setTagsTreeData', payLoad: generateTreeData(updatedTags) });
 	};
 
 	//sends selected tag back to main
