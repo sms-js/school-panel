@@ -315,7 +315,7 @@ const reducerFunction = (state, action) => {
 			return { ...state, recycleBinTags: action.payLoad };
 		case 'setRecycleBinTreeData':
 			return { ...state, recycleBinTreeDataStructure: action.payLoad };
-			//RightClickMenu: setShowModal belongs also to the RightClickMenu cmp
+			// folloing cases belong to the RightClickMenu component: 'setShowModal' case belongs to RightClickMenu and SideBarTagTree component
 		case 'closeMenu':
 			return { open: false };
 		case 'setShowTagDatesRange':

@@ -79,28 +79,6 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		If situation 2) applies, then following if-statement is true and the (antD) code for handling of nodeTree elements applies. Following code (within the if-block) was delivered with the component and is related to the treeNode elements manipulation.
 	*/
 		if (draggedMessageId === '' && destinationTag !== '' && destinationTag !== state.draggedNode) {
-			//==============================================================================
-			/**
-			 * Code inside the ======== lines is to be shown to PG. Problem: I had to comment out some node_module code to make this work. After review this code can be deleted.
-			 *
-			 */
-			// const newTagA = state.tags
-			// 	.filter(tag => tag._id == state.draggedNode)
-			// 	.map(el => {
-			// 		el.formerParentTag = el.parentTag;
-			// 		el.parentTag = destinationTag;
-			// 		el.selectable = true;
-			// 		delete el.parent;
-			// 		return el;
-			// 	})[0];
-			// tagsLib.updateTag(newTagA); //PATCH: updates the modified tag
-			// const indexNewTag = state.tags.findIndex(el => el._id === newTagA._id);
-			// let newTags = state.tags;
-			// newTags.splice(indexNewTag, 1, newTagA);
-			// dispatch({ type: 'setTags', payLoad: newTags });
-			// //renders DOM
-			// dispatch({ type: 'setTagsTreeData', payLoad: generateTreeData(newTags) });
-			//==============================================================================
 
 			const tagMap = getTagMap(state.tagsTreeDataStructure);
 			let updatedTags = state.tags.map(tag => {
@@ -143,12 +121,10 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		const query = {
     collection: 'Cats',  
     sort: 'asc',
-
-    ...state && { state },
+  ...state && { state },
     ...priority && { priority },
 };
 		*/
-
 		//when user press on "confirm" the modal closes and we want to set back its state to false (because if not, user has to click twice on edit tag props, to open the modal).
 		dispatch({ type: 'setShowModal' });
 		let newState = {
@@ -169,14 +145,11 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 	generateNewTag gets called when user click generate New Tag in the RCM. It adds a child tag to the selected tag.
 	Some considerations: 
 	1) User clicks on create new tag.
-	2) This new tag could be renamed at that point. Further props edition can be executed with the RCM option edit properties.
+	2) This new tag could be named at that point. Further props edition can be executed with the RCM option edit properties.
 	3) After a tag creation or a tag edition, an API request gets sent and the tag object is modified on the DB.
 	*/
 	const generateNewTag = async newTagTitle => {
 		const tagMap = getTagMap(state.tagsTreeDataStructure);
-		/* 
-		@todo: tag edition handling should trigger an API request.
-		 */
 		let newTag = {
 			title: newTagTitle,
 			parentTag: getTagPath(state.actualSelectedTag.key, tagMap).reverse()[0],
@@ -192,16 +165,8 @@ const SideBarTagTree = ({ sendDataToMessagesCmp }) => {
 		newTag._id = response._id;
 		let newTags = state.tags;
 		const indexOfParentTag = state.tags.findIndex(el => el.key === newTag.parentTag);
-
-		//GET new created tag from server: If following line is commented, the tag tree wont update after the new tag is posted.
-		//updateTestArray(prevState => !prevState);//this triggers API GET request to fetch all tags from server
-
-		/*
-		tag will be created directly under its parentTag.
-		modification of tags will reRender cmp and "new tag" will be shown in the tagTree.
-		In this case we don't GET the new created tag from API. We just render the object.
-		By commenting the setTags... line, the new tag wont be rendered into DOM and user should reload the browser to see the new created tag.
-		 */
+		
+		//tag will be created and rendered under its parentTag.
 		newTags.splice(indexOfParentTag, 0, newTag);
 		dispatch({ type: 'setTags', payLoad: newTags });
 		//renders DOM
