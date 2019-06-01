@@ -1,35 +1,71 @@
 import React from 'react';
-import { Input } from 'antd';
-import PropTypes from 'prop-types'
+import { withStyles, makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+
+import PropTypes from 'prop-types';
 
 const NewTagNameInputField = ({ sendDataToParentCmp, mouseRightClickPosition }) => {
+	const CssTextField = withStyles({
+		root: {
+			'& label.Mui-focused': {
+				color: 'green'
+			},
+			'& .MuiInput-underline:after': {
+				borderBottomColor: 'green'
+			},
+			'& .MuiOutlinedInput-root': {
+				'& fieldset': {
+					borderColor: 'red'
+				},
+				'&:hover fieldset': {
+					borderColor: 'blue'
+				},
+				'&.Mui-focused fieldset': {
+					borderColor: 'green'
+				}
+			}
+		}
+	})(TextField);
 
-	const getInputValue = e => {
-		sendDataToParentCmp(e.target.value);
-	};
-	const styles = {
-		modalPosition: {
+	const useStyles = makeStyles(theme => ({
+		root: {
+			display: 'flex',
+			flexWrap: 'wrap'
+		},
+		margin: {
 			position: 'absolute',
 			zIndex: '500',
-			top: mouseRightClickPosition.mouseY + 100,
+			margin: theme.spacing(1),
+			boxShadow: '22px 21px 11px 3px rgba(0, 0, 0, 0.75)',
+			//top: mouseRightClickPosition.mouseY + 100,
 			left: mouseRightClickPosition.mouseX + 20, //modal left position is independent from VP width
-			boxShadow: '7px 10px 5px 0px rgba(51,51,51,1)',
-			width: '120px',
-			height: '25px',
-			boxColor: '#8a7e67'
+			backgroundColor: '#eaedf2'
 		}
+	}));
+
+	const classes = useStyles();
+
+	const handleChange = () => {
+		return event => {
+			if (event.which == 13) sendDataToParentCmp(event.target.value);
+		};
 	};
 
 	return (
-		<div style={styles.modalPosition}>
-			<Input onPressEnter={getInputValue} size="small" placeholder="enter new folder name" />
-		</div>
+		<CssTextField
+			onKeyDown={handleChange('folderName')}
+			onChange={handleChange('folderName')}
+			className={classes.margin}
+			label="Folder Name"
+			variant="outlined"
+			id="folderName"
+		/>
 	);
 };
 
 NewTagNameInputField.propTypes = {
 	mouseRightClickPosition: PropTypes.object.isRequired,
-	sendDataToParentCmp: PropTypes.func.isRequired,
+	sendDataToParentCmp: PropTypes.func.isRequired
 };
 
 export default NewTagNameInputField;
