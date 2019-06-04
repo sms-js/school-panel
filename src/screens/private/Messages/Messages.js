@@ -6,18 +6,18 @@ import { MessagesSideBar } from 'components/MessagesSideBarContainer/MessagesSid
 import styles from './styles.js';
 import { arrayIsNotEmpty } from 'lib/validators/types';
 import PropTypes from 'prop-types';
+import SearchBar from './elements/searchBar/SearchBar';
 
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
-
 
 const Messages = ({ classes }) => {
 	// messages (array) => messages in their original state
 	// mainScreenMessages => modified messages
 	const [mainScreenMessages, setMainScreenMessages] = useState([]);
 	const [loading, setLoading] = useState(true);
-	const [selectedTag,setSelectedTag]=useState()
+	const [selectedTag, setSelectedTag] = useState();
 
 	const loadList = async () => {
 		//only messages with status=true will be retrieved from API.
@@ -42,8 +42,8 @@ const Messages = ({ classes }) => {
 	}, []);
 
 	useEffect(() => {
-		getTaggedMessages()
-	},[selectedTag])
+		getTaggedMessages();
+	}, [selectedTag]);
 
 	const dragMessageToDestinationTag = ({ destinationTag, draggedMessageId }) => {
 		const destinationTagArray = destinationTag === 'mainTagKey' ? [] : [destinationTag];
@@ -76,17 +76,24 @@ const Messages = ({ classes }) => {
 			dragMessageToDestinationTag({ destinationTag, draggedMessageId });
 		}
 		if (destinationTag && !draggedMessageId) {
-			setSelectedTag(()=>destinationTag);
+			setSelectedTag(() => destinationTag);
 		}
 	};
 
-	const deleteMessage = (msgKey) => {
+	const deleteMessage = msgKey => {
 		const msgIndex = mainScreenMessages.findIndex(el => el._id == msgKey);
 		const messageToDelete = mainScreenMessages.splice(msgIndex, 1)[0];
 		messageToDelete.status = false;
 		msgLib.updateMessage(messageToDelete);
 		setMainScreenMessages([...mainScreenMessages]);
-	}
+	};
+
+	const getSearchData = async info => {
+		info.advanceSearch = true;
+		info.selectedTag = selectedTag;
+		const response = await msgLib.getMessagesByTagsAndStatus(info);
+		setMainScreenMessages([...response]);
+	};
 
 	return (
 		<DrawerContainer title="Messages">
@@ -95,10 +102,10 @@ const Messages = ({ classes }) => {
 			</Paper>
 			<Paper className={classes.tableContainer}>
 				{loading && <LinearProgress />}
-				<MessagesTable
-					messages={mainScreenMessages}
-					deleteMessage={deleteMessage}
-				/>
+
+				<SearchBar sendSearchData={getSearchData} />
+
+				<MessagesTable messages={mainScreenMessages} deleteMessage={deleteMessage} />
 			</Paper>
 		</DrawerContainer>
 	);
@@ -106,5 +113,5 @@ const Messages = ({ classes }) => {
 
 Messages.propTypes = {
 	classes: PropTypes.object.isRequired
-}
+};
 export default withStyles(styles, { withTheme: true })(Messages);

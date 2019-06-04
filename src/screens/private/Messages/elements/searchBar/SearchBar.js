@@ -1,10 +1,3 @@
-//ANDA
-// var mySearchString='expression details'
-// var sStr2=mySearchString.split(' ')
-// var sStr2test=sStr2.map((el,index)=>{if(index!=sStr2.length-1){return el+'.*';} return el});
-// var toSearch=sStr2test.join('')
-// var newSearchExp=new RegExp(toSearch,'gi');
-// var result2=newSearchExp.exec(s1);
 
 import React, { useState } from 'react';
 

@@ -25,14 +25,9 @@ const MessagesTable = ({ classes, messages, deleteMessage }) => {
 	const handleDelete = key => {
 		deleteMessage(key);
 	};
-
-	const getSearchData=(info) => {
-		console.log('searchData/ info = ', info);
-		
-}
+	
 	return (
 		<div>
-			<SearchBar sendSearchData={getSearchData}/>
 			<Table className={classes.table}>
 				<TableHead>
 					<TableRow>
