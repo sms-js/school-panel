@@ -92,7 +92,7 @@ const Messages = ({ classes }) => {
 		info.advanceSearch = true;
 		info.selectedTag = selectedTag;
 		const response = await msgLib.getMessagesByTagsAndStatus(info);
-		setMainScreenMessages([...response]);
+		return response != false || response.legth > 0 ? setMainScreenMessages([...response]) : setMainScreenMessages([]);
 	};
 
 	return (
