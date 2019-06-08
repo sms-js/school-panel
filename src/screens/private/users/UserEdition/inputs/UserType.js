@@ -28,6 +28,7 @@ const UserType = ({ classes, handleChange, value, error }) => {
 				<MenuItem value="admin">admin</MenuItem>
 				<MenuItem value="userR">read</MenuItem>
 				<MenuItem value="userRW">read and write</MenuItem>
+				<MenuItem value="teacher">teacher</MenuItem>
 			</Select>
 		</FormControl>
 	);
