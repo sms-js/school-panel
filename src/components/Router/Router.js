@@ -12,6 +12,7 @@ import PrivateRoute from './PrivateRoute';
 import Home from 'screens/private/Home';
 import Profile from 'screens/private/Profile';
 import Messages from 'screens/private/Messages';
+import GenerateGroup from 'screens/private/Groups';
 
 // Users
 import { UserEdition, UsersList } from 'screens/private/users';
@@ -62,6 +63,13 @@ const privateRoutes = [
 		path="/messages/display"
 		component={Messages}
 		rule="MessagesListReadUpdate"
+	/>,
+	//Groups
+	<PrivateRoute
+		key="route-generate-group"
+		path="/groups/generate"
+		component={GenerateGroup}
+		rule="UserFull"
 	/>
 ];
 

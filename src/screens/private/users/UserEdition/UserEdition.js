@@ -13,11 +13,11 @@ import { keyIsObject } from 'lib/validators/types';
 
 const UserEdition = ({ classes, match }) => {
 	const [user, setUser] = useState({
-		email: '',
-		firstName: '',
-		lastName: '',
-		username: '',
-		type: ''
+		email: 'alexis.schapiro@gmail.com',
+		firstName: 'testFirstName',
+		lastName: 'testLastName',
+		username: 'userTestName',
+		type: 'userR'
 	});
 	const [errors, setErrors] = useState({
 		clean: true,

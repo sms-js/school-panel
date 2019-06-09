@@ -1,0 +1,30 @@
+	.root {
+		padding: 2px 4px;
+		display: flex;
+		align-items: center;
+		flex-wrap: nowrap;
+		justify-content: space-between;
+		flex-direction: row;
+	}
+	.input {
+		margin-left: 8;
+		flex: 1;
+	}
+
+	.iconButton {
+		padding: 1;
+	}
+	.divider {
+		width: 1;
+		height: 28;
+		margin: 4;
+	}
+	.modalStyle {
+		padding: 2px 4px;
+		display: flex;
+		align-items: center;
+		flex-wrap: nowrap;
+		justify-content: space-between;
+		flex-direction: row;
+	}
+
