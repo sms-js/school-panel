@@ -1,112 +1,154 @@
 import React, { useState, useEffect } from 'react';
-import DrawerContainer from 'components/DrawerContainer';
-import { MessagesTable } from './elements';
-import { msgLib } from 'lib/models';
-import { MessagesSideBar } from 'components/MessagesSideBarContainer/MessagesSideBar';
-import styles from './styles';
-import { arrayIsNotEmpty } from 'lib/validators/types';
 import PropTypes from 'prop-types';
-import SearchBar from './elements/searchBar/SearchBar';
 
-import LinearProgress from '@material-ui/core/LinearProgress';
-import { withStyles } from '@material-ui/core/styles';
+import DrawerContainer from 'components/DrawerContainer';
+import { arrayIsNotEmpty } from 'lib/validators/types';
+import { schoolLib } from '../../../lib/models';
+
+import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import { withStyles } from '@material-ui/core/styles';
 
-const GenerateGroups = ({ classes }) => {
-	// messages (array) => messages in their original state
-	// mainScreenMessages => modified messages
-	const [mainScreenMessages, setMainScreenMessages] = useState([]);
-	const [loading, setLoading] = useState(true);
-	const [selectedTag, setSelectedTag] = useState();
+import GroupSelectionMenu from './elements/groupSelectionMenu/GroupSelectionMenu';
 
-	const loadList = async () => {
-		//only messages with status=true will be retrieved from API.
-		// If specified messages with status=false can also be retrieved. See API documentation.
-		const response = await msgLib.getMessages();
-		return response;
+const useStyles = makeStyles(theme => ({
+	root: {
+		flexGrow: 1
+	},
+	paper: {
+		padding: theme.spacing(2),
+		textAlign: 'center',
+		color: theme.palette.text.secondary
+	}
+}));
+
+const GenerateGroups = () => {
+
+	const classes = useStyles();
+
+	const groupTypes = ['originGroup', 'destinationGroup_1', 'destinationGroup_2'];
+	const [groups, setGroups] = useState([]);
+	const [currentYear, setCurrentYear] = useState('2019');
+	const groupDefinition = [
+		{ groupCode: 'incomingChildren', groupName: 'Incoming children', _id: 'incomingChildren' },
+		{ groupCode: 'pastYearGroup', groupName: 'Past Year', _id: 'pastYearGroup' }
+	];
+	const [disable, setDisableMenu] = useState({
+		originGroup: true,
+		destinationGroup: true
+	});
+
+	const [menuState, setMenuState] = useState({
+		groupDefinition: { state: true, selectedValue: '' },
+		originGroup: { state: false, selectedValue: '' },
+		destinationGroup: { state: false, selectedValue: '',groupsData:[] }
+	});
+
+	const getInitialGroupValues = async () => {
+		const result = await schoolLib.getGroups();
+		console.log('getInitialGroupValues / result = ', result);
+		setGroups(result);
+		const actualMenuState = { ...menuState };
+		actualMenuState.destinationGroup.groupsData = result;
+		setMenuState(Object.assign(menuState, actualMenuState));
 	};
 
+
 	useEffect(() => {
-		const initList = async () => {
-			const res = await loadList();
-			// Main screen: messages with status=true and with no tags.
-			const requestedMessages = res
-				.filter(msg => !arrayIsNotEmpty(msg.tags))
-				.map(msg => {
-					return { ...msg, _key: `${msg._id}` };
-				});
-			setMainScreenMessages([...requestedMessages]);
-			setLoading(false);
-		};
-		initList();
+		getInitialGroupValues();
 	}, []);
 
 	useEffect(() => {
-		getTaggedMessages();
-	}, [selectedTag]);
+		//console.log('UE - [menuState] = ', menuState);
+	}, [menuState]);
 
-	const dragMessageToDestinationTag = ({ destinationTag, draggedMessageId }) => {
-		const destinationTagArray = destinationTag === 'mainTagKey' ? [] : [destinationTag];
-		const dragMessageIndex = mainScreenMessages.findIndex(message => message._id === draggedMessageId);
-		const draggedMessage = mainScreenMessages.splice(dragMessageIndex, 1)[0];
-		draggedMessage.tags = destinationTagArray;
-		msgLib.updateMessage(draggedMessage);
-		setMainScreenMessages([...mainScreenMessages]);
-	};
-
-	const getTaggedMessages = async () => {
-		const params = { tags: [selectedTag], status: true };
-		const res = await await msgLib.getMessagesByTagsAndStatus(params);
-		const requestedMessages = res.map(msg => {
-			return { ...msg, _key: `${msg._id}` };
-		});
-		setMainScreenMessages([...requestedMessages]);
-	};
-
-	const getDataFromTagTreeSideBar = ({ destinationTag, draggedMessageId }) => {
-		if (destinationTag && draggedMessageId) {
-			const draggedMessage = mainScreenMessages.find(msg => {
-				return msg._id === draggedMessageId;
-			});
-			// User shouldn't be able to drag a message from and to the same tag
-			const tags = arrayIsNotEmpty(draggedMessage.tags) ? draggedMessage.tags : [];
-			if ((!tags[0] && destinationTag === 'mainTagKey') || tags[0] === destinationTag) {
-				return;
-			}
-			dragMessageToDestinationTag({ destinationTag, draggedMessageId });
+	//info={menuLabel: "groupDefinition", selectedValue: "incomingChildren"}
+	const getDataFromChildCmp = info => {
+		console.log('getDataFromChildCmp / info = ', info);
+		const newMenuState = { ...menuState };
+		newMenuState[info.menuLabel].selectedValue = info.selectedValue;
+		switch (info.menuLabel) {
+			case 'groupDefinition':
+				switch (info.selectedValue) {
+					case 'pastYearGroup':
+						newMenuState.originGroup.state = true;
+						newMenuState.destinationGroup.state = false;
+						break;
+					case 'incomingChildren':
+						newMenuState.destinationGroup.state = true;
+						newMenuState.originGroup.state = false;
+						newMenuState.destinationGroup.groupsData = groups;
+						break;
+					case 'notAssigned':
+						newMenuState.destinationGroup.state = false;
+						newMenuState.originGroup.state = false;
+						break;
+				}
+				break;
+			case 'originGroup':
+				switch (info.selectedValue) {
+					case 'notAssigned':
+						newMenuState.destinationGroup.state = false;
+						newMenuState.originGroup.state = false;
+						break;
+					default:
+						newMenuState.destinationGroup.state = true;
+						const selectedOriginGroupLevel = groups.find(el => { return info.selectedValue == el.groupCode }).groupLevel;
+						newMenuState.destinationGroup.groupsData = groups.filter(el => el.groupLevel > selectedOriginGroupLevel);
+						setMenuState(Object.assign(menuState,newMenuState))
+						break;
+				}
+				break;
 		}
-		if (destinationTag && !draggedMessageId) {
-			setSelectedTag(() => destinationTag);
-		}
-	};
-
-	const deleteMessage = msgKey => {
-		const msgIndex = mainScreenMessages.findIndex(el => el._id == msgKey);
-		const messageToDelete = mainScreenMessages.splice(msgIndex, 1)[0];
-		messageToDelete.status = false;
-		msgLib.updateMessage(messageToDelete);
-		setMainScreenMessages([...mainScreenMessages]);
-	};
-
-	const getSearchData = async info => {
-		info.advanceSearch = true;
-		info.selectedTag = selectedTag;
-		const response = await msgLib.getMessagesByTagsAndStatus(info);
-		return response != false || response.legth > 0 ? setMainScreenMessages([...response]) : setMainScreenMessages([]);
+		console.log('newMenuState = ', newMenuState);
+		setMenuState(newMenuState);
 	};
 
 	return (
-		<DrawerContainer title="Messages">
-			<Paper className={classes.tree}>
-				<MessagesSideBar getDataFromTagTreeSideBar={getDataFromTagTreeSideBar} collapsed={false} />
-			</Paper>
-			<Paper className={classes.tableContainer}>
-				{loading && <LinearProgress />}
-
-				<SearchBar sendSearchData={getSearchData} />
-
-				<MessagesTable messages={mainScreenMessages} deleteMessage={deleteMessage} />
-			</Paper>
+		<DrawerContainer title="Generate new group">
+			<Grid container spacing={3}>
+				<Grid item xs={12}>
+					<Paper
+						style={{
+							display: 'flex',
+							flexDirection: 'row',
+							justifyContent: 'space-between',
+							width: '100%'
+						}}
+					>
+						<div>
+							<GroupSelectionMenu
+								menuLabel={'groupDefinition'}
+								data={groupDefinition}
+								sendDataToParentCmp={getDataFromChildCmp}
+							/>
+							{menuState['originGroup'].state ? (
+								<GroupSelectionMenu
+									menuLabel={'originGroup'}
+									data={groups}
+									sendDataToParentCmp={getDataFromChildCmp}
+									disableMenu={!menuState['originGroup'].state}
+								/>
+							) : null}
+							{menuState['destinationGroup'].state ? (
+								<GroupSelectionMenu
+									menuLabel={'destinationGroup'}
+									data={menuState['destinationGroup'].groupsData}
+									sendDataToParentCmp={getDataFromChildCmp}
+									disableMenu={!menuState['destinationGroup'].state}
+								/>
+							) : null}
+						</div>
+					</Paper>
+				</Grid>
+				<Grid item xs={12}>
+					<Paper className={classes.paper}>Transfer element</Paper>
+				</Grid>
+				<Grid item xs={12}>
+					<Paper className={classes.paper}>Command buttons</Paper>
+				</Grid>
+			</Grid>
 		</DrawerContainer>
 	);
 };
@@ -114,4 +156,4 @@ const GenerateGroups = ({ classes }) => {
 GenerateGroups.propTypes = {
 	classes: PropTypes.object.isRequired
 };
-export default withStyles(styles, { withTheme: true })(GenerateGroups);
+export default withStyles({ withTheme: true })(GenerateGroups);
