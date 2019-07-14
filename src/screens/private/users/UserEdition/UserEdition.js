@@ -11,13 +11,13 @@ import { Email, FirstName, LastName, UserType, UserName } from './inputs';
 import { Redirect } from 'react-router-dom';
 import { keyIsObject } from 'lib/validators/types';
 
-const UserEdition = ({ classes, match }) => {
+const UserEdition = ({ classes, match,format }) => {
 	const [user, setUser] = useState({
 		email: 'alexis.schapiro@gmail.com',
 		firstName: 'testFirstName',
 		lastName: 'testLastName',
 		username: 'userTestName',
-		type: 'userR'
+		type: format=='student'?'student':'userR'
 	});
 	const [errors, setErrors] = useState({
 		clean: true,
@@ -83,9 +83,8 @@ const UserEdition = ({ classes, match }) => {
 	if (mustReturn) return <Redirect to="/admin/users" />;
 
 	return (
-		<DrawerContainer title={user._id ? 'Update user' : 'Create user'}>
 			<Paper className={classes.root} elevation={1}>
-				{loading && <LinearProgress />}
+			{loading && <LinearProgress />}
 				<form
 					onSubmit={handleSubmit}
 					className={[classes.container, classes.form].join(' ')}
@@ -111,7 +110,7 @@ const UserEdition = ({ classes, match }) => {
 						error={errors.username}
 					/>
 					<Email classes={classes} handleChange={handleChange('email')} value={user.email} error={errors.email} />
-					<UserType classes={classes} handleChange={handleChange('type')} value={user.type} error={errors.type} />
+				<UserType disabled={format=='student'} classes={classes} handleChange={handleChange('type')} value={user.type} error={errors.type} />
 					{success && <span className={classes.success}>Profile update success</span>}
 					{error && <span className={classes.error}>Profile update error</span>}
 					<Button variant="contained" color="primary" className={classes.button} type="submit">
@@ -119,7 +118,6 @@ const UserEdition = ({ classes, match }) => {
 					</Button>
 				</form>
 			</Paper>
-		</DrawerContainer>
 	);
 };
 

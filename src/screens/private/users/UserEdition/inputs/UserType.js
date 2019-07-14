@@ -12,11 +12,12 @@ const fieldName = 'type';
 
 const validateField = value => isNotEmptyString(value);
 
-const UserType = ({ classes, handleChange, value, error }) => {
+const UserType = ({ classes, handleChange, value, error,disabled }) => {
 	return (
 		<FormControl className={`${classes.formControl} ${classes.textField} ${classes.selectInput}`}>
 			<InputLabel htmlFor={fieldName}>{label}</InputLabel>
 			<Select
+				disabled={disabled}
 				id={id}
 				name={fieldName}
 				label={label}
@@ -29,6 +30,7 @@ const UserType = ({ classes, handleChange, value, error }) => {
 				<MenuItem value="userR">read</MenuItem>
 				<MenuItem value="userRW">read and write</MenuItem>
 				<MenuItem value="teacher">teacher</MenuItem>
+				<MenuItem value="student">student</MenuItem>
 			</Select>
 		</FormControl>
 	);

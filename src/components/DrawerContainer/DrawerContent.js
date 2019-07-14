@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
@@ -24,14 +24,14 @@ const DrawerContent = classes => {
 		root: {
 			width: '100%',
 			maxWidth: 360,
-			backgroundColor: theme.palette.background.paper,
+			backgroundColor: theme.palette.background.paper
 		},
 		nested: {
-			paddingLeft: theme.spacing(4),
+			paddingLeft: theme.spacing(4)
 		},
-		iconStyle: { color:'primary'}
+		iconStyle: { color: 'primary' }
 	}));
-  const nestedListClasses = useStyles();
+	const nestedListClasses = useStyles();
 
 	function handleClick() {
 		setOpen(!open);
@@ -48,38 +48,64 @@ const DrawerContent = classes => {
 			</List>
 			<Divider />
 			<List>
-				<ListItem component={Link} to="/admin/users" key="users">
-					<FaceIcon />
-					<ListItemText primary="Users" />
-				</ListItem>
 				<ListItem component={Link} to="/messages/display" key="messages-root">
 					<MessageIcon />
 					<ListItemText primary="Messages" />
 				</ListItem>
-				<ListItem key='group' button onClick={handleClick}>
+				<ListItem key="group" button onClick={handleClick}>
 					<ListItemIcon>
-						<GroupIcon/>
+						<GroupIcon />
 					</ListItemIcon>
 					<ListItemText primary="Groups" />
 					{open ? <ExpandLess /> : <ExpandMore />}
 				</ListItem>
 				<Collapse in={open} timeout="auto" unmountOnExit>
 					<List component="div" disablePadding>
-						<ListItem key='generateGroup'
+						<ListItem
+							key="generateGroup"
 							button
 							className={nestedListClasses.nested}
-							component={Link} to="/groups/generate" >
+							component={Link}
+							to="/groups/generate"
+						>
 							<ListItemIcon>
-								<GroupAddIcon color='primary'/>
+								<GroupAddIcon color="primary" />
 							</ListItemIcon>
 							<ListItemText primary="Generate" />
+						</ListItem>
+					</List>
+				</Collapse>
+
+				<ListItem key="data" button onClick={handleClick}>
+					<ListItemIcon>
+						<GroupIcon />
+					</ListItemIcon>
+					<ListItemText primary="Data" />
+					{open ? <ExpandLess /> : <ExpandMore />}
+				</ListItem>
+				<Collapse in={open} timeout="auto" unmountOnExit>
+					<List component="div" disablePadding>
+						<ListItem component={Link} to="/admin/users" key="users">
+							<FaceIcon />
+							<ListItemText primary="Users" />
+						</ListItem>
+						<ListItem
+							key="addStudentData"
+							button
+							className={nestedListClasses.nested}
+							component={Link}
+							to="/data/add">
+							<ListItemIcon>
+								<GroupAddIcon color="primary" />
+							</ListItemIcon>
+							<ListItemText primary="Add student" />
 						</ListItem>
 					</List>
 				</Collapse>
 			</List>
 		</div>
 	);
-}
+};
 
 DrawerContent.propTypes = {
 	classes: PropTypes.object.isRequired
