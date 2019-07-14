@@ -13,7 +13,8 @@ import Home from 'screens/private/Home';
 import Profile from 'screens/private/Profile';
 import Messages from 'screens/private/Messages';
 import GenerateGroup from 'screens/private/Groups';
-import AddStudentData from 'screens/private/AddStudentData';
+//import AddStudentData from 'screens/private/AddStudentData';
+import EditStudentData from 'screens/private/EditStudentData/EditStudentData';
 
 // Users
 import { UserEdition, UsersList } from 'screens/private/users';
@@ -68,7 +69,7 @@ const privateRoutes = [
 	//Groups
 	<PrivateRoute key="route-generate-group" path="/groups/generate" component={GenerateGroup} rule="UserFull" />,
 	//StudentData
-	<PrivateRoute key="addStudentData" path="/data/add" component={AddStudentData} rule="UserFull" />
+	<PrivateRoute key="addStudentData" path="/data/add" component={EditStudentData} rule="UserFull" />
 ];
 
 /**

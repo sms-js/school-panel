@@ -1,2 +1,4 @@
-import AddPersonalData from './AddPD/TabStudentPersonalData'
-export default AddPersonalData;
+import TabsBar from './Tabs/TabsBar';
+import TabContent from './Tabs/TabContent';
+
+export { TabsBar, TabContent };
