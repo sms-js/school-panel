@@ -5,9 +5,10 @@ import { isNotEmptyString } from 'lib/validators/types';
 
 const validateField = value => isNotEmptyString(value);
 
-const LastName = ({ classes, handleChange, value, error,elementId,label,fieldName  }) => {
+const BirthDate = ({ classes, handleChange, value, error, elementId, label, fieldName }) => {
 	return (
 		<TextField
+			type="date"
 			name={fieldName}
 			required
 			error={error}
@@ -17,15 +18,19 @@ const LastName = ({ classes, handleChange, value, error,elementId,label,fieldNam
 			value={value}
 			onChange={ev => handleChange(ev.target.value, !validateField(ev.target.value))}
 			margin="normal"
+			InputLabelProps={{
+				shrink: true
+			}}
+			defaultValue="2010-01-01"
 		/>
 	);
 };
 
-LastName.propTypes = {
+BirthDate.propTypes = {
 	classes: PropTypes.object.isRequired,
 	handleChange: PropTypes.func.isRequired,
 	error: PropTypes.bool.isRequired,
 	value: PropTypes.string
 };
 
-export default LastName;
+export default BirthDate;

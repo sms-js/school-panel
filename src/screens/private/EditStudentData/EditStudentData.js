@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import DrawerContainer from 'components/DrawerContainer';
-import { TabsBar, TabContent } from './index';
+import { TabsBar, TabsContainers } from './index';
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -26,7 +26,7 @@ const EditStudentData = () => {
 	return (
 		<DrawerContainer title="Student: add personal data">
 			<TabsBar value={value} handleChange={handleChange} />
-			<TabContent value={value} />
+			<TabsContainers value={value} />
 		</DrawerContainer>
 	);
 };

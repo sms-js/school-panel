@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import UserEdition from '../../users/UserEdition/UserEdition';
+import { StudentPersonalData } from './TabsContent';
+
 import Aux from '../../../../components/AUX/Aux';
 function TabContainer(props) {
 	return (
@@ -15,12 +16,12 @@ TabContainer.propTypes = {
 	children: PropTypes.node.isRequired
 };
 
-const TabContent = ({ value }) => {
+const TabsContainers = ({ value }) => {
 	return (
 		<Aux>
 			{value === 0 && (
 				<TabContainer>
-					<UserEdition format={'student'} />
+					<StudentPersonalData />
 				</TabContainer>
 			)}
 			{value === 1 && <TabContainer>Health Datax</TabContainer>}
@@ -33,4 +34,4 @@ const TabContent = ({ value }) => {
 	);
 };
 
-export default TabContent;
+export default TabsContainers;
