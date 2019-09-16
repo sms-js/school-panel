@@ -21,7 +21,7 @@ const TabsContainers = ({ value }) => {
 		<Aux>
 			{value === 0 && (
 				<TabContainer>
-					<StudentPersonalData />
+					<StudentPersonalData screenName={'studenPersonalData'}/>
 				</TabContainer>
 			)}
 			{value === 1 && <TabContainer>Health Datax</TabContainer>}

@@ -9,25 +9,38 @@ import { withStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 import DrawerContainer from 'components/DrawerContainer';
-import { user as userLib } from 'lib/models';
-import { Email, FirstName, LastName, UserType, UserName, IdNumber,BirthDate } from '../../../users/UserEdition/inputs';
-import { Redirect } from 'react-router-dom';
-import { keyIsObject } from 'lib/validators/types';
+import { studentLib } from 'lib/models';
 
-const StudentPersonalData = ({ classes, match }) => {
-	const [user, setUser] = useState({
+import {
+	TextInput,
+	Email,
+	FirstName,
+	LastName,
+	UserType,
+	UserName,
+	IdNumber,
+	BirthDate
+} from '../../../users/UserEdition/inputs';
+import { Redirect } from 'react-router-dom';
+import { keyIsObject, isNotEmptyString, isNumber } from 'lib/validators/types';
+
+const StudentPersonalData = ({ classes, match, screenName }) => {
+	//screenName='studenPersonalData'
+
+	const [student, setStudent] = useState({
 		email: 'alexis.schapiro@gmail.com',
 		firstName: 'testFirstNameX',
 		lastName: 'testLastNameX',
 		username: 'userTestNameX',
 		idNumber: '11222333',
 		streetName: 'Av. Siempre Viva',
-		streetNumber: '456',
-		houseDoor: 'A',
+		houseNr: '456',
+		floorNr: '1',
+		flatNr: 'A',
 		zipCode: '1427',
 		cellPhoneNumber: '6939 3322',
 		type: 'student',
-		//birthdate:''
+		birthDate: ''
 	});
 	const [errors, setErrors] = useState({
 		clean: true,
@@ -37,7 +50,11 @@ const StudentPersonalData = ({ classes, match }) => {
 		username: false,
 		type: false,
 		idNumber: false,
-		birthdate:false
+		birthDate: false,
+		street: false,
+		houseNr: false,
+		flatNr: false,
+		floor: false
 	});
 	const [loading, setLoading] = useState(true);
 	const [success, setSuccess] = useState(false);
@@ -51,7 +68,7 @@ const StudentPersonalData = ({ classes, match }) => {
 			setSuccess(false);
 			setError(false);
 			setErrors({ ...errors, [name]: error, clean: false });
-			setUser({ ...user, [name]: value });
+			setStudent({ ...student, [name]: value });
 		};
 	};
 
@@ -68,7 +85,9 @@ const StudentPersonalData = ({ classes, match }) => {
 			setLoading(false);
 			return;
 		}
-		const response = user._id ? await userLib.updateUser(user._id, user) : await userLib.createUser(user);
+		const response = student._id
+			? await studentLib.updateStudent(student._id, student)
+			: await studentLib.createStudent(student);
 		setLoading(false);
 		if (!response) return setError(true);
 		setSuccess(true);
@@ -78,11 +97,11 @@ const StudentPersonalData = ({ classes, match }) => {
 		const loadUser = async () => {
 			const params = keyIsObject(match, 'params') ? match.params : {};
 			if (params.id) {
-				const data = await userLib.getUser(params.id);
+				const data = await studentLib.getUser(params.id);
 				if (!data) {
 					setError(true);
 				} else {
-					setUser(data);
+					setStudent(data);
 				}
 				setLoading(false);
 			} else {
@@ -105,49 +124,113 @@ const StudentPersonalData = ({ classes, match }) => {
 					noValidate
 					autoComplete="off"
 				>
+					{/* STUDENT NAME, BIRTHDATE AND ID DATA */}
 					<Grid container direction="row" style={{ flexGrow: 1 }}>
 						<Grid item sm={3}>
-							<FirstName
-								elementId={'studentFirstName'}
+							<TextInput
+								type="text"
+								validateField={isNotEmptyString}
+								elementId={'firstName'}
 								label={"Student's first name"}
-								fielName={'studentFirstName'}
+								fielName={'firstName'}
 								classes={classes}
 								handleChange={handleChange('firstName')}
-								value={user.firstName}
+								value={student.firstName}
 								error={errors.firstName}
 							/>
 						</Grid>
 						<Grid item sm={3}>
-							<LastName
-								elementId={'studentLastName'}
+							<TextInput
+								type="text"
+								validateField={isNotEmptyString}
+								elementId={'lastName'}
 								label={"Student's last name"}
-								fielName={'studentLastName'}
+								fielName={'lastName'}
 								classes={classes}
 								handleChange={handleChange('lastName')}
-								value={user.lastName}
+								value={student.lastName}
 								error={errors.lastName}
 							/>
 						</Grid>
 						<Grid item sm={3}>
-							<IdNumber
-								elementId={'studentIdNumber'}
+							<TextInput
+								type="number"
+								validateField={isNotEmptyString}
+								elementId={'idNumber'}
 								label={"Student's id number"}
-								fielName={'studentIdNumber'}
+								fielName={'idNumber'}
 								classes={classes}
 								handleChange={handleChange('idNumber')}
-								value={user.idNumber}
+								value={student.idNumber}
 								error={errors.idNumber}
 							/>
 						</Grid>
 						<Grid item sm={3}>
-							<BirthDate
-								elementId={'studentBirthDate'}
+							<TextInput
+								type="date"
+								//defaultValue="01-01-2010"
+								validateField={isNotEmptyString}
+								elementId={'birthDate'}
 								label={"Student's birthdate"}
-								fielName={'studentBirthDate'}
+								fielName={'birthDate'}
 								classes={classes}
-								handleChange={handleChange('birthdate')}
-								//value={user.birthdate}
-								error={errors.birthdate}
+								handleChange={handleChange('birthDate')}
+								value={student.birthDate}
+								error={errors.birthDate}
+								shrinkInputLabel={true}
+							/>
+						</Grid>
+						{/** STUDENT ADRESS */}
+						<Grid item sm={3}>
+							<TextInput
+								type="text"
+								validateField={isNotEmptyString}
+								elementId={'streetName'}
+								label={'Street'}
+								fielName={'streetName'}
+								classes={classes}
+								handleChange={handleChange('streetName')}
+								value={student.streetName}
+								error={errors.street}
+							/>
+						</Grid>
+						<Grid item sm={3}>
+							<TextInput
+								type="text"
+								validateField={isNotEmptyString}
+								elementId={'houseNr'}
+								label={'Haus Nr.'}
+								fielName={'houseNr'}
+								classes={classes}
+								handleChange={handleChange('houseNr')}
+								value={student.houseNr}
+								error={errors.houseNr}
+							/>
+						</Grid>
+						<Grid item sm={3}>
+							<TextInput
+								type="text"
+								validateField={isNotEmptyString}
+								elementId={'floorNr'}
+								label={"Student's Floor"}
+								fielName={'floorNr'}
+								classes={classes}
+								handleChange={handleChange('floorNr')}
+								value={student.floorNr}
+								error={errors.floor}
+							/>
+						</Grid>
+						<Grid item sm={3}>
+							<TextInput
+								type="text"
+								validateField={isNotEmptyString}
+								elementId={'flatNr'}
+								label={'Appartment Nr.'}
+								fielName={'flatNr'}
+								classes={classes}
+								handleChange={handleChange('flatNr')}
+								value={student.flatNr}
+								error={errors.flatNr}
 							/>
 						</Grid>
 					</Grid>
@@ -156,18 +239,18 @@ const StudentPersonalData = ({ classes, match }) => {
 						<UserName
 							classes={classes}
 							handleChange={handleChange('username')}
-							value={user.username}
+							value={student.username}
 							error={errors.username}
 						/>
 					) : null}
 					{displayItem ? (
-						<Email classes={classes} handleChange={handleChange('email')} value={user.email} error={errors.email} />
+						<Email classes={classes} handleChange={handleChange('email')} value={student.email} error={errors.email} />
 					) : null}
 					<UserType
 						disabled={true}
 						classes={classes}
 						handleChange={handleChange('type')}
-						value={user.type}
+						value={student.type}
 						error={errors.type}
 					/>
 					{success && <span className={classes.success}>Profile update success</span>}
