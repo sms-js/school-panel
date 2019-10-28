@@ -5,7 +5,21 @@ import { isNotEmptyString } from 'lib/validators/types';
 
 //const validateField = value => isNotEmptyString(value);
 
-const TextInput = ({defaultValue,type,classes, handleChange, value, error, elementId, label, fieldName,validateField,shrinkInputLabel=undefined }) => {
+const TextInput = ({
+	defaultValue,
+	type,
+	classes,
+	handleChange,
+	value,
+	error,
+	elementId,
+	label,
+	fieldName,
+	validateField,
+	index,
+	userType,
+	shrinkInputLabel = undefined
+}) => {
 	return (
 		<TextField
 			type={type}
@@ -16,11 +30,11 @@ const TextInput = ({defaultValue,type,classes, handleChange, value, error, eleme
 			label={label}
 			className={classes.textField}
 			value={value}
-			onChange={ev => handleChange(ev.target.value, !validateField(ev.target.value))}
+			onChange={ev => handleChange(ev.target.value, fieldName,index, userType, !validateField(ev.target.value))}
 			margin="normal"
 			defaultValue={defaultValue}
 			InputLabelProps={{
-				shrink:shrinkInputLabel
+				shrink: shrinkInputLabel
 			}}
 		/>
 	);

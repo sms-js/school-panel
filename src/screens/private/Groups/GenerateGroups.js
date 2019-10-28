@@ -24,7 +24,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const GenerateGroups = () => {
-
 	const classes = useStyles();
 
 	const groupTypes = ['originGroup', 'destinationGroup_1', 'destinationGroup_2'];
@@ -42,7 +41,7 @@ const GenerateGroups = () => {
 	const [menuState, setMenuState] = useState({
 		groupDefinition: { state: true, selectedValue: '' },
 		originGroup: { state: false, selectedValue: '' },
-		destinationGroup: { state: false, selectedValue: '',groupsData:[] }
+		destinationGroup: { state: false, selectedValue: '', groupsData: [] }
 	});
 
 	const getInitialGroupValues = async () => {
@@ -53,7 +52,6 @@ const GenerateGroups = () => {
 		actualMenuState.destinationGroup.groupsData = result;
 		setMenuState(Object.assign(menuState, actualMenuState));
 	};
-
 
 	useEffect(() => {
 		getInitialGroupValues();
@@ -84,6 +82,8 @@ const GenerateGroups = () => {
 						newMenuState.destinationGroup.state = false;
 						newMenuState.originGroup.state = false;
 						break;
+					default:
+						console.log('default switch case');
 				}
 				break;
 			case 'originGroup':
@@ -94,12 +94,16 @@ const GenerateGroups = () => {
 						break;
 					default:
 						newMenuState.destinationGroup.state = true;
-						const selectedOriginGroupLevel = groups.find(el => { return info.selectedValue == el.groupCode }).groupLevel;
+						const selectedOriginGroupLevel = groups.find(el => {
+							return info.selectedValue == el.groupCode;
+						}).groupLevel;
 						newMenuState.destinationGroup.groupsData = groups.filter(el => el.groupLevel > selectedOriginGroupLevel);
-						setMenuState(Object.assign(menuState,newMenuState))
+						setMenuState(Object.assign(menuState, newMenuState));
 						break;
 				}
 				break;
+			default:
+				console.log('default switch case');
 		}
 		console.log('newMenuState = ', newMenuState);
 		setMenuState(newMenuState);
