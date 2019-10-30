@@ -57,9 +57,16 @@ const StudentPersonalData = ({ classes, match, screenName, dispatchData }) => {
 		setSuccess(false);
 		setError(false);
 		setErrors({ ...errors, [fieldName]: error, clean: false });
-		if (fieldName === 'livesWith') {
-			dispatchData({ component: 'studentPersonalData', data: fieldName, value });
-		}
+		setTabsContainerState();
+	};
+
+	const setTabsContainerState = () => {
+		const data = Object.keys(student).reduce((acc, currentKey) => {
+			const keyValue = student[currentKey].value;
+			acc[currentKey] = keyValue !== undefined ? keyValue : '';
+			return acc;
+		}, {});
+		dispatchData({ type: 'setStudentData', payLoad: data });
 	};
 
 	const formItems = Object.keys(student).map(key => {

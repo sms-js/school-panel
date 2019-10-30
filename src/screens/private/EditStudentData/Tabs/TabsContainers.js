@@ -1,25 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import { StudentPersonalData, MotherPersonalData, FatherPersonalData } from './TabsContent';
+import { reducer, getInitialState } from './TabsContent/TabsState';
 
 import Aux from '../../../../components/AUX/Aux';
-function TabContainer(props) {
+const TabContainer = props => {
 	return (
 		<Typography component="div" style={{ padding: 8 * 1 }}>
 			{props.children}
 		</Typography>
 	);
-}
-
-TabContainer.propTypes = {
-	children: PropTypes.node.isRequired
 };
-
 const TabsContainers = ({ value }) => {
-	const getData = params => {
-		console.log('getData, params= ', params);
+	const [state, dispatch] = useReducer(reducer, getInitialState());
+
+	const getData = ({ type, payLoad }) => {
+		console.log('getData');
+		dispatch({ type, payLoad });
 	};
+
+	useEffect(() => {
+		console.log('UE');
+		console.log({ state });
+	}, [state]);
+
 	return (
 		<Aux>
 			{value === 0 && (
@@ -48,3 +53,7 @@ const TabsContainers = ({ value }) => {
 };
 
 export default TabsContainers;
+
+TabContainer.propTypes = {
+	children: PropTypes.node.isRequired
+};
