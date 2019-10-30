@@ -1,6 +1,6 @@
 import api from 'lib/api';
 import { checkStatus } from 'lib/validators/response';
-import { STUDENT_URL,USER_URL } from 'config';
+import { STUDENT_URL,USER_URL,PARENT_URL } from 'config';
 
 
 
@@ -16,6 +16,26 @@ export const createStudent = async (data) => {
 	try {
 		if (!data.type) data.type = 'student';
 		const response = await api.post(STUDENT_URL, data);
+		if (!checkStatus(response)) {
+			throw new Error('invalid credentials');
+		}
+		return data;
+	} catch (error) {
+		console.debug(error);
+		return false;
+	}
+};
+
+/**
+ * Create parent
+ *
+ * @param {string} id
+ * @param {object} data
+ */
+export const createParent = async (data) => {
+	try {
+		if (!data.type) data.type = 'parent';
+		const response = await api.post(PARENT_URL, data);
 		if (!checkStatus(response)) {
 			throw new Error('invalid credentials');
 		}

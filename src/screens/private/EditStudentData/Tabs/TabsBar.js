@@ -6,6 +6,8 @@ import Tab from '@material-ui/core/Tab';
 import PhoneIcon from '@material-ui/icons/Phone';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import PersonPinIcon from '@material-ui/icons/PersonPin';
+import ChildCareIcon from '@material-ui/icons/ChildCare';
+import WCIcon from '@material-ui/icons/Wc';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import OfflineBolt from '@material-ui/icons/OfflineBolt';
 
@@ -21,8 +23,10 @@ const TabsBar = ({ value, handleChange }) => {
 				indicatorColor="primary"
 				textColor="primary"
 			>
-				<Tab label="Personal Data" icon={<PersonPinIcon />} />
-				<Tab label="Health Datax" icon={<FavoriteIcon />} />
+				<Tab label="Student Data" icon={<ChildCareIcon />} />
+				<Tab label="Mother Data" icon={<WCIcon />} />
+				<Tab label="Father Data" icon={<WCIcon />} />
+				<Tab label="Health Data" icon={<FavoriteIcon />} />
 				<Tab label="Contact Numbers" icon={<PhoneIcon />} />
 				<Tab label="Authorizations" icon={<CheckCircle />} />
 				<Tab label="Emergency" icon={<OfflineBolt />} />

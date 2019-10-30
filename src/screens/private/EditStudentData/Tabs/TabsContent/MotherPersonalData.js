@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { studentFields, fatherFields, motherFields } from './personalDataFields';
+import { motherFields } from './personalDataFields';
 
 import DrawerContainer from 'components/DrawerContainer';
 import { studentLib } from 'lib/models';
@@ -25,8 +25,8 @@ import {
 import { Redirect } from 'react-router-dom';
 import { keyIsObject, isNotEmptyString, isNumber } from 'lib/validators/types';
 
-const StudentPersonalData = ({ classes, match, screenName, dispatchData }) => {
-	const [student, setStudent] = useState(studentFields);
+const MotherPersonalData = ({ classes, match, screenName }) => {
+	const [mother, setMother] = useState(motherFields);
 
 	const [errors, setErrors] = useState({
 		firstName: false,
@@ -50,33 +50,30 @@ const StudentPersonalData = ({ classes, match, screenName, dispatchData }) => {
 	const [mustReturn] = useState(false);
 
 	const handleChange = (value, fieldName, index, userType, error) => {
-		const newState = student;
+		const newState = mother;
 		newState[fieldName].value = value;
-		setStudent(Object.assign(student, newState));
+		setMother(Object.assign(mother, newState));
 		setLoading(false);
 		setSuccess(false);
 		setError(false);
 		setErrors({ ...errors, [fieldName]: error, clean: false });
-		if (fieldName === 'livesWith') {
-			dispatchData({ component: 'studentPersonalData', data: fieldName, value });
-		}
 	};
 
-	const formItems = Object.keys(student).map(key => {
+	const formItems = Object.keys(mother).map(key => {
 		return (
-			<Grid key={'grid_' + student[key].id} item sm={3}>
+			<Grid key={'grid_' + mother[key].id} item sm={3}>
 				<FormItem
-					key={student[key].id}
-					elementId={'id_' + student[key].id}
-					type={student[key].type}
+					key={mother[key].id}
+					elementId={'id_' + mother[key].id}
+					type={mother[key].type}
 					validateField={isNotEmptyString}
-					label={student[key].label}
+					label={mother[key].label}
 					fieldName={key}
 					classes={classes}
 					handleChange={handleChange}
 					index={0}
 					userType="student"
-					value={student[key].value}
+					value={mother[key].value}
 					error={errors[key]}
 				/>
 			</Grid>
@@ -84,8 +81,8 @@ const StudentPersonalData = ({ classes, match, screenName, dispatchData }) => {
 	});
 
 	const handleSubmit = async e => {
-		console.log('handleSubmit / student = ', student);
-		console.log('handleSubmit / student = ', errors);
+		console.log('handleSubmit / mother = ', mother);
+		console.log('handleSubmit / mother = ', errors);
 		e.preventDefault();
 		if (errors.clean) {
 			setError(true);
@@ -98,9 +95,9 @@ const StudentPersonalData = ({ classes, match, screenName, dispatchData }) => {
 			setLoading(false);
 			return;
 		}
-		const response = student._id
-			? await studentLib.updateUser(student._id, student) //@todo:updateStudent
-			: await studentLib.createStudent(student);
+		const response = mother._id
+			? await studentLib.updateUser(mother._id, mother)//@todo: check this
+			: await studentLib.createParent(mother);
 		setLoading(false);
 		if (!response) return setError(true);
 		setSuccess(true);
@@ -114,7 +111,7 @@ const StudentPersonalData = ({ classes, match, screenName, dispatchData }) => {
 				if (!data) {
 					setError(true);
 				} else {
-					setStudent(data);
+					setMother(data);
 				}
 				setLoading(false);
 			} else {
@@ -151,8 +148,8 @@ const StudentPersonalData = ({ classes, match, screenName, dispatchData }) => {
 	);
 };
 
-StudentPersonalData.propTypes = {
+MotherPersonalData.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(StudentPersonalData);
+export default withStyles(styles)(MotherPersonalData);

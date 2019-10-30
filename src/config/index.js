@@ -18,6 +18,7 @@ const MESSAGES_URL = `messages/`;
 const TAGS_URL = `tags/`;
 const SCHOOL_URL = `school/`;
 const STUDENT_URL = `student/`;
+const PARENT_URL = `parent/`;
 
 const PROFILE_URL = `${API_PREFIX}User/`; // axios baseURL is ${API_DOMAIN}
 
@@ -43,5 +44,6 @@ export {
 	MESSAGES_URL,
 	TAGS_URL,
 	SCHOOL_URL,
-	STUDENT_URL
+	STUDENT_URL,
+	PARENT_URL,
 };

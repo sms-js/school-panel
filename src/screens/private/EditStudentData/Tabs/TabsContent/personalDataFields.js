@@ -60,10 +60,10 @@ const studentFields = {
 		type: 'Date'
 	},
 	livesWith: {
-		label: 'Stundent lives with:',
-		value: 'both',
+		label: 'Lives with',
+		value: '',
 		id: 'studentLivesWith',
-		type: 'String'
+		type: 'Select'
 	}
 };
 const fatherFields = {
@@ -123,9 +123,9 @@ const fatherFields = {
 	},
 	birthDate: {
 		label: 'Birthdate',
-		value: new Date(),
+		value: '05/11/1977',
 		id: 'fatherBirthDate',
-		type: Date
+		type: 'Date'
 	},
 	cellPhone: {
 		label: 'Cellphone nr.',
@@ -133,7 +133,6 @@ const fatherFields = {
 		id: 'fatherCellPhone',
 		type: 'String'
 	},
-	userType: 'parent'
 };
 
 const motherFields = {
@@ -193,9 +192,9 @@ const motherFields = {
 	},
 	birthDate: {
 		label: 'Birthdate',
-		value: new Date(),
+		value: '04/03/1977',
 		id: 'motherBirthDate',
-		type: Date
+		type: 'Date'
 	},
 	cellPhone: {
 		label: 'Cellphone nr.',
@@ -203,7 +202,6 @@ const motherFields = {
 		id: 'motherCellPhone',
 		type: 'String'
 	},
-	userType: 'parent'
 };
 
 export { studentFields, fatherFields, motherFields };

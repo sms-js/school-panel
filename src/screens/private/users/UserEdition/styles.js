@@ -7,9 +7,18 @@ const styles = theme => {
 			flexWrap: 'wrap'
 		},
 		textField: {
+			//border:'solid blue 1px',
 			marginLeft: theme.spacing(1),
 			marginRight: theme.spacing(1),
 			width: `calc(100% - ${theme.spacing(2)}px)`
+		},
+		livesWith: {
+			marginTop: theme.spacing(2),
+			marginBottom: theme.spacing(0),
+			minWidth: `calc(100% - ${theme.spacing(2)}px)`
+		},
+		selectEmpty: {
+			marginTop: theme.spacing(0),
 		},
 		dense: {
 			marginTop: 19
