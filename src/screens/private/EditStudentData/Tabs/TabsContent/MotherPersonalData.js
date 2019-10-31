@@ -7,7 +7,6 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { motherFields } from './personalDataFields';
 
 import DrawerContainer from 'components/DrawerContainer';
 import { studentLib } from 'lib/models';
@@ -25,8 +24,8 @@ import {
 import { Redirect } from 'react-router-dom';
 import { keyIsObject, isNotEmptyString, isNumber } from 'lib/validators/types';
 
-const MotherPersonalData = ({ classes, match, screenName }) => {
-	const [mother, setMother] = useState(motherFields);
+const MotherPersonalData = ({ adressEditable,motherData,classes, match, screenName }) => {
+	const [mother, setMother] = useState(motherData);
 
 	const [errors, setErrors] = useState({
 		firstName: false,
@@ -75,6 +74,7 @@ const MotherPersonalData = ({ classes, match, screenName }) => {
 					userType="student"
 					value={mother[key].value}
 					error={errors[key]}
+					editable={adressEditable}
 				/>
 			</Grid>
 		);

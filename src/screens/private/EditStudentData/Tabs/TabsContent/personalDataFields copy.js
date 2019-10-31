@@ -93,46 +93,46 @@ const fatherFields = {
 	},
 	streetName: {
 		label: 'Street name',
-		value: '',
+		value: 'Av. Siempre Viva',
 		type: 'String',
 		id: 'fatherStreetName'
 	},
 	houseNr: {
 		label: 'House nr.',
-		value: '',
+		value: '456',
 		type: 'String',
 		id: 'fatherHouseNr'
 	},
 	floorNr: {
 		label: 'Floor number',
-		value: '',
+		value: '1',
 		type: 'String',
 		id: 'fatherFloorNr'
 	},
 	flatNr: {
 		label: 'Flat nr.',
-		value: '',
+		value: 'A',
 		type: 'String',
 		id: 'fatherFlatNr'
 	},
 	zipCode: {
 		label: 'ZIP',
-		value: '',
+		value: '1427',
 		type: 'String',
 		id: 'fatherZIP'
 	},
 	birthDate: {
 		label: 'Birthdate',
-		value: '',
+		value: '05/11/1977',
 		id: 'fatherBirthDate',
 		type: 'Date'
 	},
 	cellPhone: {
 		label: 'Cellphone nr.',
-		value: '',
+		value: '156677',
 		id: 'fatherCellPhone',
 		type: 'String'
-	}
+	},
 };
 
 const motherFields = {
@@ -162,31 +162,31 @@ const motherFields = {
 	},
 	streetName: {
 		label: 'Street name',
-		value: '',
+		value: 'Av. Siempre Viva',
 		type: 'String',
 		id: 'motherStreetName'
 	},
 	houseNr: {
 		label: 'House nr.',
-		value: '',
+		value: '456',
 		type: 'String',
 		id: 'motherHouseNr'
 	},
 	floorNr: {
 		label: 'Floor number',
-		value: '',
+		value: '1',
 		type: 'String',
 		id: 'motherFloorNr'
 	},
 	flatNr: {
 		label: 'Flat nr.',
-		value: '',
+		value: 'A',
 		type: 'String',
 		id: 'motherFlatNr'
 	},
 	zipCode: {
 		label: 'ZIP',
-		value: '',
+		value: '1427',
 		type: 'String',
 		id: 'motherZIP'
 	},
@@ -201,7 +201,7 @@ const motherFields = {
 		value: '156677',
 		id: 'motherCellPhone',
 		type: 'String'
-	}
+	},
 };
 
 export { studentFields, fatherFields, motherFields };

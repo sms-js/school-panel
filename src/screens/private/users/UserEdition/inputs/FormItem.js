@@ -16,29 +16,35 @@ const FormItem = ({
 	validateField,
 	index,
 	userType,
-	shrinkInputLabel = undefined
+	shrinkInputLabel = undefined,
+	editable = true
 }) => {
-	if (type === 'String' || type === 'Date' || type === 'Email') {
-		const StringElement = (
-			<TextField
-				type={type}
-				name={fieldName}
-				required
-				error={error}
-				id={elementId}
-				label={label}
-				className={classes.textField}
-				value={value}
-				onChange={ev => handleChange(ev.target.value, fieldName, index, userType, !validateField(ev.target.value))}
-				margin="normal"
-				defaultValue={defaultValue}
-				InputLabelProps={{
-					shrink: shrinkInputLabel
-				}}
-			/>
-		);
-		return StringElement;
-	}
+	const adressKeys = ['fieldName', 'houseNr', 'floorNr', 'flatNr', 'zipCode','streetName'];
+	if (adressKeys.indexOf(fieldName) === -1) editable = true;
+
+	if (fieldName)
+		if (type === 'String' || type === 'Date' || type === 'Email') {
+			const StringElement = (
+				<TextField
+					disabled={!editable}
+					type={type}
+					name={fieldName}
+					required
+					error={error}
+					id={elementId}
+					label={label}
+					className={classes.textField}
+					value={value}
+					onChange={ev => handleChange(ev.target.value, fieldName, index, userType, !validateField(ev.target.value))}
+					margin="normal"
+					defaultValue={defaultValue}
+					InputLabelProps={{
+						shrink: shrinkInputLabel
+					}}
+				/>
+			);
+			return StringElement;
+		}
 
 	if (type === 'Select') {
 		const SelectElement = (

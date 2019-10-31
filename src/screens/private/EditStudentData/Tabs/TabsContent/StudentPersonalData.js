@@ -25,8 +25,8 @@ import {
 import { Redirect } from 'react-router-dom';
 import { keyIsObject, isNotEmptyString, isNumber } from 'lib/validators/types';
 
-const StudentPersonalData = ({ classes, match, screenName, dispatchData }) => {
-	const [student, setStudent] = useState(studentFields);
+const StudentPersonalData = ({ studentData, classes, match, screenName, dispatchData }) => {
+	const [student, setStudent] = useState(studentData);
 
 	const [errors, setErrors] = useState({
 		firstName: false,
@@ -66,7 +66,7 @@ const StudentPersonalData = ({ classes, match, screenName, dispatchData }) => {
 			acc[currentKey] = keyValue !== undefined ? keyValue : '';
 			return acc;
 		}, {});
-		dispatchData({ type: 'setStudentData', payLoad: data });
+		dispatchData({ type: 'setStudentData', payLoad: student });
 	};
 
 	const formItems = Object.keys(student).map(key => {

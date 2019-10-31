@@ -7,7 +7,6 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
-import { fatherFields } from './personalDataFields';
 
 import DrawerContainer from 'components/DrawerContainer';
 import { studentLib } from 'lib/models';
@@ -25,8 +24,8 @@ import {
 import { Redirect } from 'react-router-dom';
 import { keyIsObject, isNotEmptyString, isNumber } from 'lib/validators/types';
 
-const FatherPersonalData = ({ classes, match, screenName }) => {
-	const [father, setFather] = useState(fatherFields);
+const FatherPersonalData = ({ fatherData, adressEditable, classes, match, screenName }) => {
+	const [father, setFather] = useState(fatherData);
 
 	const [errors, setErrors] = useState({
 		firstName: false,
@@ -58,8 +57,9 @@ const FatherPersonalData = ({ classes, match, screenName }) => {
 		setError(false);
 		setErrors({ ...errors, [fieldName]: error, clean: false });
 	};
-
+	debugger;
 	const formItems = Object.keys(father).map(key => {
+		debugger
 		return (
 			<Grid key={'grid_' + father[key].id} item sm={3}>
 				<FormItem
@@ -75,6 +75,7 @@ const FatherPersonalData = ({ classes, match, screenName }) => {
 					userType="student"
 					value={father[key].value}
 					error={errors[key]}
+					editable={adressEditable}
 				/>
 			</Grid>
 		);
@@ -96,7 +97,7 @@ const FatherPersonalData = ({ classes, match, screenName }) => {
 			return;
 		}
 		const response = father._id
-			? await studentLib.updateUser(father._id, father)//@todo: check this
+			? await studentLib.updateUser(father._id, father) //@todo: check this
 			: await studentLib.createParent(father);
 		setLoading(false);
 		if (!response) return setError(true);
