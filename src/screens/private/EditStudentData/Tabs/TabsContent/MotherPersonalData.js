@@ -1,6 +1,6 @@
 import styles from '../../../users/UserEdition/styles';
 import PropTypes from 'prop-types';
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -11,42 +11,34 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import DrawerContainer from 'components/DrawerContainer';
 import { studentLib } from 'lib/models';
 
-import {
-	FormItem,
-	Email,
-	FirstName,
-	LastName,
-	UserType,
-	UserName,
-	IdNumber,
-	BirthDate
-} from '../../../users/UserEdition/inputs';
+import { FormItem } from '../../../users/UserEdition/inputs';
 import { Redirect } from 'react-router-dom';
 import { keyIsObject, isNotEmptyString, isNumber } from 'lib/validators/types';
+import { updateClassDeclaration } from 'typescript';
 
-const MotherPersonalData = ({ adressEditable,motherData,classes, match, screenName }) => {
+const MotherPersonalData = ({ adressEditable, motherData, classes, match, screenName, dispatchData }) => {
 	const [mother, setMother] = useState(motherData);
 
-	const [errors, setErrors] = useState({
-		firstName: false,
-		lastName: false,
-		email: false,
-		idNumber: false,
-		streetName: false,
-		houseNr: false,
-		floorNr: false,
-		flatNr: false,
-		zipCode: false,
-		birthDate: false,
-		clean: true,
-		username: false,
-		livesWith: false,
-		cellPhone: false,
-	});
+	const [errors, setErrors] = useState(
+		Object.keys(motherData).reduce((acc, key) => {
+			acc[key] = false;
+			return acc;
+		}, {})
+	);
+
+	const [formError, setFormError] = useState(true);
 	const [loading, setLoading] = useState(true);
 	const [success, setSuccess] = useState(false);
 	const [error, setError] = useState(false);
 	const [mustReturn] = useState(false);
+
+	const updateFormErrors = () => {
+		const hasErrors =
+			Object.values(errors).indexOf(true) === -1
+				? false //this happens, when all fields are fullfiled
+				: true;
+		setFormError(hasErrors);
+	};
 
 	const handleChange = (value, fieldName, index, userType, error) => {
 		const newState = mother;
@@ -54,52 +46,59 @@ const MotherPersonalData = ({ adressEditable,motherData,classes, match, screenNa
 		setMother(Object.assign(mother, newState));
 		setLoading(false);
 		setSuccess(false);
-		setError(false);
-		setErrors({ ...errors, [fieldName]: error, clean: false });
+		setErrors({ ...errors, [fieldName]: error });
+		updateFormErrors();
+		setTabsContainerState();
+	};
+
+	const setTabsContainerState = () => {
+		dispatchData({ type: 'setMotherData', payLoad: mother });
 	};
 
 	const formItems = Object.keys(mother).map(key => {
 		return (
 			<Grid key={'grid_' + mother[key].id} item sm={3}>
 				<FormItem
+					validateField={isNotEmptyString}
+					classes={classes}
+					index={0}
+					userType="mother"
+					handleChange={handleChange}
+					error={errors[key]}
 					key={mother[key].id}
 					elementId={'id_' + mother[key].id}
 					type={mother[key].type}
-					validateField={isNotEmptyString}
 					label={mother[key].label}
 					fieldName={key}
-					classes={classes}
-					handleChange={handleChange}
-					index={0}
-					userType="student"
 					value={mother[key].value}
-					error={errors[key]}
+					selectOptions={mother[key].type === 'Select' ? mother[key].selectOptions : null}
 					editable={adressEditable}
 				/>
 			</Grid>
 		);
 	});
+	useEffect(() => {
+		console.log('UE ERROR');
+	}, [error]);
 
 	const handleSubmit = async e => {
-		console.log('handleSubmit / mother = ', mother);
-		console.log('handleSubmit / mother = ', errors);
+		const abortController = new AbortController();
 		e.preventDefault();
-		if (errors.clean) {
-			setError(true);
-			return;
-		}
+		if (formError) return setError(true);
 		setLoading(true);
 		setSuccess(false);
 		setError(false);
-		if (Object.values(errors).indexOf(true) >= 0) {
-			setLoading(false);
+		if (Object.values(errors).indexOf(true) >= 0) return setLoading(false);
+		const response = mother._id
+			? await studentLib.updateUser(mother._id, mother) //@todo:createParent
+			: await studentLib.createParent(abortController.mother);
+		setLoading(false);
+		if (!response) {
+			//following line cancels the async submission
+			abortController.abort();
+			setError(true);
 			return;
 		}
-		const response = mother._id
-			? await studentLib.updateUser(mother._id, mother)//@todo: check this
-			: await studentLib.createParent(mother);
-		setLoading(false);
-		if (!response) return setError(true);
 		setSuccess(true);
 	};
 
@@ -133,7 +132,7 @@ const MotherPersonalData = ({ adressEditable,motherData,classes, match, screenNa
 					noValidate
 					autoComplete="off"
 				>
-					{/* STUDENT NAME, BIRTHDATE AND ID DATA */}
+					{/* MOTHER NAME, BIRTHDATE AND ID DATA */}
 					<Grid container direction="row" style={{ flexGrow: 1 }}>
 						{formItems}
 					</Grid>

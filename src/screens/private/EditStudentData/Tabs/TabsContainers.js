@@ -17,6 +17,7 @@ const TabsContainers = ({ value }) => {
 	const [state, dispatch] = useReducer(reducer, getInitialState());
 
 	useEffect(() => {
+		debugger;
 		console.log('UE');
 		console.log('studentData.livesWith');
 		setUpParentsAdress();
