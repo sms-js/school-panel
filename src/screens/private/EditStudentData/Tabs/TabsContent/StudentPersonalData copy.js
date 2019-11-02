@@ -112,11 +112,9 @@ const StudentPersonalData = ({ classes, match, screenName }) => {
 	const [mustReturn] = useState(false);
 	const [displayItem] = useState(false);
 
-
 	const handleChange = (name, type) => {
 		console.log('handleChange - name / type', name, type);
 		return (value, fieldName, index, userType, error) => {
-			debugger;
 			const newUserState = JSON.parse(JSON.stringify(user));
 			newUserState[type][name] = value;
 			console.log('newUserState = ', newUserState);

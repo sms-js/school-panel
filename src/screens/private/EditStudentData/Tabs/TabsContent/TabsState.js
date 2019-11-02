@@ -1,12 +1,11 @@
 import { studentFields, fatherFields, motherFields } from './personalDataFields';
 
 const getInitialState = () => {
-	
-		return {
+	return {
 		studentData: { ...studentFields },
 		motherData: { ...motherFields },
 		fatherData: { ...fatherFields }
-	}
+	};
 };
 
 const reducer = (state, action) => {
@@ -18,11 +17,9 @@ const reducer = (state, action) => {
 		case 'fatherAdressEditable':
 			return { ...state, fatherAdressEditable: action.payLoad };
 		case 'setMotherAdress':
-			debugger
 			const { streetName, houseNr, floorNr, flatNr, zipCode } = action.payLoad;
 			return { ...state, motherData: { ...state.motherData, streetName, houseNr, floorNr, flatNr, zipCode } };
 		case 'setFatherAdress':
-			debugger
 			return {
 				...state,
 				fatherData: {

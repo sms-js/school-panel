@@ -24,7 +24,7 @@ const TabsContainers = ({ value }) => {
 
 	const setUpParentsAdress = () => {
 		const { streetName, houseNr, floorNr, flatNr, zipCode } = state.studentData;
-		debugger;
+
 		switch (state.studentData.livesWith.value) {
 			case 'both':
 				dispatch({ type: 'motherAdressEditable', payLoad: false });

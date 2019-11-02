@@ -1,7 +1,9 @@
+const  newDate = new Date();
+
 const studentFields = {
 	firstName: {
 		label: 'First name',
-		value: 'studentFirstName',
+		value: undefined,
 		id: 'studentFirstName',
 		type: 'String'
 	},
@@ -56,14 +58,35 @@ const studentFields = {
 	birthDate: {
 		label: 'Birthdate',
 		id: 'studentBirthdate',
-		value: '01/01/2001',
+		value: newDate.toString(),
 		type: 'Date'
 	},
 	livesWith: {
 		label: 'Lives with',
-		value: '',
+		value: 'both',
 		id: 'studentLivesWith',
-		type: 'Select'
+		type: 'Select',
+		selectOptions: {
+			both: 'Both parents',
+			mother: 'Mother',
+			father: 'Father',
+			alternate: 'Alternate'
+		}
+	},
+	assignedGrade: {
+		label: 'Grade',
+		value: '1',
+		id: 'studentGrade',
+		type: 'Select',
+		selectOptions: {
+			'1': '1st grade',
+			'2': '2nd grade',
+			'3': '3th grade',
+			'4': '4th grade',
+			'5': '5th grade',
+			'6': '6th grade',
+			'7': '7th grade'
+		}
 	}
 };
 const fatherFields = {
@@ -123,7 +146,7 @@ const fatherFields = {
 	},
 	birthDate: {
 		label: 'Birthdate',
-		value: '',
+		value: 'DD/MM/YYYY',
 		id: 'fatherBirthDate',
 		type: 'Date'
 	},
@@ -192,7 +215,7 @@ const motherFields = {
 	},
 	birthDate: {
 		label: 'Birthdate',
-		value: '04/03/1977',
+		value: newDate.toString(),
 		id: 'motherBirthDate',
 		type: 'Date'
 	},

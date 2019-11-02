@@ -1,8 +1,6 @@
 import api from 'lib/api';
 import { checkStatus } from 'lib/validators/response';
-import { STUDENT_URL,USER_URL,PARENT_URL } from 'config';
-
-
+import { STUDENT_URL, USER_URL, PARENT_URL } from 'config';
 
 // START: ADAPTING USER LIB TO STUDENT LIB ==========================
 
@@ -12,14 +10,14 @@ import { STUDENT_URL,USER_URL,PARENT_URL } from 'config';
  * @param {string} id
  * @param {object} data
  */
-export const createStudent = async (data) => {
+export const createStudent = async data => {
 	try {
 		if (!data.type) data.type = 'student';
 		const response = await api.post(STUDENT_URL, data);
 		if (!checkStatus(response)) {
 			throw new Error('invalid credentials');
 		}
-		return data;
+		return response;
 	} catch (error) {
 		console.debug(error);
 		return false;
@@ -32,7 +30,7 @@ export const createStudent = async (data) => {
  * @param {string} id
  * @param {object} data
  */
-export const createParent = async (data) => {
+export const createParent = async data => {
 	try {
 		if (!data.type) data.type = 'parent';
 		const response = await api.post(PARENT_URL, data);
@@ -71,7 +69,7 @@ export const getUsers = async (search = {}) => {
  *
  * @param {string} id
  */
-export const getUser = async (id) => {
+export const getUser = async id => {
 	try {
 		const response = await api.get(`${USER_URL}${id}`);
 		if (!checkStatus(response)) {
@@ -84,7 +82,7 @@ export const getUser = async (id) => {
 	}
 };
 
-export const deleteUser = async (id) => {
+export const deleteUser = async id => {
 	try {
 		const response = await api.delete(`${USER_URL}${id}`);
 		if (!checkStatus(response)) {

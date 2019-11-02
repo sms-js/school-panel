@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
-import LivesWith from './LivesWith';
+import SelectField from './SelectField';
 
 const FormItem = ({
 	defaultValue,
@@ -17,9 +17,11 @@ const FormItem = ({
 	index,
 	userType,
 	shrinkInputLabel = undefined,
-	editable = true
+	editable = true,
+	selectOptions
 }) => {
-	const adressKeys = ['fieldName', 'houseNr', 'floorNr', 'flatNr', 'zipCode','streetName'];
+	//adressKeys are edtiable depending on the 'editable' param. All other possible fields should be editable.
+	const adressKeys = ['fieldName', 'houseNr', 'floorNr', 'flatNr', 'zipCode', 'streetName'];
 	if (adressKeys.indexOf(fieldName) === -1) editable = true;
 
 	if (fieldName)
@@ -48,7 +50,8 @@ const FormItem = ({
 
 	if (type === 'Select') {
 		const SelectElement = (
-			<LivesWith
+			<SelectField
+				selectOptions={selectOptions}
 				userType={userType}
 				index={index}
 				type={type}
@@ -60,7 +63,6 @@ const FormItem = ({
 				classes={classes}
 				value={value}
 				handleChange={handleChange}
-				margin="normal"
 				defaultValue={defaultValue}
 				shrinkInputLabel={shrinkInputLabel}
 			/>

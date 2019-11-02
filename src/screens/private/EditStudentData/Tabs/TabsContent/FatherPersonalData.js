@@ -40,8 +40,8 @@ const FatherPersonalData = ({ fatherData, adressEditable, classes, match, screen
 		birthDate: false,
 		clean: true,
 		username: false,
-		livesWith: false
-		//type: false,
+		livesWith: false,
+		cellPhone: false,
 	});
 	const [loading, setLoading] = useState(true);
 	const [success, setSuccess] = useState(false);
@@ -57,9 +57,8 @@ const FatherPersonalData = ({ fatherData, adressEditable, classes, match, screen
 		setError(false);
 		setErrors({ ...errors, [fieldName]: error, clean: false });
 	};
-	debugger;
+
 	const formItems = Object.keys(father).map(key => {
-		debugger
 		return (
 			<Grid key={'grid_' + father[key].id} item sm={3}>
 				<FormItem

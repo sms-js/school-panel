@@ -5,7 +5,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
-const LivesWith = ({
+const SelectField = ({
 	defaultValue,
 	classes,
 	type,
@@ -18,11 +18,14 @@ const LivesWith = ({
 	fieldName,
 	index,
 	userType,
+	selectOptions,
 	shrinkInputLabel = undefined
 }) => {
+	const MenuItems = Object.keys(selectOptions).map(key => <MenuItem key={key} value={key}>{selectOptions[key]}</MenuItem>);
+
 	return (
 		<FormControl className={classes.livesWith} required>
-			<InputLabel id="livesWithLabel">{label}</InputLabel>
+			<InputLabel id={'inputLabel_'+fieldName}>{label}</InputLabel>
 			<Select
 				labelId={elementId}
 				id={elementId}
@@ -33,29 +36,23 @@ const LivesWith = ({
 				className={classes.selectEmpty}
 				value={value}
 				onChange={ev => handleChange(ev.target.value, fieldName, index, userType)}
-				margin="normal"
+				margin="dense"
 				defaultValue={defaultValue}
 				InputLabelProps={{
 					shrink: shrinkInputLabel
 				}}
 			>
-				<MenuItem value="">
-					<em>None</em>
-				</MenuItem>
-				<MenuItem value={'both'}>Both parents</MenuItem>
-				<MenuItem value={'mother'}>Mother</MenuItem>
-				<MenuItem value={'father'}>Father</MenuItem>
-				<MenuItem value={'alternate'}>Alternate</MenuItem>
+				{MenuItems}
 			</Select>
 		</FormControl>
 	);
 };
 
-LivesWith.propTypes = {
+SelectField.propTypes = {
 	classes: PropTypes.object.isRequired,
 	handleChange: PropTypes.func.isRequired,
 	error: PropTypes.bool.isRequired,
 	value: PropTypes.string
 };
 
-export default LivesWith;
+export default SelectField;

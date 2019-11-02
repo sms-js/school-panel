@@ -40,8 +40,8 @@ const MotherPersonalData = ({ adressEditable,motherData,classes, match, screenNa
 		birthDate: false,
 		clean: true,
 		username: false,
-		livesWith: false
-		//type: false,
+		livesWith: false,
+		cellPhone: false,
 	});
 	const [loading, setLoading] = useState(true);
 	const [success, setSuccess] = useState(false);
