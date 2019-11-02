@@ -1,6 +1,6 @@
 import styles from '../../../users/UserEdition/styles';
 import PropTypes from 'prop-types';
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -11,95 +11,95 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import DrawerContainer from 'components/DrawerContainer';
 import { studentLib } from 'lib/models';
 
-import {
-	FormItem,
-	Email,
-	FirstName,
-	LastName,
-	UserType,
-	UserName,
-	IdNumber,
-	BirthDate
-} from '../../../users/UserEdition/inputs';
+import { FormItem } from '../../../users/UserEdition/inputs';
 import { Redirect } from 'react-router-dom';
 import { keyIsObject, isNotEmptyString, isNumber } from 'lib/validators/types';
+import { updateClassDeclaration } from 'typescript';
 
-const MotherPersonalData = ({ adressEditable,motherData,classes, match, screenName }) => {
-	const [mother, setMother] = useState(motherData);
+const ParentPersonalData = ({ parentType, adressEditable, parentData, classes, match, screenName, dispatchData }) => {
+	const [parent, setParent] = useState(parentData);
 
-	const [errors, setErrors] = useState({
-		firstName: false,
-		lastName: false,
-		email: false,
-		idNumber: false,
-		streetName: false,
-		houseNr: false,
-		floorNr: false,
-		flatNr: false,
-		zipCode: false,
-		birthDate: false,
-		clean: true,
-		username: false,
-		livesWith: false,
-		cellPhone: false,
-	});
+	const [errors, setErrors] = useState(
+		Object.keys(parentData).reduce((acc, key) => {
+			acc[key] = false;
+			return acc;
+		}, {})
+	);
+
+	const [formError, setFormError] = useState(true);
 	const [loading, setLoading] = useState(true);
 	const [success, setSuccess] = useState(false);
 	const [error, setError] = useState(false);
 	const [mustReturn] = useState(false);
 
-	const handleChange = (value, fieldName, index, userType, error) => {
-		const newState = mother;
-		newState[fieldName].value = value;
-		setMother(Object.assign(mother, newState));
-		setLoading(false);
-		setSuccess(false);
-		setError(false);
-		setErrors({ ...errors, [fieldName]: error, clean: false });
+	const updateFormErrors = () => {
+		const hasErrors =
+			Object.values(errors).indexOf(true) === -1
+				? false //this happens, when all fields are fullfiled
+				: true;
+		setFormError(hasErrors);
 	};
 
-	const formItems = Object.keys(mother).map(key => {
+	const handleChange = (value, fieldName, index, userType, error) => {
+		const newState = parent;
+		newState[fieldName].value = value;
+		setParent(Object.assign(parent, newState));
+		setLoading(false);
+		setSuccess(false);
+		setErrors({ ...errors, [fieldName]: error });
+		updateFormErrors();
+		setTabsContainerState();
+	};
+
+	const setTabsContainerState = () => {
+		if (parentType === 'mother') return dispatchData({ type: 'setMotherData', payLoad: parent });
+		if (parentType === 'father') return dispatchData({ type: 'setFatherData', payLoad: parent });
+	};
+
+	const formItems = Object.keys(parent).map(key => {
 		return (
-			<Grid key={'grid_' + mother[key].id} item sm={3}>
+			<Grid key={'grid_' + parent[key].id} item sm={3}>
 				<FormItem
-					key={mother[key].id}
-					elementId={'id_' + mother[key].id}
-					type={mother[key].type}
 					validateField={isNotEmptyString}
-					label={mother[key].label}
-					fieldName={key}
 					classes={classes}
-					handleChange={handleChange}
 					index={0}
-					userType="student"
-					value={mother[key].value}
+					userType={parentType}
+					handleChange={handleChange}
 					error={errors[key]}
+					key={parent[key].id}
+					elementId={'id_' + parent[key].id}
+					type={parent[key].type}
+					label={parent[key].label}
+					fieldName={key}
+					value={parent[key].value}
+					selectOptions={parent[key].type === 'Select' ? parent[key].selectOptions : null}
 					editable={adressEditable}
 				/>
 			</Grid>
 		);
 	});
+	useEffect(() => {
+		console.log('UE ERROR');
+	}, [error]);
 
 	const handleSubmit = async e => {
-		console.log('handleSubmit / mother = ', mother);
-		console.log('handleSubmit / mother = ', errors);
+		const abortController = new AbortController();
 		e.preventDefault();
-		if (errors.clean) {
-			setError(true);
-			return;
-		}
+		if (formError) return setError(true);
 		setLoading(true);
 		setSuccess(false);
 		setError(false);
-		if (Object.values(errors).indexOf(true) >= 0) {
-			setLoading(false);
+		if (Object.values(errors).indexOf(true) >= 0) return setLoading(false);
+		const response = parent._id
+			? await studentLib.updateUser(parent._id, parent) //@todo:createParent
+			: await studentLib.createParent(abortController.parent);
+		setLoading(false);
+		if (!response) {
+			//following line cancels the async submission
+			abortController.abort();
+			setError(true);
 			return;
 		}
-		const response = mother._id
-			? await studentLib.updateUser(mother._id, mother)//@todo: check this
-			: await studentLib.createParent(mother);
-		setLoading(false);
-		if (!response) return setError(true);
 		setSuccess(true);
 	};
 
@@ -111,7 +111,7 @@ const MotherPersonalData = ({ adressEditable,motherData,classes, match, screenNa
 				if (!data) {
 					setError(true);
 				} else {
-					setMother(data);
+					setParent(data);
 				}
 				setLoading(false);
 			} else {
@@ -133,7 +133,7 @@ const MotherPersonalData = ({ adressEditable,motherData,classes, match, screenNa
 					noValidate
 					autoComplete="off"
 				>
-					{/* STUDENT NAME, BIRTHDATE AND ID DATA */}
+					{/* PARENT NAME, BIRTHDATE AND ID DATA */}
 					<Grid container direction="row" style={{ flexGrow: 1 }}>
 						{formItems}
 					</Grid>
@@ -148,8 +148,8 @@ const MotherPersonalData = ({ adressEditable,motherData,classes, match, screenNa
 	);
 };
 
-MotherPersonalData.propTypes = {
+ParentPersonalData.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(MotherPersonalData);
+export default withStyles(styles)(ParentPersonalData);

@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import { StudentPersonalData, MotherPersonalData, FatherPersonalData } from './TabsContent';
+import { StudentPersonalData, ParentPersonalData } from './TabsContent';
 import { reducer, getInitialState } from './TabsContent/TabsState';
-import { studentFields, fatherFields, motherFields } from './TabsContent/personalDataFields';
 
 import Aux from '../../../../components/AUX/Aux';
 const TabContainer = props => {
@@ -70,24 +69,28 @@ const TabsContainers = ({ value }) => {
 			)}
 			{value === 1 && (
 				<TabContainer>
-					<MotherPersonalData
+					<ParentPersonalData
 						adressEditable={state.motherAdressEditable}
-						motherData={state.motherData}
+						parentData={state.motherData}
 						screenName={'motherPersonalData'}
+						parentType={'mother'}
+						dispatchData={getData}
 					/>
 				</TabContainer>
 			)}
 			{value === 2 && (
 				<TabContainer>
-					<FatherPersonalData
+					<ParentPersonalData
 						adressEditable={state.fatherAdressEditable}
-						fatherData={state.fatherData}
+						parentData={state.fatherData}
 						screenName={'fatherPersonalData'}
+						parentType={'father'}
+						dispatchData={getData}
 					/>
 				</TabContainer>
 			)}
-			{value === 3 && <TabContainer>Health Datax</TabContainer>}
-			{value === 4 && <TabContainer>Contact Numbers</TabContainer>}
+			{value === 3 && <TabContainer>Health DataC</TabContainer>}
+			{value === 4 && <TabContainer>Contact NumbersS</TabContainer>}
 			{value === 5 && <TabContainer>Authorizations</TabContainer>}
 			{value === 6 && <TabContainer>Emergency Data Set</TabContainer>}
 			{value === 7 && <TabContainer>Item Six</TabContainer>}

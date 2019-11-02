@@ -1,4 +1,3 @@
 import StudentPersonalData from './StudentPersonalData';
-import MotherPersonalData from './MotherPersonalData';
-import FatherPersonalData from './FatherPersonalData';
-export { StudentPersonalData, MotherPersonalData, FatherPersonalData };
+import ParentPersonalData from './ParentPersonalData';
+export { StudentPersonalData, ParentPersonalData };
