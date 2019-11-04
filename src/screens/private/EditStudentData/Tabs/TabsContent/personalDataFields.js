@@ -3,7 +3,7 @@ const  newDate = new Date();
 const studentFields = {
 	firstName: {
 		label: 'First name',
-		value: undefined,
+		value: 'studentFirstName',
 		id: 'studentFirstName',
 		type: 'String'
 	},
