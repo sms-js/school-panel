@@ -23,8 +23,7 @@ const FormItem = ({
 	//adressKeys are edtiable depending on the 'editable' param. All other possible fields should be editable.
 	const adressKeys = ['fieldName', 'houseNr', 'floorNr', 'flatNr', 'zipCode', 'streetName'];
 	if (adressKeys.indexOf(fieldName) === -1) editable = true;
-
-	if (fieldName)
+	if (fieldName) {
 		if (type === 'String' || type === 'Date' || type === 'Email') {
 			const StringElement = (
 				<TextField
@@ -48,26 +47,27 @@ const FormItem = ({
 			return StringElement;
 		}
 
-	if (type === 'Select') {
-		const SelectElement = (
-			<SelectField
-				selectOptions={selectOptions}
-				userType={userType}
-				index={index}
-				type={type}
-				fieldName={fieldName}
-				required
-				error={error}
-				elementId={elementId}
-				label={label}
-				classes={classes}
-				value={value}
-				handleChange={handleChange}
-				defaultValue={defaultValue}
-				shrinkInputLabel={shrinkInputLabel}
-			/>
-		);
-		return SelectElement;
+		if (type === 'Select') {
+			const SelectElement = (
+				<SelectField
+					selectOptions={selectOptions}
+					userType={userType}
+					index={index}
+					type={type}
+					fieldName={fieldName}
+					required
+					error={error}
+					elementId={elementId}
+					label={label}
+					classes={classes}
+					value={value}
+					handleChange={handleChange}
+					defaultValue={defaultValue}
+					shrinkInputLabel={shrinkInputLabel}
+				/>
+			);
+			return SelectElement;
+		}
 	}
 };
 

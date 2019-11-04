@@ -1,6 +1,6 @@
 import api from 'lib/api';
 import { checkStatus } from 'lib/validators/response';
-import { STUDENT_URL, USER_URL, PARENT_URL } from 'config';
+import { STUDENT_URL, USER_URL, PARENT_URL, SCHOOL_URL } from 'config';
 
 // START: ADAPTING USER LIB TO STUDENT LIB ==========================
 
@@ -12,8 +12,8 @@ import { STUDENT_URL, USER_URL, PARENT_URL } from 'config';
  */
 export const createStudent = async data => {
 	try {
-		if (!data.type) data.type = 'student';
-		const response = await api.post(STUDENT_URL, data);
+		//if (!data.type) data.type = 'student';
+		const response = await api.post(SCHOOL_URL + STUDENT_URL, data);
 		if (!checkStatus(response)) {
 			throw new Error('invalid credentials');
 		}

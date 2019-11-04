@@ -4,12 +4,15 @@ const getInitialState = () => {
 	return {
 		studentData: { ...studentFields },
 		motherData: { ...motherFields },
-		fatherData: { ...fatherFields }
+		fatherData: { ...fatherFields },
+		postStudentData: false
 	};
 };
 
 const reducer = (state, action) => {
 	switch (action.type) {
+		case 'postStudentData':
+			return { ...state, postStudentData: action.payLoad };
 		case 'setStudentData':
 			return { ...state, studentData: { ...state.studentData, ...action.payLoad } };
 		case 'motherAdressEditable':

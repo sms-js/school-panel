@@ -17,8 +17,13 @@ import { keyIsObject, isNotEmptyString, isNumber } from 'lib/validators/types';
 import { updateClassDeclaration } from 'typescript';
 
 const StudentPersonalData = ({ studentData, classes, match, screenName, dispatchData }) => {
+	
 	const [student, setStudent] = useState(studentData);
-
+	const [formError, setFormError] = useState(true);
+	const [loading, setLoading] = useState(true);
+	const [success, setSuccess] = useState(false);
+	const [error, setError] = useState(false);
+	const [mustReturn] = useState(false);
 	const [errors, setErrors] = useState(
 		Object.keys(studentData).reduce((acc, key) => {
 			acc[key] = false;
@@ -26,11 +31,9 @@ const StudentPersonalData = ({ studentData, classes, match, screenName, dispatch
 		}, {})
 	);
 
-	const [formError, setFormError] = useState(true);
-	const [loading, setLoading] = useState(true);
-	const [success, setSuccess] = useState(false);
-	const [error, setError] = useState(false);
-	const [mustReturn] = useState(false);
+	useEffect(() => {
+		console.log('StudentPersonalData - UE - ERROR');
+	}, [error]);
 
 	const updateFormErrors = () => {
 		const hasErrors =
@@ -52,7 +55,6 @@ const StudentPersonalData = ({ studentData, classes, match, screenName, dispatch
 	};
 
 	const setTabsContainerState = () => {
-		debugger;
 		dispatchData({ type: 'setStudentData', payLoad: student });
 	};
 
@@ -77,28 +79,16 @@ const StudentPersonalData = ({ studentData, classes, match, screenName, dispatch
 			</Grid>
 		);
 	});
-	useEffect(() => {
-		console.log('UE ERROR');
-	}, [error]);
 
 	const handleSubmit = async e => {
-		const abortController = new AbortController();
 		e.preventDefault();
 		if (formError) return setError(true);
-		setLoading(true);
 		setSuccess(false);
 		setError(false);
+		setLoading(true);
 		if (Object.values(errors).indexOf(true) >= 0) return setLoading(false);
-		const response = student._id
-			? await studentLib.updateUser(student._id, student) //@todo:updateStudent
-			: await studentLib.createStudent(abortController.student);
+		dispatchData({ type: 'postStudentData', payLoad: true });
 		setLoading(false);
-		if (!response) {
-			//following line cancels the async submission
-			abortController.abort();
-			setError(true);
-			return;
-		}
 		setSuccess(true);
 	};
 

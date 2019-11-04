@@ -78,9 +78,6 @@ const ParentPersonalData = ({ parentType, adressEditable, parentData, classes, m
 			</Grid>
 		);
 	});
-	useEffect(() => {
-		console.log('UE ERROR');
-	}, [error]);
 
 	const handleSubmit = async e => {
 		const abortController = new AbortController();

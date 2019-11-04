@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import { StudentPersonalData, ParentPersonalData } from './TabsContent';
 import { reducer, getInitialState } from './TabsContent/TabsState';
+import { studentLib } from 'lib/models';
 
 import Aux from '../../../../components/AUX/Aux';
 const TabContainer = props => {
@@ -16,11 +17,26 @@ const TabsContainers = ({ value }) => {
 	const [state, dispatch] = useReducer(reducer, getInitialState());
 
 	useEffect(() => {
-		debugger;
-		console.log('UE');
+		console.log('TabsContainers - UE - studentLiveswith');
 		console.log('studentData.livesWith');
 		setUpParentsAdress();
 	}, [state.studentData.livesWith.value]);
+
+	useEffect(() => {
+		const postStudent = async () => {
+			const response = await studentLib.createStudent(state.studentData);
+			console.log({ response }); //@todo: pasarle el studentId para que el proximo save sea un patch
+		};
+		if (state.postStudentData) {
+			console.log('TabsContainers-UE- post student data');
+			console.log('studentData.livesWith');
+			postStudent();
+		}
+		return () => {
+			console.log('TabsContainers - UE ClUp - postStudentData: false');
+			dispatch({ type: 'postStudentData', payLoad: false });
+		};
+	}, [state.postStudentData]);
 
 	const setUpParentsAdress = () => {
 		const { streetName, houseNr, floorNr, flatNr, zipCode } = state.studentData;
@@ -52,7 +68,6 @@ const TabsContainers = ({ value }) => {
 	};
 
 	const getData = ({ type, payLoad }) => {
-		console.log('getData');
 		dispatch({ type, payLoad });
 	};
 
