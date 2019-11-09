@@ -25,6 +25,25 @@ export const createStudent = async data => {
 };
 
 /**
+ * Update the user data
+ *
+ * @param {string} id
+ * @param {object} data
+ */
+export const updateStudent = async (id, data) => {
+	try {
+		const response = await api.patch(`${SCHOOL_URL + STUDENT_URL}${id}`, data);
+		if (!checkStatus(response)) {
+			throw new Error('invalid credentials');
+		}
+		return data;
+	} catch (error) {
+		console.debug(error);
+		return false;
+	}
+};
+
+/**
  * Create parent
  *
  * @param {string} id

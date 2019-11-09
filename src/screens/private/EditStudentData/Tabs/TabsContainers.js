@@ -17,26 +17,33 @@ const TabsContainers = ({ value }) => {
 	const [state, dispatch] = useReducer(reducer, getInitialState());
 
 	useEffect(() => {
-		console.log('TabsContainers - UE - studentLiveswith');
-		console.log('studentData.livesWith');
 		setUpParentsAdress();
 	}, [state.studentData.livesWith.value]);
 
 	useEffect(() => {
 		const postStudent = async () => {
-			const response = await studentLib.createStudent(state.studentData);
-			console.log({ response }); //@todo: pasarle el studentId para que el proximo save sea un patch
+			if (state._idStudent === undefined) {
+				const response = await studentLib.createStudent(state.studentData);
+				console.log({ response }); //@todo: pasarle el studentId para que el proximo save sea un patch
+				setStudentId(response);
+			}
+			if (state._idStudent) {
+				await studentLib.updateStudent(state._idStudent, state.studentData);
+			}
 		};
 		if (state.postStudentData) {
-			console.log('TabsContainers-UE- post student data');
-			console.log('studentData.livesWith');
 			postStudent();
 		}
 		return () => {
-			console.log('TabsContainers - UE ClUp - postStudentData: false');
 			dispatch({ type: 'postStudentData', payLoad: false });
 		};
 	}, [state.postStudentData]);
+
+	const setStudentId = params => {
+		if (params.status === 200 && params.data._id) {
+			dispatch({ type: 'set_idStudent', payLoad: params.data._id });
+		}
+	};
 
 	const setUpParentsAdress = () => {
 		const { streetName, houseNr, floorNr, flatNr, zipCode } = state.studentData;
