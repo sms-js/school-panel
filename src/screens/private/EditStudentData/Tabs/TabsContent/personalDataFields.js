@@ -1,4 +1,4 @@
-const  newDate = new Date();
+const newDate = new Date();
 
 const studentFields = {
 	firstName: {
@@ -73,7 +73,7 @@ const studentFields = {
 			alternate: 'Alternate'
 		}
 	},
-	assignedGrade: {
+	grade: {
 		label: 'Grade',
 		value: '1',
 		id: 'studentGrade',

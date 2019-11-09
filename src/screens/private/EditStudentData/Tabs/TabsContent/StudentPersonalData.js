@@ -32,6 +32,7 @@ const StudentPersonalData = ({ studentData, classes, match, screenName, dispatch
 		}, {})
 	);
 
+	//when studentId is defined: changed data will be patched.
 	useEffect(() => {
 		const text = studentId !== undefined ? 'Update' : 'Save';
 		setButtonText(text);
@@ -42,7 +43,6 @@ const StudentPersonalData = ({ studentData, classes, match, screenName, dispatch
 	}, [error]);
 
 	const updateFormErrors = () => {
-		
 		const hasErrors =
 			Object.values(errors).indexOf(true) === -1
 				? false //this happens, when all fields are fullfiled
@@ -51,7 +51,6 @@ const StudentPersonalData = ({ studentData, classes, match, screenName, dispatch
 	};
 
 	const handleChange = (value, fieldName, index, userType, error) => {
-		
 		const newState = student;
 		newState[fieldName].value = value;
 		setStudent(Object.assign(student, newState));
