@@ -41,6 +41,7 @@ const TabsContainers = ({ value }) => {
 
 	const setStudentId = params => {
 		if (params.status === 200 && params.data._id) {
+			
 			dispatch({ type: 'set_idStudent', payLoad: params.data._id });
 		}
 	};
@@ -77,7 +78,7 @@ const TabsContainers = ({ value }) => {
 	const getData = ({ type, payLoad }) => {
 		dispatch({ type, payLoad });
 	};
-
+	
 	return (
 		<Aux>
 			{value === 0 && (
@@ -86,6 +87,7 @@ const TabsContainers = ({ value }) => {
 						studentData={state.studentData}
 						dispatchData={getData}
 						screenName={'studenPersonalData'}
+						studentId={state._idStudent}
 					/>
 				</TabContainer>
 			)}

@@ -12,6 +12,7 @@ const getInitialState = () => {
 const reducer = (state, action) => {
 	switch (action.type) {
 		case 'set_idStudent':
+			debugger
 			return {...state,_idStudent:action.payLoad}
 		case 'postStudentData':
 			return { ...state, postStudentData: action.payLoad };

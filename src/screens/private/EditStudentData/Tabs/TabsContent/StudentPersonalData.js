@@ -15,15 +15,16 @@ import { FormItem } from '../../../users/UserEdition/inputs';
 import { Redirect } from 'react-router-dom';
 import { keyIsObject, isNotEmptyString, isNumber } from 'lib/validators/types';
 import { updateClassDeclaration } from 'typescript';
+import create from 'antd/lib/icon/IconFont';
 
-const StudentPersonalData = ({ studentData, classes, match, screenName, dispatchData }) => {
-	
+const StudentPersonalData = ({ studentData, classes, match, screenName, dispatchData, studentId }) => {
 	const [student, setStudent] = useState(studentData);
 	const [formError, setFormError] = useState(true);
 	const [loading, setLoading] = useState(true);
 	const [success, setSuccess] = useState(false);
 	const [error, setError] = useState(false);
 	const [mustReturn] = useState(false);
+	const [buttonText, setButtonText] = useState('Savex');
 	const [errors, setErrors] = useState(
 		Object.keys(studentData).reduce((acc, key) => {
 			acc[key] = false;
@@ -32,11 +33,16 @@ const StudentPersonalData = ({ studentData, classes, match, screenName, dispatch
 	);
 
 	useEffect(() => {
+		const text = studentId !== undefined ? 'Update' : 'Save';
+		setButtonText(text);
+	}, [studentId]);
+
+	useEffect(() => {
 		console.log('StudentPersonalData - UE - ERROR');
 	}, [error]);
 
 	const updateFormErrors = () => {
-		debugger
+		
 		const hasErrors =
 			Object.values(errors).indexOf(true) === -1
 				? false //this happens, when all fields are fullfiled
@@ -45,7 +51,7 @@ const StudentPersonalData = ({ studentData, classes, match, screenName, dispatch
 	};
 
 	const handleChange = (value, fieldName, index, userType, error) => {
-		debugger
+		
 		const newState = student;
 		newState[fieldName].value = value;
 		setStudent(Object.assign(student, newState));
@@ -131,7 +137,7 @@ const StudentPersonalData = ({ studentData, classes, match, screenName, dispatch
 					{success && <span className={classes.success}>Profile update success</span>}
 					{error && <span className={classes.error}>Profile update error</span>}
 					<Button variant="contained" color="primary" className={classes.button} type="submit">
-						Save
+						{buttonText}
 					</Button>
 				</form>
 			</Paper>
