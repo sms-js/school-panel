@@ -13,7 +13,7 @@ import { STUDENT_URL, USER_URL, PARENT_URL, SCHOOL_URL } from 'config';
 export const createStudent = async data => {
 	try {
 		//if (!data.type) data.type = 'student';
-		const response = await api.post(SCHOOL_URL + STUDENT_URL, data);
+		const response = await api.post(STUDENT_URL, data);
 		if (!checkStatus(response)) {
 			throw new Error('invalid credentials');
 		}
@@ -32,7 +32,7 @@ export const createStudent = async data => {
  */
 export const updateStudent = async (id, data) => {
 	try {
-		const response = await api.patch(`${SCHOOL_URL + STUDENT_URL}${id}`, data);
+		const response = await api.patch(`${STUDENT_URL}${id}`, data);
 		if (!checkStatus(response)) {
 			throw new Error('invalid credentials');
 		}

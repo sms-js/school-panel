@@ -1,4 +1,4 @@
-import styles from '../../../users/UserEdition/styles';
+import styles from 'screens/private/users/UserEdition/styles';
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 

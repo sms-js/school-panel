@@ -1,13 +1,20 @@
 {
 	"compilerOptions": {
-		"baseUrl": "./src/",
+		"module": "commonjs",
+		"target": "es2016",
+		"jsx": "preserve",
+		"checkJs": true,
+		"baseUrl": "./src",
 		"paths": {
 			"*": ["./*"],
 			"assets/*": ["./src/assets/*"],
 			"components/*": ["./src/components/*"],
 			"config/*": ["./src/config/*"],
-			"lib/*": ["./src/lib/*"],
-			"screens/*": ["./src/screens/*"]
+			"lib1/*": ["./src/lib/*"],
+			"screens/*": ["./src/screens/*"],
+			"users/*": ["./src/screens/private/users/*"]
 		}
-	}
+	},
+	"include": ["src"],
+	"exclude": ["node_modules", "**/node_modules/*"]
 }

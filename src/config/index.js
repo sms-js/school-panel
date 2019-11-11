@@ -17,9 +17,9 @@ const USER_URL = `${API_PREFIX}User/`; // axios baseURL is ${API_DOMAIN}
 const MESSAGES_URL = `messages/`;
 const TAGS_URL = `tags/`;
 const SCHOOL_URL = `school/`;
-const STUDENT_URL = `student/`;
+const STUDENT_URL = `students/`;
 const PARENT_URL = `parent/`;
-
+const GROUPS_URL = 'groups/';
 const PROFILE_URL = `${API_PREFIX}User/`; // axios baseURL is ${API_DOMAIN}
 
 const RECOVERPASSWORD_URL = `auth/recovery/email/`; // axios baseURL is ${API_DOMAIN}
@@ -46,4 +46,5 @@ export {
 	SCHOOL_URL,
 	STUDENT_URL,
 	PARENT_URL,
+	GROUPS_URL
 };

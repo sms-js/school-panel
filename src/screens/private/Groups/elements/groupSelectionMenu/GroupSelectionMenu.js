@@ -10,8 +10,6 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
-
-
 const useStyles = makeStyles(theme => ({
 	root: {
 		display: 'flex',
@@ -26,10 +24,10 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const GroupSelectionMenu = ({ menuLabel, sendDataToParentCmp, data, disableMenu }) => {
+const GroupSelectionMenu = ({ selectorLabel, selectorName, dispatchData, data, disableMenu }) => {
 	const classes = useStyles();
 	const [values, setValues] = useState({
-		menuLabel,
+		selectorName,
 		selectedValue: 'notAssigned'
 	});
 
@@ -39,41 +37,20 @@ const GroupSelectionMenu = ({ menuLabel, sendDataToParentCmp, data, disableMenu 
 		setLabelWidth(inputLabel.current.offsetWidth);
 	}, []);
 
-	data.sort((a,b)=> {
-		var nameA = a.groupCode
-		var nameB = b.groupCode
-		if (nameA < nameB) {
-			return -1;
-		}
-		if (nameA > nameB) {
-			return 1;
-		}
-	});
-
-	console.log('sortedData = ',data)
-
-
-
-
 	function handleChange(event) {
 		const newValueSet = {
-			menuLabel: event.target.name,
+			selectorName: event.target.name,
 			selectedValue: event.target.value
 		};
 		setValues(() => Object.assign(newValueSet));
-		sendDataToParentCmp(newValueSet);
+		dispatchData(newValueSet);
 	}
 
-	//sets menu label
-	const menuInputLabel = menuLabel === 'originGroup' ? 'Origin group' : menuLabel === 'groupDefinition' ?'Group definition':'Destination group';
 
-	//sets data of menu
-	const menuData = data;
-
-	const menuItems = menuData.map(el => {
+	const menuItems = data.map(el => {
 		return (
-			<MenuItem value={el.groupCode} key={el._id}>
-				{el.groupName}
+			<MenuItem value={el.code} key={el.code}>
+				{el.text}
 			</MenuItem>
 		);
 	});
@@ -81,13 +58,13 @@ const GroupSelectionMenu = ({ menuLabel, sendDataToParentCmp, data, disableMenu 
 	return (
 		<FormControl variant="outlined" className={classes.formControl}>
 			<InputLabel ref={inputLabel} htmlFor="handled-group">
-				{menuInputLabel}
+				{selectorLabel}
 			</InputLabel>
 			<Select
 				disabled={disableMenu}
 				value={values.selectedValue}
 				onChange={handleChange}
-				input={<OutlinedInput labelWidth={labelWidth} name={menuLabel} id="handled-group" />}
+				input={<OutlinedInput labelWidth={labelWidth} name={selectorName} id="handled-group" />}
 			>
 				<MenuItem value="notAssigned">
 					<em>Select Group</em>

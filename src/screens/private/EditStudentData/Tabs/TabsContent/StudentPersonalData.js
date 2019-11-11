@@ -17,7 +17,16 @@ import { keyIsObject, isNotEmptyString, isNumber } from 'lib/validators/types';
 import { updateClassDeclaration } from 'typescript';
 import create from 'antd/lib/icon/IconFont';
 
-const StudentPersonalData = ({ studentData, classes, match, screenName, dispatchData, studentId }) => {
+const StudentPersonalData = ({
+	profileError,
+	studentData,
+	classes,
+	match,
+	screenName,
+	dispatchData,
+	studentId,
+	successMsg
+}) => {
 	const [student, setStudent] = useState(studentData);
 	const [formError, setFormError] = useState(true);
 	const [loading, setLoading] = useState(true);
@@ -96,7 +105,7 @@ const StudentPersonalData = ({ studentData, classes, match, screenName, dispatch
 		if (Object.values(errors).indexOf(true) >= 0) return setLoading(false);
 		dispatchData({ type: 'postStudentData', payLoad: true });
 		setLoading(false);
-		setSuccess(true);
+		//setSuccess(true);
 	};
 
 	useEffect(() => {
@@ -133,8 +142,8 @@ const StudentPersonalData = ({ studentData, classes, match, screenName, dispatch
 					<Grid container direction="row" style={{ flexGrow: 1 }}>
 						{formItems}
 					</Grid>
-					{success && <span className={classes.success}>Profile update success</span>}
-					{error && <span className={classes.error}>Profile update error</span>}
+					{successMsg && <span className={classes.success}>{successMsg}</span>}
+					{profileError && <span className={classes.error}>{profileError}</span>}
 					<Button variant="contained" color="primary" className={classes.button} type="submit">
 						{buttonText}
 					</Button>

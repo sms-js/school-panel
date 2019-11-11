@@ -5,15 +5,20 @@ const getInitialState = () => {
 		studentData: { ...studentFields },
 		motherData: { ...motherFields },
 		fatherData: { ...fatherFields },
-		postStudentData: false
+		postStudentData: false,
+		profileError: false,
+		successMsg: false
 	};
 };
 
 const reducer = (state, action) => {
 	switch (action.type) {
+		case 'serverError':
+			return { ...state, profileError: action.payLoad };
+		case 'setSucessMsg':
+			return { ...state, successMsg: action.payLoad };
 		case 'set_idStudent':
-			debugger
-			return {...state,_idStudent:action.payLoad}
+			return { ...state, _idStudent: action.payLoad };
 		case 'postStudentData':
 			return { ...state, postStudentData: action.payLoad };
 		case 'setStudentData':

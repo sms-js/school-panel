@@ -25,10 +25,18 @@ const TabsContainers = ({ value }) => {
 			if (state._idStudent === undefined) {
 				const response = await studentLib.createStudent(state.studentData);
 				console.log({ response }); //@todo: pasarle el studentId para que el proximo save sea un patch
+				if (response === false) {
+					return dispatch({ type: 'serverError', payLoad: 'Student could not be created' });
+				}
 				setStudentId(response);
 			}
 			if (state._idStudent) {
-				await studentLib.updateStudent(state._idStudent, state.studentData);
+				//student already loaded. It is an update process
+				const response = await studentLib.updateStudent(state._idStudent, state.studentData);
+				if (response === false) {
+					return dispatch({ type: 'serverError', payLoad: 'Student could not be updated' });
+				}
+				return dispatch({ type: 'setSucessMsg', payLoad: 'Student has been updated' });
 			}
 		};
 		if (state.postStudentData) {
@@ -41,8 +49,8 @@ const TabsContainers = ({ value }) => {
 
 	const setStudentId = params => {
 		if (params.status === 200 && params.data._id) {
-			
 			dispatch({ type: 'set_idStudent', payLoad: params.data._id });
+			dispatch({ type: 'setSucessMsg', payLoad: 'Student has been created' });
 		}
 	};
 
@@ -78,7 +86,7 @@ const TabsContainers = ({ value }) => {
 	const getData = ({ type, payLoad }) => {
 		dispatch({ type, payLoad });
 	};
-	
+
 	return (
 		<Aux>
 			{value === 0 && (
@@ -88,6 +96,8 @@ const TabsContainers = ({ value }) => {
 						dispatchData={getData}
 						screenName={'studenPersonalData'}
 						studentId={state._idStudent}
+						profileError={state.profileError}
+						successMsg={state.successMsg}
 					/>
 				</TabContainer>
 			)}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 
 import DrawerContainer from 'components/DrawerContainer';
@@ -9,7 +9,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
-
+import { grades, groupTypes } from 'lib/keyValues';
+import { reducer, getInitialState } from './groupsState';
 import GroupSelectionMenu from './elements/groupSelectionMenu/GroupSelectionMenu';
 
 const useStyles = makeStyles(theme => ({
@@ -25,62 +26,35 @@ const useStyles = makeStyles(theme => ({
 
 const GenerateGroups = () => {
 	const classes = useStyles();
+	const [state, dispatch] = useReducer(reducer, getInitialState());
 
-	const groupTypes = ['originGroup', 'destinationGroup_1', 'destinationGroup_2'];
 	const [groups, setGroups] = useState([]);
-	const [currentYear, setCurrentYear] = useState('2019');
-	const groupDefinition = [
-		{ groupCode: 'incomingChildren', groupName: 'Incoming children', _id: 'incomingChildren' },
-		{ groupCode: 'pastYearGroup', groupName: 'Past Year', _id: 'pastYearGroup' }
-	];
-	const [disable, setDisableMenu] = useState({
-		originGroup: true,
-		destinationGroup: true
-	});
+	const [destinationGroups, setDestinationGroups] = useState([]);
 
-	const [menuState, setMenuState] = useState({
-		groupDefinition: { state: true, selectedValue: '' },
-		originGroup: { state: false, selectedValue: '' },
-		destinationGroup: { state: false, selectedValue: '', groupsData: [] }
-	});
-
-	const getInitialGroupValues = async () => {
-		const result = await schoolLib.getGroups();
+	const getGroupTemplates = async grade => {
+		const result = await schoolLib.getGroupTemplates(grade);
 		console.log('getInitialGroupValues / result = ', result);
-		setGroups(result);
-		const actualMenuState = { ...menuState };
-		actualMenuState.destinationGroup.groupsData = result;
-		setMenuState(Object.assign(menuState, actualMenuState));
+		const groups = result === false ? [] : result;
+		setDestinationGroups(groups);
+		dispatch({ type: 'displayMenu4', payLoad: true });
 	};
 
-	useEffect(() => {
-		getInitialGroupValues();
-	}, []);
-
-	useEffect(() => {
-		//console.log('UE - [menuState] = ', menuState);
-	}, [menuState]);
-
-	//info={menuLabel: "groupDefinition", selectedValue: "incomingChildren"}
-	const getDataFromChildCmp = info => {
-		console.log('getDataFromChildCmp / info = ', info);
-		const newMenuState = { ...menuState };
-		newMenuState[info.menuLabel].selectedValue = info.selectedValue;
-		switch (info.menuLabel) {
+	const getData = info => {
+		console.log('getData / info = ', info);
+		//const newMenuState = { ...state };
+		//newMenuState[info.selectorName].selectedValue = info.selectedValue;
+		switch (info.selectorName) {
 			case 'groupDefinition':
 				switch (info.selectedValue) {
 					case 'pastYearGroup':
-						newMenuState.originGroup.state = true;
-						newMenuState.destinationGroup.state = false;
+						dispatch({ type: 'hideSelectors' });
 						break;
 					case 'incomingChildren':
-						newMenuState.destinationGroup.state = true;
-						newMenuState.originGroup.state = false;
-						newMenuState.destinationGroup.groupsData = groups;
+						dispatch({ type: 'hideSelectors' });
+						dispatch({ type: 'displayMenu2', payLoad: true });
 						break;
 					case 'notAssigned':
-						newMenuState.destinationGroup.state = false;
-						newMenuState.originGroup.state = false;
+						dispatch({ type: 'hideSelectors' });
 						break;
 					default:
 						console.log('default switch case');
@@ -89,24 +63,26 @@ const GenerateGroups = () => {
 			case 'originGroup':
 				switch (info.selectedValue) {
 					case 'notAssigned':
-						newMenuState.destinationGroup.state = false;
-						newMenuState.originGroup.state = false;
+						dispatch({ type: 'hideSelectors' });
 						break;
 					default:
-						newMenuState.destinationGroup.state = true;
-						const selectedOriginGroupLevel = groups.find(el => {
-							return info.selectedValue == el.groupCode;
-						}).groupLevel;
-						newMenuState.destinationGroup.groupsData = groups.filter(el => el.groupLevel > selectedOriginGroupLevel);
-						setMenuState(Object.assign(menuState, newMenuState));
+						break;
+				}
+				break;
+			case 'gradeSelection':
+				switch (info.selectedValue) {
+					case 'notAssigned':
+						dispatch({ type: 'displayMenu4', payLoad: false });
+						break;
+					default:
+						getGroupTemplates(info.selectedValue);
+						dispatch({ type: 'setGrade', payLoad: info.selectedValue });
 						break;
 				}
 				break;
 			default:
 				console.log('default switch case');
 		}
-		console.log('newMenuState = ', newMenuState);
-		setMenuState(newMenuState);
 	};
 
 	return (
@@ -123,24 +99,38 @@ const GenerateGroups = () => {
 					>
 						<div>
 							<GroupSelectionMenu
-								menuLabel={'groupDefinition'}
-								data={groupDefinition}
-								sendDataToParentCmp={getDataFromChildCmp}
+								selectorName={'groupDefinition'}
+								selectorLabel={'Group Type'}
+								data={groupTypes}
+								dispatchData={getData}
+								disableMenu={false}
 							/>
-							{menuState['originGroup'].state ? (
+							{state.displayMenu2 ? (
 								<GroupSelectionMenu
-									menuLabel={'originGroup'}
-									data={groups}
-									sendDataToParentCmp={getDataFromChildCmp}
-									disableMenu={!menuState['originGroup'].state}
+									selectorName={'gradeSelection'}
+									selectorLabel={'Grade Selection'}
+									data={grades}
+									dispatchData={getData}
+									disableMenu={false}
 								/>
 							) : null}
-							{menuState['destinationGroup'].state ? (
+							{state.displayMenu3 ? (
 								<GroupSelectionMenu
-									menuLabel={'destinationGroup'}
-									data={menuState['destinationGroup'].groupsData}
-									sendDataToParentCmp={getDataFromChildCmp}
-									disableMenu={!menuState['destinationGroup'].state}
+									selectorName={'originGroup'}
+									selectorLabel={'Group of origin'}
+									handleName={'originGroup'}
+									data={groups}
+									dispatchData={getData}
+									disableMenu={false}
+								/>
+							) : null}
+							{state.displayMenu4 ? (
+								<GroupSelectionMenu
+									selectorName={'destinationGroup'}
+									selectorLabel={'Group of destination'}
+									data={destinationGroups}
+									dispatchData={getData}
+									disableMenu={false}
 								/>
 							) : null}
 						</div>
