@@ -3,7 +3,8 @@ const getInitialState = () => {
 		displayMenu1: false,
 		displayMenu2: false,
 		displayMenu3: false,
-		displayMenu4: false
+		displayMenu4: false,
+		showStudents: false
 	};
 };
 
@@ -17,8 +18,12 @@ const reducer = (state, action) => {
 			return { ...state, displayMenu3: action.payLoad };
 		case 'displayMenu4':
 			return { ...state, displayMenu4: action.payLoad };
-		case 'setGroupType':
-			return { ...state, groupType: action.payLoad };
+		case 'setStudentIsNew':
+			return { ...state, incomingStudent: action.payLoad };
+		case 'setStudents':
+			return { ...state, students: action.payLoad };
+		case 'showStudents':
+			return { ...state, showStudents: action.payLoad };
 		case 'setGrade':
 			return { ...state, grade: action.payLoad };
 		case 'setOriginGroup':
@@ -26,7 +31,13 @@ const reducer = (state, action) => {
 		case 'setDestinationGroup':
 			return { ...state, destinationGroup: action.payLoad };
 		case 'hideSelectors':
-			return { ...state, displayMenu1: false, displayMenu2: false, displayMenu3: false, displayMenu4: false };
+			return {
+				...state,
+				displayMenu1: false,
+				displayMenu2: false,
+				displayMenu3: false,
+				displayMenu4: false
+			};
 		default:
 			return state;
 	}

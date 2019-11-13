@@ -67,7 +67,7 @@ const GroupSelectionMenu = ({ selectorLabel, selectorName, dispatchData, data, d
 				input={<OutlinedInput labelWidth={labelWidth} name={selectorName} id="handled-group" />}
 			>
 				<MenuItem value="notAssigned">
-					<em>Select Group</em>
+					<em>Select an option</em>
 				</MenuItem>
 				{menuItems}
 			</Select>

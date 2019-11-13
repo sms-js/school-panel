@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import DrawerContainer from 'components/DrawerContainer';
 import { arrayIsNotEmpty } from 'lib/validators/types';
-import { schoolLib } from '../../../lib/models';
+import { schoolLib, studentLib } from '../../../lib/models';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -29,29 +29,43 @@ const GenerateGroups = () => {
 	const [state, dispatch] = useReducer(reducer, getInitialState());
 
 	const [groups, setGroups] = useState([]);
+	const [students, setStudents] = useState([]);
 	const [destinationGroups, setDestinationGroups] = useState([]);
 
 	const getGroupTemplates = async grade => {
-		const result = await schoolLib.getGroupTemplates(grade);
-		console.log('getInitialGroupValues / result = ', result);
-		const groups = result === false ? [] : result;
+		const response = await schoolLib.getGroupTemplates(grade);
+		const groups = response === false ? [] : response;
 		setDestinationGroups(groups);
 		dispatch({ type: 'displayMenu4', payLoad: true });
+		//console.log('getInitialGroupValues / response = ', response);
+	};
+
+	const getStudents = async grade => {
+		const params = {
+			incomingStudent: state.incomingStudent,
+			grade
+		};
+		const response = await studentLib.getStudents(params);
+		debugger;
+		const students = response === false ? [] : response;
+		dispatch({ type: 'setStudents', payLoad: students });
+		dispatch({ type: 'showStudents', payLoad: true });
 	};
 
 	const getData = info => {
-		console.log('getData / info = ', info);
-		//const newMenuState = { ...state };
-		//newMenuState[info.selectorName].selectedValue = info.selectedValue;
+		//console.log('getData / info = ', info);
+
 		switch (info.selectorName) {
-			case 'groupDefinition':
+			case 'studentTypeDefinition':
 				switch (info.selectedValue) {
 					case 'pastYearGroup':
 						dispatch({ type: 'hideSelectors' });
+						dispatch({ type: 'setStudentIsNew', payLoad: false });
 						break;
-					case 'incomingChildren':
+					case 'studentIsNew':
 						dispatch({ type: 'hideSelectors' });
 						dispatch({ type: 'displayMenu2', payLoad: true });
+						dispatch({ type: 'setStudentIsNew', payLoad: true });
 						break;
 					case 'notAssigned':
 						dispatch({ type: 'hideSelectors' });
@@ -60,6 +74,7 @@ const GenerateGroups = () => {
 						console.log('default switch case');
 				}
 				break;
+
 			case 'originGroup':
 				switch (info.selectedValue) {
 					case 'notAssigned':
@@ -69,17 +84,21 @@ const GenerateGroups = () => {
 						break;
 				}
 				break;
+
 			case 'gradeSelection':
 				switch (info.selectedValue) {
 					case 'notAssigned':
 						dispatch({ type: 'displayMenu4', payLoad: false });
 						break;
 					default:
-						getGroupTemplates(info.selectedValue);
+						//fetch groupTemplates belonging to the selected grade.
 						dispatch({ type: 'setGrade', payLoad: info.selectedValue });
+						getGroupTemplates(info.selectedValue);
+						getStudents(info.selectedValue);
 						break;
 				}
 				break;
+
 			default:
 				console.log('default switch case');
 		}
@@ -99,8 +118,8 @@ const GenerateGroups = () => {
 					>
 						<div>
 							<GroupSelectionMenu
-								selectorName={'groupDefinition'}
-								selectorLabel={'Group Type'}
+								selectorName={'studentTypeDefinition'}
+								selectorLabel={'Group'}
 								data={groupTypes}
 								dispatchData={getData}
 								disableMenu={false}
