@@ -40,13 +40,12 @@ const GenerateGroups = () => {
 		//console.log('getInitialGroupValues / response = ', response);
 	};
 
-	const getStudents = async grade => {
+	const getIncomingStudents = async grade => {
 		const params = {
 			incomingStudent: state.incomingStudent,
 			grade
 		};
-		const response = await studentLib.getStudents(params);
-		debugger;
+		const response = await studentLib.getIncomingStudentsForGroups(params);
 		const students = response === false ? [] : response;
 		dispatch({ type: 'setStudents', payLoad: students });
 		dispatch({ type: 'showStudents', payLoad: true });
@@ -94,7 +93,7 @@ const GenerateGroups = () => {
 						//fetch groupTemplates belonging to the selected grade.
 						dispatch({ type: 'setGrade', payLoad: info.selectedValue });
 						getGroupTemplates(info.selectedValue);
-						getStudents(info.selectedValue);
+						getIncomingStudents(info.selectedValue);
 						break;
 				}
 				break;

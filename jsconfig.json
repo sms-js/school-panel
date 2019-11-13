@@ -10,7 +10,7 @@
 			"assets/*": ["./src/assets/*"],
 			"components/*": ["./src/components/*"],
 			"config/*": ["./src/config/*"],
-			"lib1/*": ["./src/lib/*"],
+			"lib/*": ["./src/lib/*"],
 			"screens/*": ["./src/screens/*"],
 			"users/*": ["./src/screens/private/users/*"]
 		}
