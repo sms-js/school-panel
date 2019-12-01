@@ -11,7 +11,6 @@ import PrivateRoute from './PrivateRoute';
 /*import Authenticated from 'screens/private/Authenticated';*/
 import Home from 'screens/private/Home';
 import Profile from 'screens/private/Profile';
-import Messages from 'screens/private/Messages';
 import GenerateGroup from 'screens/private/Groups';
 //import AddStudentData from 'screens/private/AddStudentData';
 import EditStudentData from 'screens/private/EditStudentData/EditStudentData';
@@ -59,13 +58,6 @@ const privateRoutes = [
 	<PrivateRoute key="route-users-list" path="/admin/users" component={UsersList} rule="UserFull" />,
 	<PrivateRoute exact key="route-users-create" path="/admin/user" component={UserEdition} rule="UserFull" />,
 	<PrivateRoute key="route-users-edit" path="/admin/user/:id" component={UserEdition} rule="UserFull" />,
-	//Messages
-	<PrivateRoute
-		key="route-display-messages"
-		path="/messages/display"
-		component={Messages}
-		rule="MessagesListReadUpdate"
-	/>,
 	//Groups
 	<PrivateRoute key="route-generate-group" path="/groups/generate" component={GenerateGroup} rule="UserFull" />,
 	//StudentData

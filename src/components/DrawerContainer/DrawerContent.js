@@ -7,7 +7,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import HomeIcon from 'components/icons/HomeIcon';
-import MessageIcon from 'components/icons/MessageIcon';
 import Divider from '@material-ui/core/Divider';
 import Collapse from '@material-ui/core/Collapse';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -53,10 +52,6 @@ const DrawerContent = classes => {
 			</List>
 			<Divider />
 			<List>
-				<ListItem component={Link} to="/messages/display" key="messages-root">
-					<MessageIcon />
-					<ListItemText primary="Messages" />
-				</ListItem>
 				<ListItem key="groups" button onClick={() => handleToggle('groups')}>
 					<ListItemIcon>
 						<GroupIcon />

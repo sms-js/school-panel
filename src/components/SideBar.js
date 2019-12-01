@@ -22,7 +22,7 @@ const SideBar = ({ collapsed }) => {
 					<span>
 						<Icon type="home" />
 						<span>
-							<Link to="/admin/home">Home</Link>
+							<Link to="/admin/home">Homy</Link>
 						</span>
 					</span>
 				</Menu.Item>
@@ -33,16 +33,6 @@ const SideBar = ({ collapsed }) => {
 						<span>
 							<Icon type="user" />
 							<span>Users</span>
-						</span>
-					</Link>
-				</Menu.Item>
-
-				{/* Messages list screen item */}
-				<Menu.Item key="menu-messages-list-list">
-					<Link to="/messages/display">
-						<span>
-							<Icon type="wechat" />
-							<span>Messages</span>
 						</span>
 					</Link>
 				</Menu.Item>
