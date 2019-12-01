@@ -10,6 +10,7 @@ const getInitialState = () => {
 
 const reducer = (state, action) => {
 	switch (action.type) {
+		// show --------------------------------------------------------------
 		case 'displayMenu1':
 			return { ...state, displayMenu1: action.payLoad };
 		case 'displayMenu2':
@@ -18,18 +19,8 @@ const reducer = (state, action) => {
 			return { ...state, displayMenu3: action.payLoad };
 		case 'displayMenu4':
 			return { ...state, displayMenu4: action.payLoad };
-		case 'setStudentIsNew':
-			return { ...state, incomingStudent: action.payLoad };
-		case 'setStudents':
-			return { ...state, students: action.payLoad };
 		case 'showStudents':
 			return { ...state, showStudents: action.payLoad };
-		case 'setGrade':
-			return { ...state, grade: action.payLoad };
-		case 'setOriginGroup':
-			return { ...state, originGroup: action.payLoad };
-		case 'setDestinationGroup':
-			return { ...state, destinationGroup: action.payLoad };
 		case 'hideSelectors':
 			return {
 				...state,
@@ -38,6 +29,18 @@ const reducer = (state, action) => {
 				displayMenu3: false,
 				displayMenu4: false
 			};
+		//set ----------------------------------------------------------------
+		case 'setStudentIsNew':
+			return { ...state, incomingStudent: action.payLoad };
+		case 'setStudents':
+			return { ...state, students: action.payLoad };
+		case 'setGrade':
+			return { ...state, grade: action.payLoad };
+		case 'setOriginGroup':
+			return { ...state, originGroup: action.payLoad };
+		case 'setDestinationGroup':
+			return { ...state, destinationGroup: action.payLoad };
+		//default ------------------------------------------------------------
 		default:
 			return state;
 	}

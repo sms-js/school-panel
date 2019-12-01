@@ -27,9 +27,6 @@ const useStyles = makeStyles(theme => ({
 const GenerateGroups = () => {
 	const classes = useStyles();
 	const [state, dispatch] = useReducer(reducer, getInitialState());
-
-	const [groups, setGroups] = useState([]);
-	const [students, setStudents] = useState([]);
 	const [destinationGroups, setDestinationGroups] = useState([]);
 
 	const getGroupTemplates = async grade => {
@@ -37,7 +34,6 @@ const GenerateGroups = () => {
 		const groups = response === false ? [] : response;
 		setDestinationGroups(groups);
 		dispatch({ type: 'displayMenu4', payLoad: true });
-		//console.log('getInitialGroupValues / response = ', response);
 	};
 
 	const getIncomingStudents = async grade => {
@@ -137,7 +133,7 @@ const GenerateGroups = () => {
 									selectorName={'originGroup'}
 									selectorLabel={'Group of origin'}
 									handleName={'originGroup'}
-									data={groups}
+									data={[]}
 									dispatchData={getData}
 									disableMenu={false}
 								/>
@@ -154,8 +150,11 @@ const GenerateGroups = () => {
 						</div>
 					</Paper>
 				</Grid>
-				<Grid item xs={12}>
-					<Paper className={classes.paper}>Transfer element</Paper>
+				<Grid item xs={6}>
+					<Paper className={classes.paper}>Transfer element 1</Paper>
+				</Grid>
+				<Grid item xs={6}>
+					<Paper className={classes.paper}>Transfer element 2</Paper>
 				</Grid>
 				<Grid item xs={12}>
 					<Paper className={classes.paper}>Command buttons</Paper>
