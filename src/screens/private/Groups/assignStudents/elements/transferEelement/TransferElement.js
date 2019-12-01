@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
 		padding: theme.spacing(1, 2)
 	},
 	list: {
-		width: 200,
+		width: 400,
 		height: 230,
 		backgroundColor: theme.palette.background.paper,
 		overflow: 'auto'
@@ -41,14 +41,17 @@ function union(a, b) {
 	return [...a, ...not(b, a)];
 }
 
-const TransferList = () => {
-	const classes = useStyles();
-	const [checked, setChecked] = React.useState([]);
-	const [left, setLeft] = React.useState([0, 1, 2, 3]);
-	const [right, setRight] = React.useState([4, 5, 6, 7]);
+const TransferElement = ({ sourceStudents, destinationGroupCode,destinationGroupStudents }) => {
+	console.log({ sourceStudents });
+	console.log({ destinationGroupCode });
 
-	const leftChecked = intersection(checked, left);
-	const rightChecked = intersection(checked, right);
+	const classes = useStyles();
+	const [checked, setChecked] = useState([]);
+	const [students, setSourceStudents] = useState(sourceStudents);
+	const [destinationStudents, setDestinationStudents] = useState(destinationGroupStudents);
+
+	const leftChecked = intersection(checked, students);
+	const rightChecked = intersection(checked, destinationStudents);
 
 	const handleToggle = value => () => {
 		const currentIndex = checked.indexOf(value);
@@ -74,14 +77,14 @@ const TransferList = () => {
 	};
 
 	const handleCheckedRight = () => {
-		setRight(right.concat(leftChecked));
-		setLeft(not(left, leftChecked));
+		setDestinationStudents(destinationStudents.concat(leftChecked));
+		setSourceStudents(not(students, leftChecked));
 		setChecked(not(checked, leftChecked));
 	};
 
 	const handleCheckedLeft = () => {
-		setLeft(left.concat(rightChecked));
-		setRight(not(right, rightChecked));
+		setSourceStudents(students.concat(rightChecked));
+		setDestinationStudents(not(destinationStudents, rightChecked));
 		setChecked(not(checked, rightChecked));
 	};
 
@@ -116,7 +119,7 @@ const TransferList = () => {
 									inputProps={{ 'aria-labelledby': labelId }}
 								/>
 							</ListItemIcon>
-							<ListItemText id={labelId} primary={`List item ${value + 1}`} />
+							<ListItemText id={value._id} primary={`${(value.lastName, value.firstName)}`} />
 						</ListItem>
 					);
 				})}
@@ -127,7 +130,7 @@ const TransferList = () => {
 
 	return (
 		<Grid container spacing={2} justify="center" alignItems="center" className={classes.root}>
-			<Grid item>{customList('Choices', left)}</Grid>
+			<Grid item>{customList('Source', students)}</Grid>
 			<Grid item>
 				<Grid container direction="column" alignItems="center">
 					<Button
@@ -146,15 +149,15 @@ const TransferList = () => {
 						className={classes.button}
 						onClick={handleCheckedLeft}
 						disabled={rightChecked.length === 0}
-						aria-label="move selected left"
+						aria-label="move selected students"
 					>
 						&lt;
 					</Button>
 				</Grid>
 			</Grid>
-			<Grid item>{customList('Chosen', right)}</Grid>
+			<Grid item>{customList('Destination', destinationStudents)}</Grid>
 		</Grid>
 	);
 };
 
-export default TransferList;
+export default TransferElement;

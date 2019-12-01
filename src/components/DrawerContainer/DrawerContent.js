@@ -62,7 +62,7 @@ const DrawerContent = classes => {
 				<Collapse in={toggle.groups} timeout="auto" unmountOnExit>
 					<List component="div" disablePadding>
 						<ListItem
-							key="generateGroup"
+							key="generateGroups"
 							button
 							className={nestedListClasses.nested}
 							component={Link}
@@ -72,6 +72,20 @@ const DrawerContent = classes => {
 								<GroupAddIcon color="primary" />
 							</ListItemIcon>
 							<ListItemText primary="Generate" />
+						</ListItem>
+					</List>
+					<List component="div" disablePadding>
+						<ListItem
+							key="assignStudents"
+							button
+							className={nestedListClasses.nested}
+							component={Link}
+							to="/groups/assign"
+						>
+							<ListItemIcon>
+								<GroupAddIcon color="primary" />
+							</ListItemIcon>
+							<ListItemText primary="Assign" />
 						</ListItem>
 					</List>
 				</Collapse>

@@ -21,13 +21,16 @@ const reducer = (state, action) => {
 			return { ...state, displayMenu4: action.payLoad };
 		case 'showStudents':
 			return { ...state, showStudents: action.payLoad };
+		case 'showTransferElement':
+			return { ...state, showTransferElement: action.payLoad };
 		case 'hideSelectors':
 			return {
 				...state,
 				displayMenu1: false,
 				displayMenu2: false,
 				displayMenu3: false,
-				displayMenu4: false
+				displayMenu4: false,
+				showTransferElement: false
 			};
 		//set ----------------------------------------------------------------
 		case 'setStudentIsNew':
@@ -40,6 +43,8 @@ const reducer = (state, action) => {
 			return { ...state, originGroup: action.payLoad };
 		case 'setDestinationGroup':
 			return { ...state, destinationGroup: action.payLoad };
+		case 'setDestinationGroups':
+			return { ...state, destinationGroups: action.payLoad };
 		//default ------------------------------------------------------------
 		default:
 			return state;

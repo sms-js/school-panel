@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import DrawerContainer from 'components/DrawerContainer';
 import { arrayIsNotEmpty } from 'lib/validators/types';
-import { schoolLib, studentLib } from '../../../lib/models';
+import { schoolLib, studentLib } from '../../../../lib/models';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -11,7 +11,7 @@ import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import { grades, groupTypes } from 'lib/keyValues';
 import { reducer, getInitialState } from './groupsState';
-import GroupSelectionMenu from './elements/groupSelectionMenu/GroupSelectionMenu';
+import { GroupSelectionMenu, TransferElement } from './elements';
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -24,15 +24,14 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const GenerateGroups = () => {
+const AssignStudents = () => {
 	const classes = useStyles();
 	const [state, dispatch] = useReducer(reducer, getInitialState());
-	const [destinationGroups, setDestinationGroups] = useState([]);
 
 	const getGroupTemplates = async grade => {
 		const response = await schoolLib.getGroupTemplates(grade);
 		const groups = response === false ? [] : response;
-		setDestinationGroups(groups);
+		dispatch({ type: 'setDestinationGroups', payLoad: groups });
 		dispatch({ type: 'displayMenu4', payLoad: true });
 	};
 
@@ -84,13 +83,26 @@ const GenerateGroups = () => {
 				switch (info.selectedValue) {
 					case 'notAssigned':
 						dispatch({ type: 'displayMenu4', payLoad: false });
+						dispatch({ type: 'showTransferElement', payLoad: false });
 						break;
 					default:
 						//fetch groupTemplates belonging to the selected grade.
 						dispatch({ type: 'setGrade', payLoad: info.selectedValue });
 						getGroupTemplates(info.selectedValue);
 						getIncomingStudents(info.selectedValue);
+						dispatch({ type: 'showTransferElement', payLoad: false });
 						break;
+				}
+				break;
+
+			case 'destinationGroup':
+				switch (info.selectedValue) {
+					case 'notAssigned':
+						dispatch({ type: 'showTransferElement', payLoad: false });
+						break;
+					default:
+						dispatch({ type: 'setDestinationGroup', payLoad: info.selectedValue });
+						dispatch({ type: 'showTransferElement', payLoad: true });
 				}
 				break;
 
@@ -100,7 +112,7 @@ const GenerateGroups = () => {
 	};
 
 	return (
-		<DrawerContainer title="Generate new group">
+		<DrawerContainer title="Assign Students">
 			<Grid container spacing={3}>
 				<Grid item xs={12}>
 					<Paper
@@ -142,7 +154,7 @@ const GenerateGroups = () => {
 								<GroupSelectionMenu
 									selectorName={'destinationGroup'}
 									selectorLabel={'Group of destination'}
-									data={destinationGroups}
+									data={state.destinationGroups}
 									dispatchData={getData}
 									disableMenu={false}
 								/>
@@ -150,11 +162,16 @@ const GenerateGroups = () => {
 						</div>
 					</Paper>
 				</Grid>
-				<Grid item xs={6}>
-					<Paper className={classes.paper}>Transfer element 1</Paper>
-				</Grid>
-				<Grid item xs={6}>
-					<Paper className={classes.paper}>Transfer element 2</Paper>
+				<Grid item xs={12}>
+					<Paper className={classes.paper}>
+						{state.showTransferElement ? (
+							<TransferElement
+								sourceStudents={state.students}
+								destinationGroupCode={state.destinationGroup}
+								destinationGroupStudents={[]}
+							/>
+						) : null}
+					</Paper>
 				</Grid>
 				<Grid item xs={12}>
 					<Paper className={classes.paper}>Command buttons</Paper>
@@ -164,7 +181,7 @@ const GenerateGroups = () => {
 	);
 };
 
-GenerateGroups.propTypes = {
+AssignStudents.propTypes = {
 	classes: PropTypes.object.isRequired
 };
-export default withStyles({ withTheme: true })(GenerateGroups);
+export default withStyles({ withTheme: true })(AssignStudents);
