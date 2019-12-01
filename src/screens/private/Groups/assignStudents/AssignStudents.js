@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import DrawerContainer from 'components/DrawerContainer';
 import { arrayIsNotEmpty } from 'lib/validators/types';
-import { schoolLib, studentLib } from '../../../../lib/models';
+import { groupLib, studentLib } from 'lib/models';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -29,7 +29,7 @@ const AssignStudents = () => {
 	const [state, dispatch] = useReducer(reducer, getInitialState());
 
 	const getGroupTemplates = async grade => {
-		const response = await schoolLib.getGroupTemplates(grade);
+		const response = await groupLib.getGroupTemplates(grade);
 		const groups = response === false ? [] : response;
 		dispatch({ type: 'setDestinationGroups', payLoad: groups });
 		dispatch({ type: 'displayMenu4', payLoad: true });
@@ -40,7 +40,7 @@ const AssignStudents = () => {
 			incomingStudent: state.incomingStudent,
 			grade
 		};
-		const response = await studentLib.getIncomingStudentsForGroups(params);
+		const response = await groupLib.getIncomingStudentsForGroups(params);
 		const students = response === false ? [] : response;
 		dispatch({ type: 'setStudents', payLoad: students });
 		dispatch({ type: 'showStudents', payLoad: true });

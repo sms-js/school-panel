@@ -4,24 +4,6 @@ import { STUDENT_URL, USER_URL, PARENT_URL, SCHOOL_URL } from 'config';
 
 // START: ADAPTING USER LIB TO STUDENT LIB ==========================
 
-/**
- * get INCOMING Students for group building
- * @param {object} params
- * params = {incomingStudent,grade};
- */
-export const getIncomingStudentsForGroups = async params => {
-	try {
-		//if (!data.type) data.type = 'student';
-		const response = await api.get(`${STUDENT_URL}groups`, { params });
-		if (!checkStatus(response)) {
-			throw new Error('invalid credentials');
-		}
-		return response.data;
-	} catch (error) {
-		console.debug(error);
-		return false;
-	}
-};
 
 /**
  * Create student
