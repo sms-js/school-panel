@@ -107,10 +107,10 @@ const TransferElement = ({ sourceStudents, destinationGroupCode,destinationGroup
 			<Divider />
 			<List className={classes.list} dense component="div" role="list">
 				{items.map(value => {
-					const labelId = `transfer-list-all-item-${value}-label`;
+					const labelId = `transfer-list-all-item-${value._id}-label`;
 
 					return (
-						<ListItem key={value} role="listitem" button onClick={handleToggle(value)}>
+						<ListItem key={value._id} role="listitem" button onClick={handleToggle(value)}>
 							<ListItemIcon>
 								<Checkbox
 									checked={checked.indexOf(value) !== -1}

@@ -105,7 +105,6 @@ const StudentPersonalData = ({
 		if (Object.values(errors).indexOf(true) >= 0) return setLoading(false);
 		dispatchData({ type: 'postStudentData', payLoad: true });
 		setLoading(false);
-		//setSuccess(true);
 	};
 
 	useEffect(() => {

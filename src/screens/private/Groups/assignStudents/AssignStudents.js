@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import { grades, groupTypes } from 'lib/keyValues';
-import { reducer, getInitialState } from './groupsState';
+import { reducer, getInitialState } from './state';
 import { GroupSelectionMenu, TransferElement } from './elements';
 
 const useStyles = makeStyles(theme => ({
@@ -28,8 +28,9 @@ const AssignStudents = () => {
 	const classes = useStyles();
 	const [state, dispatch] = useReducer(reducer, getInitialState());
 
-	const getGroupTemplates = async grade => {
-		const response = await groupLib.getGroupTemplates(grade);
+	const getGroups = async grade => {
+		const response = await groupLib.getGroups(grade);
+		console.log({ response });
 		const groups = response === false ? [] : response;
 		dispatch({ type: 'setDestinationGroups', payLoad: groups });
 		dispatch({ type: 'displayMenu4', payLoad: true });
@@ -88,7 +89,7 @@ const AssignStudents = () => {
 					default:
 						//fetch groupTemplates belonging to the selected grade.
 						dispatch({ type: 'setGrade', payLoad: info.selectedValue });
-						getGroupTemplates(info.selectedValue);
+						getGroups(info.selectedValue);
 						getIncomingStudents(info.selectedValue);
 						dispatch({ type: 'showTransferElement', payLoad: false });
 						break;
