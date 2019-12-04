@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
@@ -41,17 +41,22 @@ function union(a, b) {
 	return [...a, ...not(b, a)];
 }
 
-const TransferElement = ({ sourceStudents, destinationGroupCode,destinationGroupStudents }) => {
-	console.log({ sourceStudents });
-	console.log({ destinationGroupCode });
-
+const TransferElement = ({
+	sourceStudents,
+	destinationGroupCode,
+	destinationGroupStudents,
+	removeFromGroup,
+	addToGroup
+}) => {
 	const classes = useStyles();
 	const [checked, setChecked] = useState([]);
 	const [students, setSourceStudents] = useState(sourceStudents);
-	const [destinationStudents, setDestinationStudents] = useState(destinationGroupStudents);
+	const [transferredStudents, setTransferredStudents] = useState(destinationGroupStudents);
+	const [remove, setRemove] = useState([]);
+	const [assign, setAssign] = useState([]);
 
 	const leftChecked = intersection(checked, students);
-	const rightChecked = intersection(checked, destinationStudents);
+	const rightChecked = intersection(checked, transferredStudents);
 
 	const handleToggle = value => () => {
 		const currentIndex = checked.indexOf(value);
@@ -75,16 +80,25 @@ const TransferElement = ({ sourceStudents, destinationGroupCode,destinationGroup
 			setChecked(union(checked, items));
 		}
 	};
+	useEffect(() => {
+		removeFromGroup({ remove });
+	}, [remove]);
+
+	useEffect(() => {
+		addToGroup({ assign });
+	}, [assign]);
 
 	const handleCheckedRight = () => {
-		setDestinationStudents(destinationStudents.concat(leftChecked));
+		setAssign(() => [...leftChecked]);
+		setTransferredStudents(transferredStudents.concat(leftChecked));
 		setSourceStudents(not(students, leftChecked));
 		setChecked(not(checked, leftChecked));
 	};
 
 	const handleCheckedLeft = () => {
+		setRemove([...rightChecked]);
 		setSourceStudents(students.concat(rightChecked));
-		setDestinationStudents(not(destinationStudents, rightChecked));
+		setTransferredStudents(not(transferredStudents, rightChecked));
 		setChecked(not(checked, rightChecked));
 	};
 
@@ -155,7 +169,7 @@ const TransferElement = ({ sourceStudents, destinationGroupCode,destinationGroup
 					</Button>
 				</Grid>
 			</Grid>
-			<Grid item>{customList('Destination', destinationStudents)}</Grid>
+			<Grid item>{customList('Destination', transferredStudents)}</Grid>
 		</Grid>
 	);
 };

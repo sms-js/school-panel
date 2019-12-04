@@ -30,7 +30,7 @@ const AssignStudents = () => {
 
 	const getGroups = async grade => {
 		const response = await groupLib.getGroups(grade);
-		console.log({ response });
+		//console.log({ response });
 		const groups = response === false ? [] : response;
 		dispatch({ type: 'setDestinationGroups', payLoad: groups });
 		dispatch({ type: 'displayMenu4', payLoad: true });
@@ -38,13 +38,22 @@ const AssignStudents = () => {
 
 	const getIncomingStudents = async grade => {
 		const params = {
-			incomingStudent: state.incomingStudent,
+			incomingStudent: state.incomingStudents,
 			grade
 		};
-		const response = await groupLib.getIncomingStudentsForGroups(params);
+		const response = await studentLib.getIncomingStudentsForGroups(params);
 		const students = response === false ? [] : response;
 		dispatch({ type: 'setStudents', payLoad: students });
 		dispatch({ type: 'showStudents', payLoad: true });
+	};
+
+	const addToGroup = async ({ assign }) => {
+		console.log({ assign });
+		//add student to group. set incoming to false
+		const response = studentLib.attachGroupToStudent({ students: assign, _id: state.destinationId });
+	};
+	const removeFromGroup = async ({ remove }) => {
+		console.log({ remove });
 	};
 
 	const getData = info => {
@@ -55,12 +64,12 @@ const AssignStudents = () => {
 				switch (info.selectedValue) {
 					case 'pastYearGroup':
 						dispatch({ type: 'hideSelectors' });
-						dispatch({ type: 'setStudentIsNew', payLoad: false });
+						dispatch({ type: 'setIncomingStudents', payLoad: false });
 						break;
-					case 'studentIsNew':
+					case 'incomingStudents':
 						dispatch({ type: 'hideSelectors' });
 						dispatch({ type: 'displayMenu2', payLoad: true });
-						dispatch({ type: 'setStudentIsNew', payLoad: true });
+						dispatch({ type: 'setIncomingStudents', payLoad: true });
 						break;
 					case 'notAssigned':
 						dispatch({ type: 'hideSelectors' });
@@ -104,6 +113,7 @@ const AssignStudents = () => {
 					default:
 						dispatch({ type: 'setDestinationGroup', payLoad: info.selectedValue });
 						dispatch({ type: 'showTransferElement', payLoad: true });
+						console.log({ state });
 				}
 				break;
 
@@ -170,6 +180,8 @@ const AssignStudents = () => {
 								sourceStudents={state.students}
 								destinationGroupCode={state.destinationGroup}
 								destinationGroupStudents={[]}
+								addToGroup={addToGroup}
+								removeFromGroup={removeFromGroup}
 							/>
 						) : null}
 					</Paper>

@@ -46,10 +46,10 @@ const GroupSelectionMenu = ({ selectorLabel, selectorName, dispatchData, data, d
 		dispatchData(newValueSet);
 	}
 
-
 	const menuItems = data.map(el => {
+		const value = el._id ? el._id : el.code;
 		return (
-			<MenuItem value={el.code} key={el.code}>
+			<MenuItem value={value} key={value}>
 				{el.text}
 			</MenuItem>
 		);

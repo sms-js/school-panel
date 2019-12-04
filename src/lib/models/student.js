@@ -2,69 +2,26 @@ import api from 'lib/api';
 import { checkStatus } from 'lib/validators/response';
 import { STUDENT_URL, USER_URL, PARENT_URL, SCHOOL_URL } from 'config';
 
-// START: ADAPTING USER LIB TO STUDENT LIB ==========================
-
+//GET --------------------------------------------------------------------
 
 /**
- * Create student
- *
- * @param {string} id
- * @param {object} data
+ * get INCOMING Students for group building
+ * @param {object} params
+ * params = {incomingStudents,grade};
  */
-export const createStudent = async data => {
+export const getIncomingStudentsForGroups = async params => {
 	try {
 		//if (!data.type) data.type = 'student';
-		const response = await api.post(STUDENT_URL, data);
+		const response = await api.get(`${STUDENT_URL}groups`, { params });
 		if (!checkStatus(response)) {
 			throw new Error('invalid credentials');
 		}
-		return response;
+		return response.data;
 	} catch (error) {
 		console.debug(error);
 		return false;
 	}
 };
-
-/**
- * Update the user data
- *
- * @param {string} id
- * @param {object} data
- */
-export const updateStudent = async (id, data) => {
-	try {
-		const response = await api.patch(`${STUDENT_URL}${id}`, data);
-		if (!checkStatus(response)) {
-			throw new Error('invalid credentials');
-		}
-		return data;
-	} catch (error) {
-		console.debug(error);
-		return false;
-	}
-};
-
-/**
- * Create parent
- *
- * @param {string} id
- * @param {object} data
- */
-export const createParent = async data => {
-	try {
-		if (!data.type) data.type = 'parent';
-		const response = await api.post(PARENT_URL, data);
-		if (!checkStatus(response)) {
-			throw new Error('invalid credentials');
-		}
-		return data;
-	} catch (error) {
-		console.debug(error);
-		return false;
-	}
-};
-
-// END: ADAPTING USER LIB TO STUDENT LIB ============================
 
 /**
  * Get users
@@ -102,6 +59,82 @@ export const getUser = async id => {
 	}
 };
 
+//PATCH ------------------------------------------------------------------
+
+/**
+ * Update the user data
+ *
+ * @param {string} id
+ * @param {object} data
+ */
+export const updateStudent = async (id, data) => {
+	try {
+		const response = await api.patch(`${STUDENT_URL}update/${id}`, data);
+		if (!checkStatus(response)) {
+			throw new Error('invalid credentials');
+		}
+		return data;
+	} catch (error) {
+		console.debug(error);
+		return false;
+	}
+};
+
+export const attachGroupToStudent = async data => {
+	try {
+		const response = await api.patch(`${STUDENT_URL}attachgroup`, data);
+		if (!checkStatus(response)) {
+			throw new Error('invalid PATCH params');
+		}
+	} catch (error) {
+		console.debug(error);
+		return false;
+	}
+};
+
+//POST -------------------------------------------------------------------
+
+/**
+ * Create student
+ *
+ * @param {string} id
+ * @param {object} data
+ */
+export const createStudent = async data => {
+	try {
+		//if (!data.type) data.type = 'student';
+		const response = await api.post(STUDENT_URL, data);
+		if (!checkStatus(response)) {
+			throw new Error('invalid credentials');
+		}
+		return response;
+	} catch (error) {
+		console.debug(error);
+		return false;
+	}
+};
+
+/**
+ * Create parent
+ *
+ * @param {string} id
+ * @param {object} data
+ */
+export const createParent = async data => {
+	try {
+		if (!data.type) data.type = 'parent';
+		const response = await api.post(PARENT_URL, data);
+		if (!checkStatus(response)) {
+			throw new Error('invalid credentials');
+		}
+		return data;
+	} catch (error) {
+		console.debug(error);
+		return false;
+	}
+};
+
+// DELETE ----------------------------------------------------------------
 export const deleteUser = async id => {
 	try {
 		const response = await api.delete(`${USER_URL}${id}`);

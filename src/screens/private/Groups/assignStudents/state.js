@@ -33,16 +33,16 @@ const reducer = (state, action) => {
 				showTransferElement: false
 			};
 		//set ----------------------------------------------------------------
-		case 'setStudentIsNew':
-			return { ...state, incomingStudent: action.payLoad };
+		case 'setIncomingStudents':
+			return { ...state, incomingStudents: action.payLoad };
 		case 'setStudents':
 			return { ...state, students: action.payLoad };
 		case 'setGrade':
 			return { ...state, grade: action.payLoad };
 		case 'setOriginGroup':
-			return { ...state, originGroup: action.payLoad };
+			return { ...state, originGroupCode: action.payLoad };
 		case 'setDestinationGroup':
-			return { ...state, destinationGroup: action.payLoad };
+			return { ...state, destinationId: action.payLoad };
 		case 'setDestinationGroups':
 			return { ...state, destinationGroups: action.payLoad };
 		//default ------------------------------------------------------------

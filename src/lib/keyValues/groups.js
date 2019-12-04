@@ -9,7 +9,7 @@ const grades = [
 ];
 
 const groupTypes = [
-	{ code: 'studentIsNew', text: 'Incoming children' },
+	{ code: 'incomingStudents', text: 'Incoming children' },
 	{ code: 'pastYearGroup', text: 'Past Year' }
 ];
 
