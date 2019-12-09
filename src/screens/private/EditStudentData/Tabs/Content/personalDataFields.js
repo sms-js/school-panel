@@ -89,6 +89,13 @@ const studentFields = {
 		}
 	}
 };
+const healthData = {
+	company: 'Comi',
+	affiliateNumber: 'HC-0006',
+	allergies: ['acaros', 'pollen'],
+	medicaments: [{ name: 'areotonina', useTo: 'acaros allergy' }],
+	emergencyPhoneNumber: [{ number: '15-1111-911', belongsTo: 'father' }]
+};
 const fatherFields = {
 	firstName: {
 		label: 'First name',
@@ -227,4 +234,4 @@ const motherFields = {
 	}
 };
 
-export { studentFields, fatherFields, motherFields };
+export { studentFields, fatherFields, motherFields, healthData };

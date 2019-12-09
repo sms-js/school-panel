@@ -12,7 +12,7 @@ import CheckCircle from '@material-ui/icons/CheckCircle';
 import OfflineBolt from '@material-ui/icons/OfflineBolt';
 
 
-const TabsBar = ({ value, handleChange }) => {
+const Bar = ({ value, handleChange }) => {
 	return (
 		<AppBar position="static" color="default">
 			<Tabs
@@ -36,4 +36,4 @@ const TabsBar = ({ value, handleChange }) => {
 	);
 };
 
-export default TabsBar;
+export default Bar;

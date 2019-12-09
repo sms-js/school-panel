@@ -7,8 +7,8 @@ export const validUser = (user = {}) => {
 		isObject(user) &&
 		isString(user._id) &&
 		isString(user.username) &&
-		isString(user.firstName) &&
-		isString(user.lastName) &&
+		// isString(user.firstName) &&
+		// isString(user.lastName) &&
 		isString(user.status, [ 'isactive', 'inactive' ]) &&
 		isString(user.type) &&
 		isObject(user.rules)

@@ -1,10 +1,11 @@
-import { studentFields, fatherFields, motherFields } from './personalDataFields';
+import { studentFields, fatherFields, motherFields, healthData } from './Content/personalDataFields';
 
 const getInitialState = () => {
 	return {
 		studentData: { ...studentFields },
 		motherData: { ...motherFields },
 		fatherData: { ...fatherFields },
+		healthData: { ...healthData },
 		postStudentData: false,
 		profileError: false,
 		successMsg: false
@@ -13,6 +14,14 @@ const getInitialState = () => {
 
 const reducer = (state, action) => {
 	switch (action.type) {
+		//HEALTH DATA
+		case 'company':
+			return { ...state, healthData: { ...state.healthData, company: action.payLoad } };
+		case 'affiliateNumber':
+			return { ...state, healthData: { ...state.healthData, affiliateNumber: action.payLoad } };
+		case 'allergies':
+			return { ...state, healthData: { ...state.healthData, allergies: action.payLoad } };
+
 		case 'serverError':
 			return { ...state, profileError: action.payLoad };
 		case 'setSucessMsg':

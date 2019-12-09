@@ -73,7 +73,7 @@ const GenerateGroups = ({ classes }) => {
 	const saveGroup = async () => {
 		try {
 			const { selectedGroupTemplate, year, grade } = state;
-			const response = await groupLib.createGroup({ code: selectedGroupTemplate, year, grade });
+			const response = await groupLib.createGroup({ value: selectedGroupTemplate, year, grade });
 			if (!response) throw new Error();
 			dispatch({ type: 'displaySuccessMessage', payLoad: true });
 			dispatch({ type: 'disableSaveButton', payLoad: true });

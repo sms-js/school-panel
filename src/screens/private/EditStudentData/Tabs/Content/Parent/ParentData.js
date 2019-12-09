@@ -1,4 +1,5 @@
-import styles from '../../../users/UserEdition/styles';
+import styles from '../../styles';
+
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 
@@ -11,45 +12,26 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import DrawerContainer from 'components/DrawerContainer';
 import { studentLib } from 'lib/models';
 
-import { FormItem } from '../../../users/UserEdition/inputs';
+import { FormItem } from '../elements';
 import { Redirect } from 'react-router-dom';
-import { keyIsObject, isNotEmptyString, isNumber } from 'lib/validators/types';
+import { keyIsObject, isNotEmptyString, isNumber } from '../../../../../../lib/validators/types';
 import { updateClassDeclaration } from 'typescript';
-import create from 'antd/lib/icon/IconFont';
 
-const StudentPersonalData = ({
-	profileError,
-	studentData,
-	classes,
-	match,
-	screenName,
-	dispatchData,
-	studentId,
-	successMsg
-}) => {
-	const [student, setStudent] = useState(studentData);
-	const [formError, setFormError] = useState(true);
-	const [loading, setLoading] = useState(true);
-	const [success, setSuccess] = useState(false);
-	const [error, setError] = useState(false);
-	const [mustReturn] = useState(false);
-	const [buttonText, setButtonText] = useState('Savex');
+const ParentData = ({ parentType, adressEditable, parentData, classes, match, screenName, dispatchData }) => {
+	const [parent, setParent] = useState(parentData);
+
 	const [errors, setErrors] = useState(
-		Object.keys(studentData).reduce((acc, key) => {
+		Object.keys(parentData).reduce((acc, key) => {
 			acc[key] = false;
 			return acc;
 		}, {})
 	);
 
-	//when studentId is defined: changed data will be patched.
-	useEffect(() => {
-		const text = studentId !== undefined ? 'Update' : 'Save';
-		setButtonText(text);
-	}, [studentId]);
-
-	useEffect(() => {
-		console.log('StudentPersonalData - UE - ERROR');
-	}, [error]);
+	const [formError, setFormError] = useState(true);
+	const [loading, setLoading] = useState(true);
+	const [success, setSuccess] = useState(false);
+	const [error, setError] = useState(false);
+	const [mustReturn] = useState(false);
 
 	const updateFormErrors = () => {
 		const hasErrors =
@@ -60,9 +42,9 @@ const StudentPersonalData = ({
 	};
 
 	const handleChange = (value, fieldName, index, userType, error) => {
-		const newState = student;
+		const newState = parent;
 		newState[fieldName].value = value;
-		setStudent(Object.assign(student, newState));
+		setParent(Object.assign(parent, newState));
 		setLoading(false);
 		setSuccess(false);
 		setErrors({ ...errors, [fieldName]: error });
@@ -71,40 +53,52 @@ const StudentPersonalData = ({
 	};
 
 	const setTabsContainerState = () => {
-		dispatchData({ type: 'setStudentData', payLoad: student });
+		if (parentType === 'mother') return dispatchData({ type: 'setMotherData', payLoad: parent });
+		if (parentType === 'father') return dispatchData({ type: 'setFatherData', payLoad: parent });
 	};
 
-	const formItems = Object.keys(student).map(key => {
+	const formItems = Object.keys(parent).map(key => {
 		return (
-			<Grid key={'grid_' + student[key].id} item sm={3}>
+			<Grid key={'grid_' + parent[key].id} item sm={3}>
 				<FormItem
 					validateField={isNotEmptyString}
 					classes={classes}
 					index={0}
-					userType="student"
+					userType={parentType}
 					handleChange={handleChange}
 					error={errors[key]}
-					key={student[key].id}
-					elementId={'id_' + student[key].id}
-					type={student[key].type}
-					label={student[key].label}
+					key={parent[key].id}
+					elementId={'id_' + parent[key].id}
+					type={parent[key].type}
+					label={parent[key].label}
 					fieldName={key}
-					value={student[key].value}
-					selectOptions={student[key].type === 'Select' ? student[key].selectOptions : null}
+					value={parent[key].value}
+					selectOptions={parent[key].type === 'Select' ? parent[key].selectOptions : null}
+					editable={adressEditable}
 				/>
 			</Grid>
 		);
 	});
 
 	const handleSubmit = async e => {
+		const abortController = new AbortController();
 		e.preventDefault();
 		if (formError) return setError(true);
+		setLoading(true);
 		setSuccess(false);
 		setError(false);
-		setLoading(true);
 		if (Object.values(errors).indexOf(true) >= 0) return setLoading(false);
-		dispatchData({ type: 'postStudentData', payLoad: true });
+		const response = parent._id
+			? await studentLib.updateUser(parent._id, parent) //@todo:createParent
+			: await studentLib.createParent(abortController.parent);
 		setLoading(false);
+		if (!response) {
+			//following line cancels the async submission
+			abortController.abort();
+			setError(true);
+			return;
+		}
+		setSuccess(true);
 	};
 
 	useEffect(() => {
@@ -115,7 +109,7 @@ const StudentPersonalData = ({
 				if (!data) {
 					setError(true);
 				} else {
-					setStudent(data);
+					setParent(data);
 				}
 				setLoading(false);
 			} else {
@@ -137,14 +131,14 @@ const StudentPersonalData = ({
 					noValidate
 					autoComplete="off"
 				>
-					{/* STUDENT NAME, BIRTHDATE AND ID DATA */}
+					{/* PARENT NAME, BIRTHDATE AND ID DATA */}
 					<Grid container direction="row" style={{ flexGrow: 1 }}>
 						{formItems}
 					</Grid>
-					{successMsg && <span className={classes.success}>{successMsg}</span>}
-					{profileError && <span className={classes.error}>{profileError}</span>}
+					{success && <span className={classes.success}>Profile update success</span>}
+					{error && <span className={classes.error}>Profile update error</span>}
 					<Button variant="contained" color="primary" className={classes.button} type="submit">
-						{buttonText}
+						Save
 					</Button>
 				</form>
 			</Paper>
@@ -152,8 +146,8 @@ const StudentPersonalData = ({
 	);
 };
 
-StudentPersonalData.propTypes = {
+ParentData.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(StudentPersonalData);
+export default withStyles(styles)(ParentData);

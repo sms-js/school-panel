@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import { StudentPersonalData, ParentPersonalData } from './TabsContent';
-import { reducer, getInitialState } from './TabsContent/TabsState';
+import { StudentData, ParentData, HealthData, Contact } from './Content';
+import { reducer, getInitialState } from './State';
 import { studentLib } from 'lib/models';
 
 import Aux from '../../../../components/AUX/Aux';
@@ -13,7 +13,7 @@ const TabContainer = props => {
 		</Typography>
 	);
 };
-const TabsContainers = ({ value }) => {
+const Containers = ({ value }) => {
 	const [state, dispatch] = useReducer(reducer, getInitialState());
 
 	useEffect(() => {
@@ -91,7 +91,7 @@ const TabsContainers = ({ value }) => {
 		<Aux>
 			{value === 0 && (
 				<TabContainer>
-					<StudentPersonalData
+					<StudentData
 						studentData={state.studentData}
 						dispatchData={getData}
 						screenName={'studenPersonalData'}
@@ -103,7 +103,7 @@ const TabsContainers = ({ value }) => {
 			)}
 			{value === 1 && (
 				<TabContainer>
-					<ParentPersonalData
+					<ParentData
 						adressEditable={state.motherAdressEditable}
 						parentData={state.motherData}
 						screenName={'motherPersonalData'}
@@ -114,7 +114,7 @@ const TabsContainers = ({ value }) => {
 			)}
 			{value === 2 && (
 				<TabContainer>
-					<ParentPersonalData
+					<ParentData
 						adressEditable={state.fatherAdressEditable}
 						parentData={state.fatherData}
 						screenName={'fatherPersonalData'}
@@ -123,8 +123,16 @@ const TabsContainers = ({ value }) => {
 					/>
 				</TabContainer>
 			)}
-			{value === 3 && <TabContainer>Health DataC</TabContainer>}
-			{value === 4 && <TabContainer>Contact NumbersS</TabContainer>}
+			{value === 3 && (
+				<TabContainer>
+					<HealthData dataSet={state.healthData} screenName={'healthData'} dispatchData={getData} />
+				</TabContainer>
+			)}
+			{value === 4 && (
+				<TabContainer>
+					<Contact />
+				</TabContainer>
+			)}
 			{value === 5 && <TabContainer>Authorizations</TabContainer>}
 			{value === 6 && <TabContainer>Emergency Data Set</TabContainer>}
 			{value === 7 && <TabContainer>Item Six</TabContainer>}
@@ -133,7 +141,7 @@ const TabsContainers = ({ value }) => {
 	);
 };
 
-export default TabsContainers;
+export default Containers;
 
 TabContainer.propTypes = {
 	children: PropTypes.node.isRequired
