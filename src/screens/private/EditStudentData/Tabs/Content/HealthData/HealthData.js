@@ -1,70 +1,71 @@
 import styles from '../../styles';
-
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
+import { Grid, Paper, Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import LinearProgress from '@material-ui/core/LinearProgress';
 
 import DrawerContainer from 'components/DrawerContainer';
 import { studentLib } from 'lib/models';
 
+import { FormItem } from '../elements/';
 import { Redirect } from 'react-router-dom';
-import { keyIsObject, isNotEmptyString, isNumber } from 'lib/validators/types';
+// import { keyIsObject, isNotEmptyString, isNumber } from 'lib/validators/types';
+
+import { isNotEmptyString } from '../../../../../../lib/validators/types';
 import { updateClassDeclaration } from 'typescript';
-import FItem from './FItem';
+import create from 'antd/lib/icon/IconFont';
+import { healthData } from '../personalDataFields';
 
-const HealthData = ({ classes, dataSet, dispatchData }) => {
-	//sets initial values
-	const [data, setData] = useState(dataSet);
-
-	const MiniFormik = props => {
-		const [state, setState] = useState({
-			values: props.initialValues || {}
-		});
-
-		const handleChange = event => {
-			//dispatchData({ type: event.target.name, payLoad: event.target.value });
-			const target = event.target;
-			event.persist();
-			const name = target.name;
-			const value = target.value;
-			const newState = JSON.parse(JSON.stringify(data));
-			newState[event.target.name] = event.target.value;
-			setData(newState);
-			setState({ [name]: value });
-		};
-
-		return props.children({ handleChange });
+const HealthData = ({ data, screenName, dispatchData, classes }) => {
+	console.log('healhData - ', data);
+	const handleChange = (value, fieldName, index, userType, error) => {
+		console.log({ value, fieldName, index, userType, error });
+		dispatchData({ type: fieldName, payLoad: value });
 	};
 
-	const items = ({ handleChange }) => {
-		const result = Object.keys(data).map(key => {
-			const item = (
-				<FItem
-					name={key}
-					id={'id_' + key}
-					key={'key_' + key}
-					label={key}
-					value={data[key]}
-					handleChange={handleChange}
+	const handleSubmit = async e => {
+		debugger;
+		console.log({ e });
+	};
+
+	const formItems = Object.keys(data).map(el => {
+		const item = (
+			<Grid key={'grid_' + data[el].id} item sm={6}>
+				<FormItem
+					validateField={isNotEmptyString}
 					classes={classes}
-				></FItem>
-			);
-			return item;
-		});
-		return result;
-	};
+					index={0}
+					userType="student"
+					handleChange={handleChange}
+					error={data[el].error}
+					key={data[el].id}
+					elementId={'id_' + data[el].id}
+					type={data[el].type}
+					label={data[el].label}
+					fieldName={el}
+					value={data[el].value}
+					selectOptions={data[el].type === 'Select' ? data[el].selectOptions : null}
+					header={data[el].type === 'Table' ? data[el].header : null}
+				/>
+			</Grid>
+		);
+
+		return item;
+	});
 
 	return (
-		<Grid container spacing={2} style={{ flexGrow: 1 }} item sm={9}>
+		<Grid container spacing={2} style={{ flexGrow: 1 }}>
 			<Paper className={classes.root} elevation={1} style={{ flexGrow: 1 }}>
-				<MiniFormik>{() => items()}</MiniFormik>
+				<form onSubmit={handleSubmit} className={[classes.container, classes.form].join(' ')}>
+					<Grid container direction="row" style={{ flexGrow: 1 }}>
+						{formItems}
+					</Grid>
+					<Button variant="contained" color="primary" className={classes.button} type="submit">
+						Save
+					</Button>
+				</form>
 			</Paper>
-			<pre>{JSON.stringify(data, null, 2)}</pre>
 		</Grid>
 	);
 };

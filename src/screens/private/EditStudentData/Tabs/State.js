@@ -16,11 +16,23 @@ const reducer = (state, action) => {
 	switch (action.type) {
 		//HEALTH DATA
 		case 'company':
-			return { ...state, healthData: { ...state.healthData, company: action.payLoad } };
+			const company = {
+				...state.healthData.company,
+				value: action.payLoad
+			};
+			return { ...state, healthData: { ...state.healthData, company } };
 		case 'affiliateNumber':
-			return { ...state, healthData: { ...state.healthData, affiliateNumber: action.payLoad } };
+			const affiliateNumber = {
+				...state.healthData.affiliateNumber,
+				value: action.payLoad
+			};
+			return { ...state, healthData: { ...state.healthData, affiliateNumber } };
 		case 'allergies':
-			return { ...state, healthData: { ...state.healthData, allergies: action.payLoad } };
+			const allergies = {
+				...state.healthData.allergies,
+				value: action.payLoad
+			};
+			return { ...state, healthData: { ...state.healthData, allergies } };
 
 		case 'serverError':
 			return { ...state, profileError: action.payLoad };

@@ -18,7 +18,8 @@ const FormItem = ({
 	userType,
 	shrinkInputLabel = undefined,
 	editable = true,
-	selectOptions
+	selectOptions,
+	header
 }) => {
 	//adressKeys are edtiable depending on the 'editable' param. All other possible fields should be editable.
 	const adressKeys = ['fieldName', 'houseNr', 'floorNr', 'flatNr', 'zipCode', 'streetName'];
@@ -66,7 +67,13 @@ const FormItem = ({
 					shrinkInputLabel={shrinkInputLabel}
 				/>
 			);
+
 			return SelectElement;
+		}
+
+		if (type === 'Table' || type === 'Array') {
+			const TableElement = <div>Table - ARRAY</div>;
+			return TableElement;
 		}
 	}
 };
@@ -75,7 +82,7 @@ FormItem.propTypes = {
 	classes: PropTypes.object.isRequired,
 	handleChange: PropTypes.func.isRequired,
 	error: PropTypes.bool.isRequired,
-	value: PropTypes.string
+	value: PropTypes.string || PropTypes.array || PropTypes.object
 };
 
 export default FormItem;

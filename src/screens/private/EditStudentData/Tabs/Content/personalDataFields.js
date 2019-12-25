@@ -90,11 +90,35 @@ const studentFields = {
 	}
 };
 const healthData = {
-	company: 'Comi',
-	affiliateNumber: 'HC-0006',
-	allergies: ['acaros', 'pollen'],
-	medicaments: [{ name: 'areotonina', useTo: 'acaros allergy' }],
-	emergencyPhoneNumber: [{ number: '15-1111-911', belongsTo: 'father' }]
+	company: {
+		label: 'Company',
+		value: '',
+		id: 'company',
+		type: 'String',
+		error: false
+	},
+	affiliateNumber: {
+		label: 'Affilate Number',
+		value: '',
+		id: 'affiliateNumber',
+		type: 'String',
+		error: false
+	},
+	allergies: {
+		label: 'Allergies',
+		value: ['acaros', 'pollen'],
+		id: 'allergies',
+		type: 'Array',
+		error: false
+	},
+	emergencyPhoneNumbers: {
+		label: 'Emergency Phone Numbers',
+		data: [{ column2: '15-1111-911', column1: 'father' }],
+		header: ['Pertenece a', 'Numero'],
+		id: 'emergencyPhoneNumbers',
+		type: 'Table',
+		error: false
+	}
 };
 const fatherFields = {
 	firstName: {

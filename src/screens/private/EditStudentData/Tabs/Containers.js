@@ -125,7 +125,7 @@ const Containers = ({ value }) => {
 			)}
 			{value === 3 && (
 				<TabContainer>
-					<HealthData dataSet={state.healthData} screenName={'healthData'} dispatchData={getData} />
+					<HealthData data={state.healthData} screenName={'healthData'} dispatchData={getData} />
 				</TabContainer>
 			)}
 			{value === 4 && (

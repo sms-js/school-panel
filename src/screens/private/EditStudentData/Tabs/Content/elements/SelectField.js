@@ -19,7 +19,8 @@ const SelectField = ({
 	index,
 	userType,
 	selectOptions,
-	shrinkInputLabel = undefined
+	shrinkInputLabel = undefined,
+	header
 }) => {
 	const MenuItems = Object.keys(selectOptions).map(key => <MenuItem key={key} value={key}>{selectOptions[key]}</MenuItem>);
 

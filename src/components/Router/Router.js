@@ -14,7 +14,7 @@ import Profile from 'screens/private/Profile';
 import AssignStudents from 'screens/private/Groups/assignStudents';
 import GenerateGroups from 'screens/private/Groups/generate';
 //import AddStudentData from 'screens/private/AddStudentData';
-import EditStudentData from 'screens/private/EditStudentData/EditStudentData';
+import { EditStudentData } from 'screens/private/EditStudentData';
 
 // Users
 import { UserEdition, UsersList } from 'screens/private/users';
