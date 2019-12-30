@@ -79,27 +79,6 @@ const ParentData = ({ parentType, adressEditable, parentData, classes, match, sc
 		);
 	});
 
-	const handleSubmit = async e => {
-		const abortController = new AbortController();
-		e.preventDefault();
-		if (formError) return setError(true);
-		setLoading(true);
-		setSuccess(false);
-		setError(false);
-		if (Object.values(errors).indexOf(true) >= 0) return setLoading(false);
-		const response = parent._id
-			? await studentLib.updateUser(parent._id, parent) //@todo:createParent
-			: await studentLib.createParent(abortController.parent);
-		setLoading(false);
-		if (!response) {
-			//following line cancels the async submission
-			abortController.abort();
-			setError(true);
-			return;
-		}
-		setSuccess(true);
-	};
-
 	useEffect(() => {
 		const loadUser = async () => {
 			const params = keyIsObject(match, 'params') ? match.params : {};
@@ -124,22 +103,15 @@ const ParentData = ({ parentType, adressEditable, parentData, classes, match, sc
 		<Grid container spacing={2} style={{ flexGrow: 1 }}>
 			<Paper className={classes.root} elevation={1} style={{ flexGrow: 1 }}>
 				{loading && <LinearProgress />}
-				<form
-					onSubmit={handleSubmit}
-					className={[classes.container, classes.form].join(' ')}
-					noValidate
-					autoComplete="off"
-				>
-					{/* PARENT NAME, BIRTHDATE AND ID DATA */}
-					<Grid container direction="row" style={{ flexGrow: 1 }}>
-						<Grid item xs={12}>
-							{parentType === 'mother' ? 'MOTHER DATA' : 'FATHER DATA'}
-						</Grid>
-						{formItems}
+				{/* PARENT NAME, BIRTHDATE AND ID DATA */}
+				<Grid container direction="row" style={{ flexGrow: 1 }}>
+					<Grid item xs={12}>
+						{parentType === 'mother' ? 'MOTHER DATA' : 'FATHER DATA'}
 					</Grid>
-					{success && <span className={classes.success}>Profile update success</span>}
-					{error && <span className={classes.error}>Profile update error</span>}
-				</form>
+					{formItems}
+				</Grid>
+				{success && <span className={classes.success}>Profile update success</span>}
+				{error && <span className={classes.error}>Profile update error</span>}
 			</Paper>
 		</Grid>
 	);

@@ -2,20 +2,16 @@ import styles from '../../styles';
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
 
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import { withStyles } from '@material-ui/core/styles';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import { Paper, Grid, Button, Typography,LinearProgress } from '@material-ui/core/';
 
-import DrawerContainer from 'components/DrawerContainer';
+import { withStyles } from '@material-ui/core/styles';
+
+//import DrawerContainer from 'components/DrawerContainer';
 import { studentLib } from 'lib/models';
 
 import { FormItem } from '../elements/';
 import { Redirect } from 'react-router-dom';
 import { keyIsObject, isNotEmptyString, isNumber } from 'lib/validators/types';
-import { updateClassDeclaration } from 'typescript';
-import create from 'antd/lib/icon/IconFont';
 
 const StudentData = ({
 	profileError,
@@ -129,6 +125,7 @@ const StudentData = ({
 
 	return (
 		<Grid container spacing={1} className={classes.root}>
+			<Typography variant="subtitle1" gutterBottom>
 			<Paper elevation={1}>
 				{loading && <LinearProgress />}
 				<form
@@ -147,7 +144,8 @@ const StudentData = ({
 						{buttonText}
 					</Button>
 				</form>
-			</Paper>
+				</Paper>
+				</Typography>
 		</Grid>
 	);
 };

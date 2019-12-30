@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import { StudentData, ParentData, HealthData, Contact } from './Content';
+import { StudentData, ParentData, HealthData } from './Content';
 import { reducer, getInitialState } from './State';
 import { studentLib } from 'lib/models';
 import { Paper, Grid } from '@material-ui/core';
@@ -132,19 +132,15 @@ const Containers = ({ value }) => {
 			)}
 			{value === 2 && (
 				<TabContainer>
-				<HealthData data={state.healthData} screenName={'healthData'} dispatchData={getData} />
+					<HealthData data={state.healthData} screenName={'healthData'} dispatchData={getData} />
 				</TabContainer>
 			)}
 			{value === 3 && (
 				<TabContainer>
-				<Contact />
+					<pre>{JSON.stringify(state, null, 1)}</pre>
 				</TabContainer>
 			)}
-			{value === 4 && (
-				<TabContainer>
-		Authorizations
-				</TabContainer>
-			)}
+			{value === 4 && <TabContainer>Authorizations</TabContainer>}
 			{value === 5 && <TabContainer>Emergency Data Set</TabContainer>}
 			{value === 6 && <TabContainer>Item Six</TabContainer>}
 			{value === 7 && <TabContainer>Item Seven</TabContainer>}
