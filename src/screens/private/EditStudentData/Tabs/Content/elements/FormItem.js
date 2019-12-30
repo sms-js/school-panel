@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TextField from '@material-ui/core/TextField';
+import { TextField, FormControl } from '@material-ui/core/';
 import SelectField from './SelectField';
 
 const FormItem = ({
@@ -27,23 +27,24 @@ const FormItem = ({
 	if (fieldName) {
 		if (type === 'String' || type === 'Date' || type === 'Email') {
 			const StringElement = (
-				<TextField
-					disabled={!editable}
-					type={type}
-					name={fieldName}
-					required
-					error={error}
-					id={elementId}
-					label={label}
-					className={classes.textField}
-					value={value}
-					onChange={ev => handleChange(ev.target.value, fieldName, index, userType, !validateField(ev.target.value))}
-					margin="normal"
-					defaultValue={defaultValue}
-					InputLabelProps={{
-						shrink: shrinkInputLabel
-					}}
-				/>
+					<TextField
+						fullWidth
+						disabled={!editable}
+						type={type}
+						name={fieldName}
+						required
+						error={error}
+						id={elementId}
+						label={label}
+						className={classes.textField}
+						value={value}
+						onChange={ev => handleChange(ev.target.value, fieldName, index, userType, !validateField(ev.target.value))}
+						margin="normal"
+						defaultValue={defaultValue}
+						InputLabelProps={{
+							shrink: shrinkInputLabel
+						}}
+					/>
 			);
 			return StringElement;
 		}

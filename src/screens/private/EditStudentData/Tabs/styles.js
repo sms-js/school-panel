@@ -9,7 +9,8 @@ const styles = theme => {
 		textField: {
 			marginLeft: theme.spacing(1),
 			marginRight: theme.spacing(1),
-			width: `calc(100% - ${theme.spacing(2)}px)`
+			width: `calc(100% - ${theme.spacing(2)}px)`,
+			border: 'solid blue 0px'
 		},
 		dense: {
 			marginTop: 19
@@ -24,8 +25,11 @@ const styles = theme => {
 			margin: '5px'
 		},
 		selectInput: {
-			marginTop: theme.spacing(1),
-			marginBottom: theme.spacing(1)
+			top: theme.spacing(2),
+			border: 'solid red 0px',
+		},
+		selectInputLabel: {
+			border: 'solid red 0px',
 		},
 		success: {
 			...theme.typography.subtitle1,
@@ -36,6 +40,13 @@ const styles = theme => {
 			...theme.typography.subtitle1,
 			color: theme.palette.error[theme.palette.type],
 			width: '100%'
+		},
+		root: {
+			border: 'solid blue 0px'
+			//flexGrow: 1,
+			// direction: 'row',
+			// justify: 'center',
+			// alignItems: 'center'
 		}
 	};
 };

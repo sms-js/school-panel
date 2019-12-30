@@ -5,7 +5,6 @@ import React, { useState, useEffect } from 'react';
 
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
@@ -133,13 +132,13 @@ const ParentData = ({ parentType, adressEditable, parentData, classes, match, sc
 				>
 					{/* PARENT NAME, BIRTHDATE AND ID DATA */}
 					<Grid container direction="row" style={{ flexGrow: 1 }}>
+						<Grid item xs={12}>
+							{parentType === 'mother' ? 'MOTHER DATA' : 'FATHER DATA'}
+						</Grid>
 						{formItems}
 					</Grid>
 					{success && <span className={classes.success}>Profile update success</span>}
 					{error && <span className={classes.error}>Profile update error</span>}
-					<Button variant="contained" color="primary" className={classes.button} type="submit">
-						Save
-					</Button>
 				</form>
 			</Paper>
 		</Grid>

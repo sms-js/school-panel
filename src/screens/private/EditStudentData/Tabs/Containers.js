@@ -4,6 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import { StudentData, ParentData, HealthData, Contact } from './Content';
 import { reducer, getInitialState } from './State';
 import { studentLib } from 'lib/models';
+import { Paper, Grid } from '@material-ui/core';
 
 import Aux from '../../../../components/AUX/Aux';
 const TabContainer = props => {
@@ -103,40 +104,50 @@ const Containers = ({ value }) => {
 			)}
 			{value === 1 && (
 				<TabContainer>
-					<ParentData
-						adressEditable={state.motherAdressEditable}
-						parentData={state.motherData}
-						screenName={'motherPersonalData'}
-						parentType={'mother'}
-						dispatchData={getData}
-					/>
+					<Grid container spacing={10}>
+						<Grid item xs={12}>
+							<Paper>
+								<ParentData
+									adressEditable={state.motherAdressEditable}
+									parentData={state.motherData}
+									screenName={'parentsData'}
+									parentType={'mother'}
+									dispatchData={getData}
+								/>
+							</Paper>
+						</Grid>
+						<Grid item xs={12}>
+							<Paper>
+								<ParentData
+									adressEditable={state.fatherAdressEditable}
+									parentData={state.fatherData}
+									screenName={'fatherPersonalData'}
+									parentType={'father'}
+									dispatchData={getData}
+								/>
+							</Paper>
+						</Grid>
+					</Grid>
 				</TabContainer>
 			)}
 			{value === 2 && (
 				<TabContainer>
-					<ParentData
-						adressEditable={state.fatherAdressEditable}
-						parentData={state.fatherData}
-						screenName={'fatherPersonalData'}
-						parentType={'father'}
-						dispatchData={getData}
-					/>
+				<HealthData data={state.healthData} screenName={'healthData'} dispatchData={getData} />
 				</TabContainer>
 			)}
 			{value === 3 && (
 				<TabContainer>
-					<HealthData data={state.healthData} screenName={'healthData'} dispatchData={getData} />
+				<Contact />
 				</TabContainer>
 			)}
 			{value === 4 && (
 				<TabContainer>
-					<Contact />
+		Authorizations
 				</TabContainer>
 			)}
-			{value === 5 && <TabContainer>Authorizations</TabContainer>}
-			{value === 6 && <TabContainer>Emergency Data Set</TabContainer>}
-			{value === 7 && <TabContainer>Item Six</TabContainer>}
-			{value === 8 && <TabContainer>Item Seven</TabContainer>}
+			{value === 5 && <TabContainer>Emergency Data Set</TabContainer>}
+			{value === 6 && <TabContainer>Item Six</TabContainer>}
+			{value === 7 && <TabContainer>Item Seven</TabContainer>}
 		</Aux>
 	);
 };

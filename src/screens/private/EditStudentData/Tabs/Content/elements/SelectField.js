@@ -1,15 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import { MenuItem, InputLabel, FormControl, Select } from '@material-ui/core/';
+
+// const useStyles = makeStyles(theme => ({
+// 	root: {
+// 		display: 'flex',
+// 		flexWrap: 'wrap'
+// 	},
+// 	formControl: {
+// 		margin: theme.spacing(1),
+// 		minWidth: 300
+// 	},
+// 	selectEmpty: {
+// 		marginTop: theme.spacing(2)
+// 	}
+// }));
 
 const SelectField = ({
 	defaultValue,
 	classes,
 	type,
-	className,
 	handleChange,
 	value,
 	error,
@@ -19,29 +29,33 @@ const SelectField = ({
 	index,
 	userType,
 	selectOptions,
-	shrinkInputLabel = undefined,
+	shrinkInputLabel = true,
 	header
 }) => {
-	const MenuItems = Object.keys(selectOptions).map(key => <MenuItem key={key} value={key}>{selectOptions[key]}</MenuItem>);
+	//const classes = useStyles();
+	const MenuItems = Object.keys(selectOptions).map(key => (
+		<MenuItem key={key} value={key}>
+			{selectOptions[key]}
+		</MenuItem>
+	));
 
 	return (
-		<FormControl className={classes.livesWith} required>
-			<InputLabel id={'inputLabel_'+fieldName}>{label}</InputLabel>
+		<FormControl fullWidth required>
+			<InputLabel className={classes.selectInput} id={'inputLabel_' + fieldName}>
+				{label}
+			</InputLabel>
 			<Select
-				labelId={elementId}
+				fullWidth
 				id={elementId}
 				type={type}
 				name={fieldName}
 				required
 				error={error}
-				className={classes.selectEmpty}
+				className={classes.selectInput}
 				value={value}
 				onChange={ev => handleChange(ev.target.value, fieldName, index, userType)}
-				margin="dense"
+				margin="none"
 				defaultValue={defaultValue}
-				InputLabelProps={{
-					shrink: shrinkInputLabel
-				}}
 			>
 				{MenuItems}
 			</Select>

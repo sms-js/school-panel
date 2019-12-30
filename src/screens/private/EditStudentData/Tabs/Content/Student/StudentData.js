@@ -128,8 +128,8 @@ const StudentData = ({
 	if (mustReturn) return <Redirect to="/admin/users" />;
 
 	return (
-		<Grid container spacing={2} style={{ flexGrow: 1 }}>
-			<Paper className={classes.root} elevation={1} style={{ flexGrow: 1 }}>
+		<Grid container spacing={1} className={classes.root}>
+			<Paper elevation={1}>
 				{loading && <LinearProgress />}
 				<form
 					onSubmit={handleSubmit}
@@ -138,7 +138,7 @@ const StudentData = ({
 					autoComplete="off"
 				>
 					{/* STUDENT NAME, BIRTHDATE AND ID DATA */}
-					<Grid container direction="row" style={{ flexGrow: 1 }}>
+					<Grid container direction="row" >
 						{formItems}
 					</Grid>
 					{successMsg && <span className={classes.success}>{successMsg}</span>}

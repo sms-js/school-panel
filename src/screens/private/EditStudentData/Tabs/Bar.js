@@ -23,10 +23,9 @@ const Bar = ({ value, handleChange }) => {
 				indicatorColor="primary"
 				textColor="primary"
 			>
-				<Tab label="Student Data" icon={<ChildCareIcon />} />
-				<Tab label="Mother Data" icon={<WCIcon />} />
-				<Tab label="Father Data" icon={<WCIcon />} />
-				<Tab label="Health Data" icon={<FavoriteIcon />} />
+				<Tab label="Student" icon={<ChildCareIcon />} />
+				<Tab label="Parents" icon={<WCIcon />} />
+				<Tab label="Health" icon={<FavoriteIcon />} />
 				<Tab label="Contact Numbers" icon={<PhoneIcon />} />
 				<Tab label="Authorizations" icon={<CheckCircle />} />
 				<Tab label="Emergency" icon={<OfflineBolt />} />
