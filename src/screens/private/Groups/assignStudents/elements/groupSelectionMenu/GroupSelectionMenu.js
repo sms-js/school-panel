@@ -24,12 +24,8 @@ const useStyles = makeStyles(theme => ({
 	}
 }));
 
-const GroupSelectionMenu = ({ selectorLabel, selectorName, dispatchData, data, disableMenu }) => {
+const GroupSelectionMenu = ({ selectorLabel, selectorName, handleChange, data, disableMenu,selectedValue }) => {
 	const classes = useStyles();
-	const [values, setValues] = useState({
-		selectorName,
-		selectedValue: 'notAssigned'
-	});
 
 	const inputLabel = useRef(null);
 	const [labelWidth, setLabelWidth] = useState(0);
@@ -37,14 +33,6 @@ const GroupSelectionMenu = ({ selectorLabel, selectorName, dispatchData, data, d
 		setLabelWidth(inputLabel.current.offsetWidth);
 	}, []);
 
-	function handleChange(event) {
-		const newValueSet = {
-			selectorName: event.target.name,
-			selectedValue: event.target.value
-		};
-		setValues(() => Object.assign(newValueSet));
-		dispatchData(newValueSet);
-	}
 
 	const menuItems = data.map(el => {
 		const value = el._id ? el._id : el.code;
@@ -62,8 +50,8 @@ const GroupSelectionMenu = ({ selectorLabel, selectorName, dispatchData, data, d
 			</InputLabel>
 			<Select
 				disabled={disableMenu}
-				value={values.selectedValue}
-				onChange={handleChange}
+				value={selectedValue}
+				onChange={event => handleChange(event)}
 				input={<OutlinedInput labelWidth={labelWidth} name={selectorName} id="handled-group" />}
 			>
 				<MenuItem value="notAssigned">

@@ -9,7 +9,10 @@ const getInitialState = () => {
 		displayErrorMessage: false,
 		successMsg: 'Sucess: Group has been created',
 		errorMsg: 'Error: Group could not be created',
-		groupsTemplates: []
+		groupsTemplates: [],
+		year: 'notAssigned',
+		grade: 'notAssigned',
+		selectedGroupTemplate: 'notAssigned'
 	};
 };
 

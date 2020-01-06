@@ -24,50 +24,7 @@ const GenerateGroups = ({ classes }) => {
 		const response = await groupLib.getGroupTemplates(grade);
 		const groups = response === false ? [] : response;
 		dispatch({ type: 'setTemplates', payLoad: groups });
-		dispatch({ type: 'disableMenu2', payLoad: false });
-	};
-
-	const getData = info => {
-		switch (info.selectorName) {
-			case 'gradeSelection':
-				switch (info.selectedValue) {
-					case 'notAssigned':
-						dispatch({ type: 'disableAll' });
-						dispatch({ type: 'disableSaveButton', payLoad: true });
-						break;
-					default:
-						//fetch groupTemplates belonging to the selected grade.
-						dispatch({ type: 'setGrade', payLoad: info.selectedValue });
-						getGroupTemplates(info.selectedValue);
-						break;
-				}
-				break;
-			case 'selectedGroupTemplate':
-				switch (info.selectedValue) {
-					case 'notAssigned':
-						dispatch({ type: 'disableSaveButton', payLoad: true });
-						dispatch({ type: 'disableMenu3', payLoad: true });
-						dispatch({ type: 'hideMessagges' });
-						break;
-					default:
-						dispatch({ type: 'setSelectedGroupTemplate', payLoad: info.selectedValue });
-						dispatch({ type: 'disableMenu3', payLoad: false });
-				}
-				break;
-			case 'selectedYear':
-				switch (info.selectedValue) {
-					case 'notAssigned':
-						dispatch({ type: 'hideMessagges' });
-						dispatch({ type: 'disableSaveButton', payLoad: true });
-						break;
-					default:
-						dispatch({ type: 'setYear', payLoad: info.selectedValue });
-						dispatch({ type: 'disableSaveButton', payLoad: false });
-				}
-				break;
-			default:
-				console.log('default switch case');
-		}
+		dispatch({ type: 'disableMenu2', payLoad: groups.length == 0 ? true : false });
 	};
 
 	const saveGroup = async () => {
@@ -84,6 +41,34 @@ const GenerateGroups = ({ classes }) => {
 		}
 	};
 
+	const handleGradeSelection = event => {
+		dispatch({ type: 'setSelectedGroupTemplate', payLoad: 'notAssigned' });
+		dispatch({ type: 'disableSaveButton', payLoad: true });
+		dispatch({ type: 'setGrade', payLoad: event.target.value });
+		dispatch({ type: 'disableMenu3', payLoad: true });
+		getGroupTemplates(event.target.value);
+	};
+
+	const handleTemplateSelection = event => {
+		if (event.target.value === 'notAssigned') {
+			dispatch({ type: 'disableSaveButton', payLoad: true });
+			dispatch({ type: 'disableMenu3', payLoad: true });
+			dispatch({ type: 'hideMessagges' });
+			return;
+		}
+		dispatch({ type: 'setSelectedGroupTemplate', payLoad: event.target.value });
+		dispatch({ type: 'disableMenu3', payLoad: false });
+	};
+
+	const handleYearSelection = event => {
+		if (event.target.value === 'notAssigned') {
+			dispatch({ type: 'hideMessagges' });
+			dispatch({ type: 'disableSaveButton', payLoad: true });
+		}
+		dispatch({ type: 'setYear', payLoad: event.target.value });
+		dispatch({ type: 'disableSaveButton', payLoad: false });
+	};
+
 	return (
 		<DrawerContainer title="Generate Groups">
 			<Grid container spacing={3}>
@@ -94,21 +79,24 @@ const GenerateGroups = ({ classes }) => {
 								selectorName={'gradeSelection'}
 								selectorLabel={'Grade Selection'}
 								data={grades}
-								dispatchData={getData}
+								selectedValue={state.grade}
+								handleChange={handleGradeSelection}
 								disableMenu={false}
 							/>
 							<GroupSelectionMenu
 								selectorName={'selectedGroupTemplate'}
 								selectorLabel={'Group Name'}
 								data={state.groupsTemplates}
-								dispatchData={getData}
+								selectedValue={state.selectedGroupTemplate}
+								handleChange={handleTemplateSelection}
 								disableMenu={state.disableMenu2}
 							></GroupSelectionMenu>
 							<GroupSelectionMenu
 								selectorName={'selectedYear'}
 								selectorLabel={'Year'}
+								selectedValue={state.year}
 								data={years}
-								dispatchData={getData}
+								handleChange={handleYearSelection}
 								disableMenu={state.disableMenu3}
 							/>
 						</div>

@@ -1,0 +1,12 @@
+{
+	"parser": "babel-eslint",
+	"plugins": ["angular", "prettier", "eslint-plugin-angular"],
+	"extends": ["eslint:recommended", "prettier"],
+	"rules": {
+		"no-console": "off"
+	},
+	"env": {
+		"browser": true,
+		"node": true
+	}
+}
