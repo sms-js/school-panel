@@ -10,9 +10,12 @@ import ChildCareIcon from '@material-ui/icons/ChildCare';
 import WCIcon from '@material-ui/icons/Wc';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import OfflineBolt from '@material-ui/icons/OfflineBolt';
+import { useTranslation } from 'react-i18next';
 
 
 const Bar = ({ value, handleChange }) => {
+	const { t } = useTranslation();
+
 	return (
 		<AppBar position="static" color="default">
 			<Tabs
@@ -23,7 +26,7 @@ const Bar = ({ value, handleChange }) => {
 				indicatorColor="primary"
 				textColor="primary"
 			>
-				<Tab label="Student" icon={<ChildCareIcon />} />
+				<Tab label={t('student')} icon={<ChildCareIcon />} />
 				<Tab label="Parents" icon={<WCIcon />} />
 				<Tab label="Health" icon={<FavoriteIcon />} />
 				<Tab label="Contact Numbers" icon={<PhoneIcon />} />
